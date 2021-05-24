@@ -1,0 +1,32 @@
+{
+    "states": [{
+        "id": 1,
+        "is_initial_state": true,
+        "type": "alert",
+        "title": {
+            "key": "SUPPORT_TITLE"
+        },
+        "message": {
+            "key": "SUPPORT_MESSAGE"
+        },
+        "transitions": [{
+            "title": {
+                "key": "ALLOW_BUTTON_TITLE"
+            },
+            "style": "default",
+            "destination_state_id": 12
+        }]
+    }, {
+        "id": 12,
+        "type": "event",
+        "name": "support",
+        "destination_state_id": 14
+    }, {
+        "id": 14,
+        "type": "att",
+        "destination_state_id": 99
+    }, {
+        "id": 99,
+        "type": "reinit"
+    }]
+}

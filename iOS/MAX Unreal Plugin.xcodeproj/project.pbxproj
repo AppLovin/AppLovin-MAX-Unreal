@@ -1,0 +1,423 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3597F0282658248E003E9821 /* MAX_Unreal_Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 3597F0262658248E003E9821 /* MAX_Unreal_Plugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3597F03B265824EE003E9821 /* AppLovinSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F03A265824EE003E9821 /* AppLovinSDK.framework */; };
+		3597F03F265824F2003E9821 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F03E265824F2003E9821 /* AudioToolbox.framework */; };
+		3597F041265824F9003E9821 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F040265824F9003E9821 /* AppTrackingTransparency.framework */; };
+		3597F043265827E6003E9821 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F042265827E6003E9821 /* UIKit.framework */; };
+		3597F0452658281B003E9821 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F0442658281B003E9821 /* StoreKit.framework */; };
+		3597F04726582825003E9821 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F04626582825003E9821 /* AVFoundation.framework */; };
+		3597F0492658282F003E9821 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F0482658282F003E9821 /* CoreGraphics.framework */; };
+		3597F04D26582850003E9821 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F04C26582850003E9821 /* WebKit.framework */; };
+		3597F05326582881003E9821 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F05226582881003E9821 /* SystemConfiguration.framework */; };
+		3597F0542658288C003E9821 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F0502658286A003E9821 /* CoreTelephony.framework */; };
+		3597F05526582896003E9821 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F04E2658285C003E9821 /* CFNetwork.framework */; };
+		3597F057265828A7003E9821 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F056265828A7003E9821 /* AdSupport.framework */; };
+		3597F05926582B4E003E9821 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F05826582B4E003E9821 /* CoreMedia.framework */; };
+		3597F05B26582B5F003E9821 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F05A26582B5F003E9821 /* Foundation.framework */; };
+		3597F05C26582B65003E9821 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3597F04A2658283A003E9821 /* SafariServices.framework */; };
+		35B51AD02658502300F2EA86 /* MAUnrealPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 35B51ACE2658502300F2EA86 /* MAUnrealPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		35B51AD12658502300F2EA86 /* MAUnrealPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 35B51ACF2658502300F2EA86 /* MAUnrealPlugin.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3597F0232658248E003E9821 /* MAX_Unreal_Plugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MAX_Unreal_Plugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3597F0262658248E003E9821 /* MAX_Unreal_Plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MAX_Unreal_Plugin.h; sourceTree = "<group>"; };
+		3597F0272658248E003E9821 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3597F03A265824EE003E9821 /* AppLovinSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AppLovinSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3597F03E265824F2003E9821 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		3597F040265824F9003E9821 /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk/System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = DEVELOPER_DIR; };
+		3597F042265827E6003E9821 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		3597F0442658281B003E9821 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		3597F04626582825003E9821 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		3597F0482658282F003E9821 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3597F04A2658283A003E9821 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		3597F04C26582850003E9821 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		3597F04E2658285C003E9821 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		3597F0502658286A003E9821 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		3597F05226582881003E9821 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		3597F056265828A7003E9821 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		3597F05826582B4E003E9821 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		3597F05A26582B5F003E9821 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		35B51ACE2658502300F2EA86 /* MAUnrealPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAUnrealPlugin.h; sourceTree = "<group>"; };
+		35B51ACF2658502300F2EA86 /* MAUnrealPlugin.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MAUnrealPlugin.mm; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3597F0202658248E003E9821 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3597F041265824F9003E9821 /* AppTrackingTransparency.framework in Frameworks */,
+				3597F05526582896003E9821 /* CFNetwork.framework in Frameworks */,
+				3597F043265827E6003E9821 /* UIKit.framework in Frameworks */,
+				3597F0542658288C003E9821 /* CoreTelephony.framework in Frameworks */,
+				3597F04726582825003E9821 /* AVFoundation.framework in Frameworks */,
+				3597F05B26582B5F003E9821 /* Foundation.framework in Frameworks */,
+				3597F057265828A7003E9821 /* AdSupport.framework in Frameworks */,
+				3597F0492658282F003E9821 /* CoreGraphics.framework in Frameworks */,
+				3597F0452658281B003E9821 /* StoreKit.framework in Frameworks */,
+				3597F04D26582850003E9821 /* WebKit.framework in Frameworks */,
+				3597F05926582B4E003E9821 /* CoreMedia.framework in Frameworks */,
+				3597F05326582881003E9821 /* SystemConfiguration.framework in Frameworks */,
+				3597F03B265824EE003E9821 /* AppLovinSDK.framework in Frameworks */,
+				3597F03F265824F2003E9821 /* AudioToolbox.framework in Frameworks */,
+				3597F05C26582B65003E9821 /* SafariServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3597F0192658248E003E9821 = {
+			isa = PBXGroup;
+			children = (
+				3597F0252658248E003E9821 /* MAX Unreal Plugin */,
+				3597F0242658248E003E9821 /* Products */,
+				3597F039265824EE003E9821 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3597F0242658248E003E9821 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3597F0232658248E003E9821 /* MAX_Unreal_Plugin.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3597F0252658248E003E9821 /* MAX Unreal Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				3597F0262658248E003E9821 /* MAX_Unreal_Plugin.h */,
+				35B51ACE2658502300F2EA86 /* MAUnrealPlugin.h */,
+				35B51ACF2658502300F2EA86 /* MAUnrealPlugin.mm */,
+				3597F0272658248E003E9821 /* Info.plist */,
+			);
+			path = "MAX Unreal Plugin";
+			sourceTree = "<group>";
+		};
+		3597F039265824EE003E9821 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3597F05A26582B5F003E9821 /* Foundation.framework */,
+				3597F05826582B4E003E9821 /* CoreMedia.framework */,
+				3597F056265828A7003E9821 /* AdSupport.framework */,
+				3597F05226582881003E9821 /* SystemConfiguration.framework */,
+				3597F0502658286A003E9821 /* CoreTelephony.framework */,
+				3597F04E2658285C003E9821 /* CFNetwork.framework */,
+				3597F04C26582850003E9821 /* WebKit.framework */,
+				3597F04A2658283A003E9821 /* SafariServices.framework */,
+				3597F0482658282F003E9821 /* CoreGraphics.framework */,
+				3597F04626582825003E9821 /* AVFoundation.framework */,
+				3597F0442658281B003E9821 /* StoreKit.framework */,
+				3597F042265827E6003E9821 /* UIKit.framework */,
+				3597F040265824F9003E9821 /* AppTrackingTransparency.framework */,
+				3597F03E265824F2003E9821 /* AudioToolbox.framework */,
+				3597F03A265824EE003E9821 /* AppLovinSDK.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3597F01E2658248E003E9821 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35B51AD02658502300F2EA86 /* MAUnrealPlugin.h in Headers */,
+				3597F0282658248E003E9821 /* MAX_Unreal_Plugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3597F0222658248E003E9821 /* MAX Unreal Plugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3597F02B2658248E003E9821 /* Build configuration list for PBXNativeTarget "MAX Unreal Plugin" */;
+			buildPhases = (
+				3597F01E2658248E003E9821 /* Headers */,
+				3597F01F2658248E003E9821 /* Sources */,
+				3597F0202658248E003E9821 /* Frameworks */,
+				3597F0212658248E003E9821 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MAX Unreal Plugin";
+			productName = "MAX Unreal Plugin";
+			productReference = 3597F0232658248E003E9821 /* MAX_Unreal_Plugin.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3597F01A2658248E003E9821 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					3597F0222658248E003E9821 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+				};
+			};
+			buildConfigurationList = 3597F01D2658248E003E9821 /* Build configuration list for PBXProject "MAX Unreal Plugin" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3597F0192658248E003E9821;
+			productRefGroup = 3597F0242658248E003E9821 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3597F0222658248E003E9821 /* MAX Unreal Plugin */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3597F0212658248E003E9821 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3597F01F2658248E003E9821 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35B51AD12658502300F2EA86 /* MAUnrealPlugin.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3597F0292658248E003E9821 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		3597F02A2658248E003E9821 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		3597F02C2658248E003E9821 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = NO;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = LUDVB6Z3BS;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "MAX Unreal Plugin/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.applovin.MAX-Unreal-Plugin";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)";
+			};
+			name = Debug;
+		};
+		3597F02D2658248E003E9821 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = NO;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = LUDVB6Z3BS;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "MAX Unreal Plugin/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.applovin.MAX-Unreal-Plugin";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3597F01D2658248E003E9821 /* Build configuration list for PBXProject "MAX Unreal Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3597F0292658248E003E9821 /* Debug */,
+				3597F02A2658248E003E9821 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3597F02B2658248E003E9821 /* Build configuration list for PBXNativeTarget "MAX Unreal Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3597F02C2658248E003E9821 /* Debug */,
+				3597F02D2658248E003E9821 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3597F01A2658248E003E9821 /* Project object */;
+}

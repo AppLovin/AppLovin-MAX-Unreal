@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AppLovinMAXDemoTarget : TargetRules
 {
-	public AppLovinMAXDemoTarget( TargetInfo Target) : base(Target)
+	public AppLovinMAXDemoTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;

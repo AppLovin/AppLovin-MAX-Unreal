@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "AppLovin MAX",
+	"Description": "AppLovin MAX Unreal Engine 4 Plugin for Android and iOS",
+	"Category": "Advertising",
+	"CreatedBy": "AppLovin Corporation",
+	"CreatedByURL": "https://www.applovin.com",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/AppLovin/AppLovin-MAX-Unreal-Engine/issues",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "AppLovinMAX",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
