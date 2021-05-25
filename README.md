@@ -4,7 +4,7 @@ This page shows you how to download, import and configure the AppLovin MAX Unrea
 
 ## Download the Latest Unreal Plugin
 
-(Link to extension)
+Link to extension
 
 ## Import the Plugin
 
@@ -17,20 +17,6 @@ Add the `AppLovinMAX` plugin to the `Plugins` directory in the root directory of
 - For iOS builds:
     - Your build will fail if you do not build with Xcode 12 or higher. [The App Store now requires apps to be built with Xcode 12.](https://developer.apple.com/news/?id=ib31uj1j) AppLovin recommends that you update Xcode to version 12.5 or higher in order to stay ahead of anticipated minimum requirements.
     - The AppLovin MAX plugin requires CocoaPods. Install CocoaPods by following the instructions at [the CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html#getting-started).
-
-## Android Manifest
-
-==TODO==
-
-- Add using a UPL XML file
-- Add to Build process
-- Activities, etc.
-
-## iOS
-
-==TODO==
-
-- How to add key. In the Unreal Editor, go to "Project Settings" > "iOS" > "Extra PList Data". In the textfield for "Additional Plist Data", append `<key>AppLovinSdkKey</key><string>YOUR_SDK_KEY</string>`, ensuring it is separated from any prior pair with a `\n`.
 
 ## Initialize the SDK
 
@@ -50,15 +36,13 @@ UAppLovinMAX::SetUserId("USER_ID")
 UAppLovinMAX::Initialize("YOUR_SDK_KEY");
 ```
 
-==Initializing with Blueprint==
-
 ## iOS 14 Support
 
 In iOS 14, Apple introduced global privacy changes that you need to comply with. This section explains how to comply with these changes and thereby avoid a material drop in revenue.
 
 ### SKAdNetwork
 
-Update your app’s `Info.plist` in Unreal's Project Settings with network-specific identifiers. See the [SKAdNetwork documentation]() ==add link== for instructions.
+Update your app’s `Info.plist` in Unreal's Project Settings with network-specific identifiers. See the [SKAdNetwork documentation](#skadnetwork-2) for instructions.
 
 ### Consent Flow
 
@@ -78,25 +62,31 @@ MAX consent flow is a standalone solution for iOS 14.5+. To ask for consent from
 
 ## Enabling MAX Consent Flow
 
-To enable MAX's built-in consent flow, append the following text snippet to the Additional Plist Data under Project Settings in the UE4 Editor, replacing any relevant text as described below:
+To enable MAX's built-in consent flow by using the app’s `Info.plist`, modify the `AppLovin_IOS_UPL.xml` file as follows:
+
+1. Add the `NSUserTrackingUsageDescription` value. This string is how you inform your user why the app is requesting permission to use data that tracks the user or the device. AppLovin recommends that you use the string: **This only uses device info for less annoying, more relevant ads.**
+2. Create a new key named `AppLovinConsentFlowInfo`.
+3. Add a new key-value pair inside `AppLovinConsentFlowInfo` with the key `AppLovinConsentFlowEnabled` and the value `true`.
+4. Add a new key-value pair inside `AppLovinConsentFlowInfo` with the key `AppLovinConsentFlowPrivacyPolicy` and the value of your Privacy Policy URL.
+5. Optionally, add a new key-value pair inside `AppLovinConsentFlowInfo` with the key `AppLovinConsentFlowTermsOfService` and the value of your Terms of Service URL.
+
+The final result should look similar to this:
 
 ```xml
-<key>NSUserTrackingUsageDescription</key>\n
-<string>This only uses device info for less annoying, more relevant ads</string>\n
-<key>AppLovinConsentFlowInfo</key>\n
-<dict>\n
-    <key>AppLovinConsentFlowEnabled</key>\nV
-    <true/>\n
-    <key>AppLovinConsentFlowPrivacyPolicy</key>\n
-    <string>https://your_company_name.com/privacy_policy</string>\n
-    <key>AppLovinConsentFlowTermsOfService</key>\n
-    <string>https://your_company_name.com/terms_of_service</string>\n
-</dict>\n
+<addElements tag="dict" once="true">
+    <key>NSUserTrackingUsageDescription</key>
+    <string>This only uses device info for less annoying, more relevant ads</string>
+    <key>AppLovinConsentFlowInfo</key>
+    <dict>
+        <key>AppLovinConsentFlowEnabled</key>
+        <true/>
+        <key>AppLovinConsentFlowPrivacyPolicy</key>
+        <string>https://your_company_name.com/privacy_policy</string>
+        <key>AppLovinConsentFlowTermsOfService</key>
+        <string>https://your_company_name.com/terms_of_service</string>
+    </dict>
+</addElements>
 ```
-
-1. The `NSUserTrackingUsageDescription` value. This string is how you inform your user why the app is requesting permission to use data that tracks the user or the device. AppLovin recommends that you use the string: **This only uses device info for less annoying, more relevant ads.**
-2. Change the value for the key `AppLovinConsentFlowPrivacyPolicy` to your Privacy Policy URL.
-3. Optionally, change the value for the key `AppLovinConsentFlowTermsOfService` to your Terms of Service URL. You may remove the key-value pair if you decide not to include it.
 
 ## Integration
 
@@ -130,7 +120,7 @@ UAppLovinMAX::Initialize("SDK_KEY");
 
 ## Loading an Interstitial Ad
 
-The following code shows you how to attach listeners and load the first interstitial: 
+The following code shows you how to attach listeners and load the first interstitial: ==TODO: Verify==
 
 ```cpp
 const FString InterstitialAdUnitId = "YOUR_AD_UNIT_ID";
@@ -200,7 +190,7 @@ if (UAppLovinMAX::IsInterstitialReady(InterstitialAdUnitId))
 
 ## Loading a Rewarded Ad
 
-The following code shows you how to attach listeners and load the first rewarded ad:
+The following code shows you how to attach listeners and load the first rewarded ad: ==TODO==
 
 ```cpp
 const FString RewardedAdUnitId = "YOUR_AD_UNIT_ID";
@@ -209,11 +199,6 @@ int retryAttempt = 0;
 void InitializeRewardedAds()
 {
     // Attach function delegates
-}
-
-void loadInterstitial()
-{
-    UAppLovinMAX::LoadInterstitial(InterstitialAdUnitId);
 }
 ```
 
@@ -274,13 +259,7 @@ To hide a banner, call `HideBanner()`:
 UAppLovinMAX::HideBanner(BannerAdUnitId);
 ```
 
-## Blueprints
-
-[Insert image]
-
 # MRECs
-
-## Programmatic Method
 
 ### Loading an MREC
 
@@ -302,22 +281,14 @@ void InitializeMRecAds()
 To show an MREC ad, call `ShowMRec()`:
 
 ```cpp
-UAppLovinMAX::ShowMRec(BannerAdUnitId);
+UAppLovinMAX::ShowMRec(MRecAdUnitId);
 ```
 
 To hide an MREC ad, call `HideMRec()`:
 
 ```cpp
-UAppLovinMAX::HideMRec(BannerAdUnitId);
+UAppLovinMAX::HideMRec(MRecAdUnitId);
 ```
-
-
-
-## Blueprints
-
-[Insert image]
-
-
 
 # Privacy
 

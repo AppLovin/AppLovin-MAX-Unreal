@@ -26,7 +26,7 @@ void UAppLovinMAX::Initialize()
 
 void UAppLovinMAX::Initialize(const FString &SdkKey)
 {
-    const FString PluginVersion = FEngineVersion::Current().ToString();
+    FString PluginVersion = FEngineVersion::Current().ToString(EVersionComponent::Patch);
 #if PLATFORM_IOS
     [GetIOSPlugin() initialize:GetNSString(PluginVersion) sdkKey:GetNSString(SdkKey)];
 #elif PLATFORM_ANDROID

@@ -29,8 +29,8 @@ public class AppLovinMAX : ModuleRules
 		{
 			string AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
 			string AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovinSDK.embeddedframework.zip" );
-			string PluginPath = Path.Combine( AppLovinIOSPath, "MAX_Unreal_Plugin.embeddedframework.zip" );
-			if ( File.Exists( AppLovinSDKPath ) && File.Exists( PluginPath ) )
+			string AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "MAX_Unreal_Plugin.embeddedframework.zip" );
+			if ( File.Exists( AppLovinSDKPath ) && File.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
 				
@@ -46,7 +46,7 @@ public class AppLovinMAX : ModuleRules
 				PublicAdditionalFrameworks.Add(
 					new Framework(
 						"MAX_Unreal_Plugin",
-						PluginPath
+						AppLovinPluginPath
 					)
 				);
 
@@ -69,6 +69,9 @@ public class AppLovinMAX : ModuleRules
 						"WebKit"
 					}
 				);
+
+				string PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
+				AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + VersionString );
@@ -97,7 +100,7 @@ public class AppLovinMAX : ModuleRules
 				PrivateDependencyModuleNames.Add( "Launch" );
 
 				string PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
-				AdditionalPropertiesForReceipt.Add( new ReceiptProperty( "AndroidPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_Android.xml" ) ) );
+				AdditionalPropertiesForReceipt.Add( "AndroidPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_Android.xml" ) );
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + VersionString );
