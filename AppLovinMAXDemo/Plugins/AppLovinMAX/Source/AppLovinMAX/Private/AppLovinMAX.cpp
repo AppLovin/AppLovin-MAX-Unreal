@@ -228,6 +228,49 @@ void UAppLovinMAX::CreateBanner(const FString &AdUnitIdentifier, EAdViewPosition
 #endif
 }
 
+// t
+void UAppLovinMAX::SetBannerBackgroundColor(const FString &AdUnitIdentifier, const FColor &Color)
+{
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner background color");
+    FString HexColorCode = AppLovinMAXUtils::ParseColor(Color);
+#if PLATFORM_IOS
+    [GetIOSPlugin() setBannerBackgroundColorForAdUnitIdentifier:GetNSString(AdUnitIdentifier) hexColorCode:GetNSString(HexColorCode)];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetBannerBackgroundColor(AdUnitIdentifier, HexColorCode);
+#endif
+}
+
+void UAppLovinMAX::SetBannerPlacement(const FString &AdUnitIdentifier, const FString &Placement)
+{
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner placement");
+#if PLATFORM_IOS
+    [GetIOSPlugin() setBannerPlacement:GetNSString(Placement) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetBannerPlacement(AdUnitIdentifier, Placement);
+#endif
+}
+
+void UAppLovinMAX::SetBannerExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
+{
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner extra parameter");
+#if PLATFORM_IOS
+    [GetIOSPlugin() setBannerExtraParameterForAdUnitIdentifier:GetNSString(AdUnitIdentifier) key:GetNSString(Key) value:GetNSString(Value)];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetBannerExtraParameter(AdUnitIdentifier, Key, Value);
+#endif
+}
+
+void UAppLovinMAX::UpdateBannerPosition(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition)
+{
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update banner position");
+    const FString BannerPositionString = GetAdViewPositionString(BannerPosition);
+#if PLATFORM_IOS // T
+    [GetIOSPlugin() updateBannerPosition:GetNSString(BannerPositionString) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->UpdateBannerPosition(AdUnitIdentifier, BannerPositionString);
+#endif
+}
+
 // T
 void UAppLovinMAX::ShowBanner(const FString &AdUnitIdentifier)
 {
@@ -261,49 +304,6 @@ void UAppLovinMAX::DestroyBanner(const FString &AdUnitIdentifier)
 #endif
 }
 
-void UAppLovinMAX::UpdateBannerPosition(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition)
-{
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update banner position");
-    const FString BannerPositionString = GetAdViewPositionString(BannerPosition);
-#if PLATFORM_IOS // T
-    [GetIOSPlugin() updateBannerPosition:GetNSString(BannerPositionString) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->UpdateBannerPosition(AdUnitIdentifier, BannerPositionString);
-#endif
-}
-
-// t
-void UAppLovinMAX::SetBannerBackgroundColor(const FString &AdUnitIdentifier, const FColor &Color)
-{
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner background color");
-    FString HexColorCode = AppLovinMAXUtils::ParseColor(Color);
-#if PLATFORM_IOS
-    [GetIOSPlugin() setBannerBackgroundColorForAdUnitIdentifier:GetNSString(AdUnitIdentifier) hexColorCode:GetNSString(HexColorCode)];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetBannerBackgroundColor(AdUnitIdentifier, HexColorCode);
-#endif
-}
-
-void UAppLovinMAX::SetBannerPlacement(const FString &AdUnitIdentifier, const FString &Placement)
-{
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner placement");
-#if PLATFORM_IOS
-    [GetIOSPlugin() setBannerPlacement:GetNSString(Placement) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetBannerPlacement(AdUnitIdentifier, Placement);
-#endif
-}
-
-void UAppLovinMAX::SetBannerExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
-{
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner extra parameter");
-#if PLATFORM_IOS
-    [GetIOSPlugin() setBannerExtraParameterForAdUnitIdentifier:GetNSString(AdUnitIdentifier) key:GetNSString(Key) value:GetNSString(Value)];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetBannerExtraParameter(AdUnitIdentifier, Key, Value);
-#endif
-}
-
 // MARK: MRECs
 
 // T
@@ -315,6 +315,39 @@ void UAppLovinMAX::CreateMRec(const FString &AdUnitIdentifier, EAdViewPosition M
     [GetIOSPlugin() createMRecWithAdUnitIdentifier:GetNSString(AdUnitIdentifier) atPosition:GetNSString(MRecPositionString)];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->CreateMRec(AdUnitIdentifier, MRecPositionString);
+#endif
+}
+
+// nt
+void UAppLovinMAX::SetMRecPlacement(const FString &AdUnitIdentifier, const FString &Placement)
+{
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC placement");
+#if PLATFORM_IOS
+    [GetIOSPlugin() setMRecPlacement:GetNSString(Placement) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetMRecPlacement(AdUnitIdentifier, Placement);
+#endif
+}
+
+// nt
+void UAppLovinMAX::SetMRecExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
+{
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC extra parameter");
+#if PLATFORM_IOS
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetMRecExtraParameter(AdUnitIdentifier, Key, Value);
+#endif
+}
+
+// t
+void UAppLovinMAX::UpdateMRecPosition(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition)
+{
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update MREC position");
+    const FString MRecPositionString = GetAdViewPositionString(MRecPosition);
+#if PLATFORM_IOS
+    [GetIOSPlugin() updateMRecPosition:GetNSString(MRecPositionString) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->UpdateMRecPosition(AdUnitIdentifier, MRecPositionString);
 #endif
 }
 
@@ -348,39 +381,6 @@ void UAppLovinMAX::DestroyMRec(const FString &AdUnitIdentifier)
     [GetIOSPlugin() destroyMRecWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->DestroyMRec(AdUnitIdentifier);
-#endif
-}
-
-// t
-void UAppLovinMAX::UpdateMRecPosition(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition)
-{
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update MREC position");
-    const FString MRecPositionString = GetAdViewPositionString(MRecPosition);
-#if PLATFORM_IOS
-    [GetIOSPlugin() updateMRecPosition:GetNSString(MRecPositionString) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->UpdateMRecPosition(AdUnitIdentifier, MRecPositionString);
-#endif
-}
-
-// nt
-void UAppLovinMAX::SetMRecPlacement(const FString &AdUnitIdentifier, const FString &Placement)
-{
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC placement");
-#if PLATFORM_IOS
-    [GetIOSPlugin() setMRecPlacement:GetNSString(Placement) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetMRecPlacement(AdUnitIdentifier, Placement);
-#endif
-}
-
-// nt
-void UAppLovinMAX::SetMRecExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
-{
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC extra parameter");
-#if PLATFORM_IOS
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetMRecExtraParameter(AdUnitIdentifier, Key, Value);
 #endif
 }
 

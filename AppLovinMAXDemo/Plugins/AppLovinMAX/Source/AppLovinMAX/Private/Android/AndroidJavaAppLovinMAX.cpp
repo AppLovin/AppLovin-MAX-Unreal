@@ -29,20 +29,20 @@ FJavaAndroidAppLovinMAX::FJavaAndroidAppLovinMAX()
     , SetTestDeviceAdvertisingIdentifiersMethod(GetClassMethod("setTestDeviceAdvertisingIds", "([Ljava/lang/String;)V"))
     , TrackEventMethod(GetClassMethod("trackEvent", "(Ljava/lang/String;Ljava/lang/String;)V"))
     , CreateBannerMethod(GetClassMethod("createBanner", "(Ljava/lang/String;Ljava/lang/String;)V"))
-    , ShowBannerMethod(GetClassMethod("showBanner", "(Ljava/lang/String;)V"))
-    , HideBannerMethod(GetClassMethod("hideBanner", "(Ljava/lang/String;)V"))
-    , DestroyBannerMethod(GetClassMethod("destroyBanner", "(Ljava/lang/String;)V"))
-    , UpdateBannerPositionMethod(GetClassMethod("updateBannerPosition", "(Ljava/lang/String;Ljava/lang/String;)V"))
     , SetBannerBackgroundColorMethod(GetClassMethod("setBannerBackgroundColor", "(Ljava/lang/String;Ljava/lang/String;)V"))
     , SetBannerPlacementMethod(GetClassMethod("setBannerPlacement", "(Ljava/lang/String;Ljava/lang/String;)V"))
     , SetBannerExtraParameterMethod(GetClassMethod("setBannerExtraParameter", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"))
+    , UpdateBannerPositionMethod(GetClassMethod("updateBannerPosition", "(Ljava/lang/String;Ljava/lang/String;)V"))
+    , ShowBannerMethod(GetClassMethod("showBanner", "(Ljava/lang/String;)V"))
+    , HideBannerMethod(GetClassMethod("hideBanner", "(Ljava/lang/String;)V"))
+    , DestroyBannerMethod(GetClassMethod("destroyBanner", "(Ljava/lang/String;)V"))
     , CreateMRecMethod(GetClassMethod("createMRec", "(Ljava/lang/String;Ljava/lang/String;)V"))
+    , SetMRecPlacementMethod(GetClassMethod("setMRecPlacement", "(Ljava/lang/String;Ljava/lang/String;)V"))
+    , SetMRecExtraParameterMethod(GetClassMethod("setMRecExtraParameter", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"))
+    , UpdateMRecPositionMethod(GetClassMethod("updateMRecPosition", "(Ljava/lang/String;Ljava/lang/String;)V"))
     , ShowMRecMethod(GetClassMethod("showMRec", "(Ljava/lang/String;)V"))
     , HideMRecMethod(GetClassMethod("hideMRec", "(Ljava/lang/String;)V"))
     , DestroyMRecMethod(GetClassMethod("destroyMRec", "(Ljava/lang/String;)V"))
-    , UpdateMRecPositionMethod(GetClassMethod("updateMRecPosition", "(Ljava/lang/String;Ljava/lang/String;)V"))
-    , SetMRecPlacementMethod(GetClassMethod("setMRecPlacement", "(Ljava/lang/String;Ljava/lang/String;)V"))
-    , SetMRecExtraParameterMethod(GetClassMethod("setMRecExtraParameter", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"))
     , LoadInterstitialMethod(GetClassMethod("loadInterstitial", "(Ljava/lang/String;)V"))
     , IsInterstitialReadyMethod(GetClassMethod("isInterstitialReady", "(Ljava/lang/String;)Z"))
     , ShowInterstitialMethod(GetClassMethod("showInterstitial", "(Ljava/lang/String;Ljava/lang/String;)V"))
@@ -177,26 +177,6 @@ void FJavaAndroidAppLovinMAX::CreateBanner( const FString &AdUnitIdentifier, con
     return CallMethod<void>(CreateBannerMethod, *GetJString(AdUnitIdentifier), *GetJString(BannerPosition));
 }
 
-void FJavaAndroidAppLovinMAX::ShowBanner( const FString &AdUnitIdentifier )
-{
-    return CallMethod<void>(ShowBannerMethod, *GetJString(AdUnitIdentifier));
-}
-
-void FJavaAndroidAppLovinMAX::HideBanner( const FString &AdUnitIdentifier )
-{
-    return CallMethod<void>(HideBannerMethod, *GetJString(AdUnitIdentifier));
-}
-
-void FJavaAndroidAppLovinMAX::DestroyBanner( const FString &AdUnitIdentifier )
-{
-    return CallMethod<void>(DestroyBannerMethod, *GetJString(AdUnitIdentifier));
-}
-
-void FJavaAndroidAppLovinMAX::UpdateBannerPosition( const FString &AdUnitIdentifier, const FString &BannerPosition )
-{
-    return CallMethod<void>(UpdateBannerPositionMethod, *GetJString(AdUnitIdentifier), *GetJString(BannerPosition));
-}
-
 void FJavaAndroidAppLovinMAX::SetBannerBackgroundColor( const FString &AdUnitIdentifier, const FString &HexColorCode)
 {
     return CallMethod<void>(SetBannerBackgroundColorMethod, *GetJString(AdUnitIdentifier), *GetJString(HexColorCode));
@@ -212,11 +192,46 @@ void FJavaAndroidAppLovinMAX::SetBannerExtraParameter( const FString &AdUnitIden
     return CallMethod<void>(SetBannerExtraParameterMethod, *GetJString(AdUnitIdentifier), *GetJString(Key), *GetJString(Value));
 }
 
+void FJavaAndroidAppLovinMAX::UpdateBannerPosition( const FString &AdUnitIdentifier, const FString &BannerPosition )
+{
+    return CallMethod<void>(UpdateBannerPositionMethod, *GetJString(AdUnitIdentifier), *GetJString(BannerPosition));
+}
+
+void FJavaAndroidAppLovinMAX::ShowBanner( const FString &AdUnitIdentifier )
+{
+    return CallMethod<void>(ShowBannerMethod, *GetJString(AdUnitIdentifier));
+}
+
+void FJavaAndroidAppLovinMAX::HideBanner( const FString &AdUnitIdentifier )
+{
+    return CallMethod<void>(HideBannerMethod, *GetJString(AdUnitIdentifier));
+}
+
+void FJavaAndroidAppLovinMAX::DestroyBanner( const FString &AdUnitIdentifier )
+{
+    return CallMethod<void>(DestroyBannerMethod, *GetJString(AdUnitIdentifier));
+}
+
 // MARK: - MRECs
 
 void FJavaAndroidAppLovinMAX::CreateMRec( const FString &AdUnitIdentifier, const FString &MRecPosition )
 {
     return CallMethod<void>(CreateMRecMethod, *GetJString(AdUnitIdentifier), *GetJString(MRecPosition));
+}
+
+void FJavaAndroidAppLovinMAX::SetMRecPlacement( const FString &AdUnitIdentifier, const FString &Placement )
+{
+    return CallMethod<void>(SetMRecPlacementMethod, *GetJString(AdUnitIdentifier), *GetJString(Placement));
+}
+
+void FJavaAndroidAppLovinMAX::SetMRecExtraParameter( const FString &AdUnitIdentifier, const FString &Key, const FString &Value )
+{
+    return CallMethod<void>(SetMRecExtraParameterMethod, *GetJString(AdUnitIdentifier), *GetJString(Key), *GetJString(Value));
+}
+
+void FJavaAndroidAppLovinMAX::UpdateMRecPosition( const FString &AdUnitIdentifier, const FString &MRecPosition )
+{
+    return CallMethod<void>(UpdateMRecPositionMethod, *GetJString(AdUnitIdentifier), *GetJString(MRecPosition));
 }
 
 void FJavaAndroidAppLovinMAX::ShowMRec( const FString &AdUnitIdentifier )
@@ -232,21 +247,6 @@ void FJavaAndroidAppLovinMAX::HideMRec( const FString &AdUnitIdentifier )
 void FJavaAndroidAppLovinMAX::DestroyMRec( const FString &AdUnitIdentifier )
 {
     return CallMethod<void>(DestroyMRecMethod, *GetJString(AdUnitIdentifier));
-}
-
-void FJavaAndroidAppLovinMAX::UpdateMRecPosition( const FString &AdUnitIdentifier, const FString &MRecPosition )
-{
-    return CallMethod<void>(UpdateMRecPositionMethod, *GetJString(AdUnitIdentifier), *GetJString(MRecPosition));
-}
-
-void FJavaAndroidAppLovinMAX::SetMRecPlacement( const FString &AdUnitIdentifier, const FString &Placement )
-{
-    return CallMethod<void>(SetMRecPlacementMethod, *GetJString(AdUnitIdentifier), *GetJString(Placement));
-}
-
-void FJavaAndroidAppLovinMAX::SetMRecExtraParameter( const FString &AdUnitIdentifier, const FString &Key, const FString &Value )
-{
-    return CallMethod<void>(SetMRecExtraParameterMethod, *GetJString(AdUnitIdentifier), *GetJString(Key), *GetJString(Value));
 }
 
 // MARK: - Interstitials

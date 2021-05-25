@@ -201,35 +201,6 @@ public:
     static void CreateBanner(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition);
 
     /**
-     * Show banner at a position determined by the 'CreateBanner' call.
-     * @param AdUnitIdentifier - The ad unit identifier of the banner to show
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void ShowBanner(const FString &AdUnitIdentifier);
-
-    /**
-     * Hide banner.
-     * @param AdUnitIdentifier - The ad unit identifier of the banner to hide
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void HideBanner(const FString &AdUnitIdentifier);
-
-    /**
-     * Remove banner from the ad view and destroy it.
-     * @param AdUnitIdentifier - The ad unit identifier of the banner to destroy
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void DestroyBanner(const FString &AdUnitIdentifier);
-
-    /**
-     * Updates the position of the banner to the new position provided.
-     * @param AdUnitIdentifier - The ad unit identifier of the banner for which to update the position
-     * @param BannerPosition - A new position for the banner
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void UpdateBannerPosition(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition);
-
-    /**
      * Set non-transparent background color for banners to be fully functional.
      * @param AdUnitIdentifier - The ad unit identifier of the banner to set background color for
      * @param Color - A background color to set for the ad
@@ -254,6 +225,35 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static void SetBannerExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value);
 
+    /**
+     * Updates the position of the banner to the new position provided.
+     * @param AdUnitIdentifier - The ad unit identifier of the banner for which to update the position
+     * @param BannerPosition - A new position for the banner
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void UpdateBannerPosition(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition);
+
+    /**
+     * Show banner at a position determined by the 'CreateBanner' call.
+     * @param AdUnitIdentifier - The ad unit identifier of the banner to show
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void ShowBanner(const FString &AdUnitIdentifier);
+
+    /**
+     * Hide banner.
+     * @param AdUnitIdentifier - The ad unit identifier of the banner to hide
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void HideBanner(const FString &AdUnitIdentifier);
+
+    /**
+     * Remove banner from the ad view and destroy it.
+     * @param AdUnitIdentifier - The ad unit identifier of the banner to destroy
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void DestroyBanner(const FString &AdUnitIdentifier);
+
     // MARK: - MRECs
 
     /**
@@ -263,6 +263,31 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static void CreateMRec(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition);
+
+    /**
+     * Set the MREC placement for an ad unit identifier to tie the future ad events to.
+     * @param AdUnitIdentifier - The ad unit identifier of the MREC to set the placement for
+     * @param Placement - The placement to tie ad events to
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void SetMRecPlacement(const FString &AdUnitIdentifier, const FString &Placement);
+
+    /**
+     * Set an extra parameter for the MREC ad.
+     * @param AdUnitIdentifier - The ad unit identifier of the MREC to set the extra parameter for
+     * @param Key - The key for the extra parameter
+     * @param Value - The value for the extra parameter
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void SetMRecExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value);
+
+    /**
+     * Updates the position of the MREC to the new position provided.
+     * @param AdUnitIdentifier - The ad unit identifier of the MREC for which to update the position
+     * @param MRecPosition - A new position for the MREC
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void UpdateMRecPosition(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition);
 
     /**
      * Show MREC at a position determined by the 'CreateMRec' call.
@@ -284,31 +309,6 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static void DestroyMRec(const FString &AdUnitIdentifier);
-
-    /**
-     * Updates the position of the MREC to the new position provided.
-     * @param AdUnitIdentifier - The ad unit identifier of the MREC for which to update the position
-     * @param MRecPosition - A new position for the MREC
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void UpdateMRecPosition(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition);
-
-    /**
-     * Set the MREC placement for an ad unit identifier to tie the future ad events to.
-     * @param AdUnitIdentifier - The ad unit identifier of the MREC to set the placement for
-     * @param Placement - The placement to tie ad events to
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void SetMRecPlacement(const FString &AdUnitIdentifier, const FString &Placement);
-
-    /**
-     * Set an extra parameter for the MREC ad.
-     * @param AdUnitIdentifier - The ad unit identifier of the MREC to set the extra parameter for
-     * @param Key - The key for the extra parameter
-     * @param Value - The value for the extra parameter
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void SetMRecExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value);
 
     // MARK: - Interstitials
 

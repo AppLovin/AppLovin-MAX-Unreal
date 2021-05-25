@@ -42,22 +42,22 @@ public:
 
     // MARK: Banners
     void CreateBanner( const FString &AdUnitIdentifier, const FString &BannerPosition );
-    void ShowBanner( const FString &AdUnitIdentifier );
-    void HideBanner( const FString &AdUnitIdentifier );
-    void DestroyBanner( const FString &AdUnitIdentifier );
-    void UpdateBannerPosition( const FString &AdUnitIdentifier, const FString &BannerPosition );
     void SetBannerBackgroundColor( const FString &AdUnitIdentifier, const FString &HexColorCode );
     void SetBannerPlacement( const FString &AdUnitIdentifier, const FString &Placement );
     void SetBannerExtraParameter( const FString &AdUnitIdentifier, const FString &Key, const FString &Value );
+    void UpdateBannerPosition( const FString &AdUnitIdentifier, const FString &BannerPosition );
+    void ShowBanner( const FString &AdUnitIdentifier );
+    void HideBanner( const FString &AdUnitIdentifier );
+    void DestroyBanner( const FString &AdUnitIdentifier );
 
     // MARK: MRECs
     void CreateMRec( const FString &AdUnitIdentifier, const FString &MRecPosition );
+    void SetMRecPlacement( const FString &AdUnitIdentifier, const FString &Placement );
+    void SetMRecExtraParameter( const FString &AdUnitIdentifier, const FString &Key, const FString &Value );
+    void UpdateMRecPosition( const FString &AdUnitIdentifier, const FString &MRecPosition );
     void ShowMRec( const FString &AdUnitIdentifier );
     void HideMRec( const FString &AdUnitIdentifier );
     void DestroyMRec( const FString &AdUnitIdentifier );
-    void UpdateMRecPosition( const FString &AdUnitIdentifier, const FString &MRecPosition );
-    void SetMRecPlacement( const FString &AdUnitIdentifier, const FString &Placement );
-    void SetMRecExtraParameter( const FString &AdUnitIdentifier, const FString &Key, const FString &Value );
 
     // MARK: Interstitials
     void LoadInterstitial( const FString &AdUnitIdentifier );
@@ -97,21 +97,21 @@ private:
     FJavaClassMethod TrackEventMethod;
 
     FJavaClassMethod CreateBannerMethod;
-    FJavaClassMethod ShowBannerMethod;
-    FJavaClassMethod HideBannerMethod;
-    FJavaClassMethod DestroyBannerMethod;
-    FJavaClassMethod UpdateBannerPositionMethod;
     FJavaClassMethod SetBannerBackgroundColorMethod;
     FJavaClassMethod SetBannerPlacementMethod;
     FJavaClassMethod SetBannerExtraParameterMethod;
+    FJavaClassMethod UpdateBannerPositionMethod;
+    FJavaClassMethod ShowBannerMethod;
+    FJavaClassMethod HideBannerMethod;
+    FJavaClassMethod DestroyBannerMethod;
 
     FJavaClassMethod CreateMRecMethod;
+    FJavaClassMethod SetMRecPlacementMethod;
+    FJavaClassMethod SetMRecExtraParameterMethod;
+    FJavaClassMethod UpdateMRecPositionMethod;
     FJavaClassMethod ShowMRecMethod;
     FJavaClassMethod HideMRecMethod;
     FJavaClassMethod DestroyMRecMethod;
-    FJavaClassMethod UpdateMRecPositionMethod;
-    FJavaClassMethod SetMRecPlacementMethod;
-    FJavaClassMethod SetMRecExtraParameterMethod;
 
     FJavaClassMethod LoadInterstitialMethod;
     FJavaClassMethod IsInterstitialReadyMethod;

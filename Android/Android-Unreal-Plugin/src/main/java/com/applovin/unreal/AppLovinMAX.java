@@ -363,26 +363,6 @@ public class AppLovinMAX
         createAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat(), bannerPosition );
     }
 
-    public void showBanner(final String adUnitId)
-    {
-        showAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat() );
-    }
-
-    public void hideBanner(final String adUnitId)
-    {
-        hideAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat() );
-    }
-
-    public void destroyBanner(final String adUnitId)
-    {
-        destroyAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat() );
-    }
-
-    public void updateBannerPosition(final String adUnitId, final String bannerPosition)
-    {
-        updateAdViewPosition( adUnitId, bannerPosition, getDeviceSpecificBannerAdViewAdFormat() );
-    }
-
     public void setBannerBackgroundColor(final String adUnitId, final String hexColorCode)
     {
         setAdViewBackgroundColor( adUnitId, getDeviceSpecificBannerAdViewAdFormat(), hexColorCode );
@@ -398,11 +378,46 @@ public class AppLovinMAX
         setAdViewExtraParameters( adUnitId, getDeviceSpecificBannerAdViewAdFormat(), value, key );
     }
 
+    public void updateBannerPosition(final String adUnitId, final String bannerPosition)
+    {
+        updateAdViewPosition( adUnitId, bannerPosition, getDeviceSpecificBannerAdViewAdFormat() );
+    }
+
+    public void showBanner(final String adUnitId)
+    {
+        showAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat() );
+    }
+
+    public void hideBanner(final String adUnitId)
+    {
+        hideAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat() );
+    }
+
+    public void destroyBanner(final String adUnitId)
+    {
+        destroyAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat() );
+    }
+
     // MRECS
 
     public void createMRec(final String adUnitId, final String mrecPosition)
     {
         createAdView( adUnitId, MaxAdFormat.MREC, mrecPosition );
+    }
+
+    public void setMRecPlacement(final String adUnitId, final String placement)
+    {
+        setAdViewPlacement( adUnitId, MaxAdFormat.MREC, placement );
+    }
+
+    public void setMRecExtraParameter(final String adUnitId, final String key, final String value)
+    {
+        setAdViewExtraParameters( adUnitId, MaxAdFormat.MREC, value, key );
+    }
+
+    public void updateMRecPosition(final String adUnitId, final String mrecPosition)
+    {
+        updateAdViewPosition( adUnitId, mrecPosition, MaxAdFormat.MREC );
     }
 
     public void showMRec(final String adUnitId)
@@ -418,21 +433,6 @@ public class AppLovinMAX
     public void destroyMRec(final String adUnitId)
     {
         destroyAdView( adUnitId, MaxAdFormat.MREC );
-    }
-
-    public void updateMRecPosition(final String adUnitId, final String mrecPosition)
-    {
-        updateAdViewPosition( adUnitId, mrecPosition, MaxAdFormat.MREC );
-    }
-
-    public void setMRecPlacement(final String adUnitId, final String placement)
-    {
-        setAdViewPlacement( adUnitId, MaxAdFormat.MREC, placement );
-    }
-
-    public void setMRecExtraParameter(final String adUnitId, final String key, final String value)
-    {
-        setAdViewExtraParameters( adUnitId, MaxAdFormat.MREC, value, key );
     }
 
     // INTERSTITIALS

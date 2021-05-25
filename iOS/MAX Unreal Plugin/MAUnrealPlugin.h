@@ -49,22 +49,23 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 #pragma mark - Banners
 
 - (void)createBannerWithAdUnitIdentifier:(NSString *)adUnitIdentifier atPosition:(NSString *)bannerPosition;
-- (void)showBannerWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
-- (void)hideBannerWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
-- (void)destroyBannerWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
-- (void)updateBannerPosition:(NSString *)bannerPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier;
 - (void)setBannerBackgroundColorForAdUnitIdentifier:(NSString *)adUnitIdentifier hexColorCode:(NSString *)hexColorCode;
 - (void)setBannerPlacement:(nullable NSString *)placement forAdUnitIdentifier:(NSString *)adUnitIdentifier;
 - (void)setBannerExtraParameterForAdUnitIdentifier:(NSString *)adUnitIdentifier key:(NSString *)key value:(nullable NSString *)value;
+- (void)updateBannerPosition:(NSString *)bannerPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier;
+- (void)showBannerWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
+- (void)hideBannerWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
+- (void)destroyBannerWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
 
 #pragma mark - MRECs
 
 - (void)createMRecWithAdUnitIdentifier:(NSString *)adUnitIdentifier atPosition:(NSString *)mrecPosition;
+- (void)setMRecPlacement:(nullable NSString *)placement forAdUnitIdentifier:(NSString *)adUnitIdentifier;
+- (void)setMRecExtraParameterForAdUnitIdentifier:(NSString *)adUnitIdentifier key:(NSString *)key value:(nullable NSString *)value;
+- (void)updateMRecPosition:(NSString *)mrecPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier;
 - (void)showMRecWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
 - (void)hideMRecWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
 - (void)destroyMRecWithAdUnitIdentifier:(NSString *)adUnitIdentifier;
-- (void)updateMRecPosition:(NSString *)mrecPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier;
-- (void)setMRecPlacement:(nullable NSString *)placement forAdUnitIdentifier:(NSString *)adUnitIdentifier;
 
 #pragma mark - Interstitials
 
