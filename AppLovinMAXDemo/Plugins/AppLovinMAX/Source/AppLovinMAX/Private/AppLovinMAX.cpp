@@ -19,6 +19,11 @@ THIRD_PARTY_INCLUDES_END
 
 // MARK: Initialization (T)
 
+void UAppLovinMAX::Initialize()
+{
+    UAppLovinMAX::Initialize(FString());
+}
+
 void UAppLovinMAX::Initialize(const FString &SdkKey)
 {
     const FString PluginVersion = FEngineVersion::Current().ToString();

@@ -8,13 +8,11 @@
 
 AAppLovinMAXDemoGameModeBase::AAppLovinMAXDemoGameModeBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-    UAppLovinMAX::OnSdkInitializedDelegate.AddLambda(
-        [this](const FSdkConfiguration& SdkConfiguration)
-        {
-            DEMO_LOG("AppLovin SDK Initialized");
-            AttachCallbacks();
-        }
-    );
+    UAppLovinMAX::OnSdkInitializedDelegate.AddLambda([this](const FSdkConfiguration& SdkConfiguration)
+    {
+        DEMO_LOG("AppLovin SDK Initialized");
+        AttachCallbacks();
+    });
 
     UAppLovinMAX::SetVerboseLogging(true);
     UAppLovinMAX::Initialize(SdkKey);

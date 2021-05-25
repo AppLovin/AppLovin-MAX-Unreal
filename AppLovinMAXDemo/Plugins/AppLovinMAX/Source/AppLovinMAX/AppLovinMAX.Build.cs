@@ -29,7 +29,6 @@ public class AppLovinMAX : ModuleRules
 		{
 			string AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
 			string AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovinSDK.embeddedframework.zip" );
-			string AppLovinBundlePath = Path.Combine( "Resources", "AppLovinSDKResources.bundle" );
 			string PluginPath = Path.Combine( AppLovinIOSPath, "MAX_Unreal_Plugin.embeddedframework.zip" );
 			if ( File.Exists( AppLovinSDKPath ) && File.Exists( PluginPath ) )
 			{
@@ -39,8 +38,7 @@ public class AppLovinMAX : ModuleRules
 				PublicAdditionalFrameworks.Add(
 					new Framework(
 						"AppLovinSDK",
-						AppLovinSDKPath,
-						AppLovinBundlePath
+						AppLovinSDKPath
 					)
 				);
 
