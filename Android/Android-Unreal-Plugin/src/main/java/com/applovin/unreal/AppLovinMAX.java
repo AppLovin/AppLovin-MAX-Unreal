@@ -118,7 +118,7 @@ public class AppLovinMAX
         // Set listener
         eventListener = listener;
 
-        // If SDK key passed in is empty, check AndroidManifest.xml
+        // If SDK key passed in is empty, check Android Manifest
         String sdkKeyToUse = sdkKey;
         if ( TextUtils.isEmpty( sdkKey ) )
         {
@@ -293,7 +293,7 @@ public class AppLovinMAX
         return sdk.getSettings().isMuted();
     }
 
-    public void setVerboseLogging(final boolean enabled)
+    public void setVerboseLoggingEnabled(final boolean enabled)
     {
         if ( sdk != null )
         {
@@ -452,7 +452,7 @@ public class AppLovinMAX
     public void showInterstitial(final String adUnitId, final String placement)
     {
         MaxInterstitialAd interstitial = retrieveInterstitial( adUnitId );
-        interstitial.showAd( null );
+        interstitial.showAd( placement );
     }
 
     public void setInterstitialExtraParameter(final String adUnitId, final String key, final String value)

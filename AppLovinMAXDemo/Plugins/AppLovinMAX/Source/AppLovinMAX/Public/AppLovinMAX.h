@@ -150,7 +150,7 @@ public:
      * @param bEnabled - True if verbose logging should be enabled
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void SetVerboseLogging(bool bEnabled);
+    static void SetVerboseLoggingEnabled(bool bEnabled);
 
     /**
      * Check whether or not verbose logging is enabled.

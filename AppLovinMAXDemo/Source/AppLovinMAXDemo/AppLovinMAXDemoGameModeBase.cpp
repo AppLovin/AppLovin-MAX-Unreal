@@ -14,7 +14,7 @@ AAppLovinMAXDemoGameModeBase::AAppLovinMAXDemoGameModeBase(const FObjectInitiali
         AttachCallbacks();
     });
 
-    UAppLovinMAX::SetVerboseLogging(true);
+    UAppLovinMAX::SetVerboseLoggingEnabled(true);
     UAppLovinMAX::Initialize(SdkKey);
 }
 

@@ -32,7 +32,7 @@ public:
     void SetUserId( const FString &UserId );
     void SetMuted( bool bMuted );
     bool IsMuted();
-    void SetVerboseLogging( bool bEnabled );
+    void SetVerboseLoggingEnabled( bool bEnabled );
     bool IsVerboseLoggingEnabled();
     void SetCreativeDebuggerEnabled( bool bEnabled );
     void SetTestDeviceAdvertisingIdentifiers( const TArray<FString> &AdvertisingIdentifiers );
@@ -89,7 +89,7 @@ private:
     FJavaClassMethod SetUserIdMethod;
     FJavaClassMethod SetMutedMethod;
     FJavaClassMethod IsMutedMethod;
-    FJavaClassMethod SetVerboseLoggingMethod;
+    FJavaClassMethod SetVerboseLoggingEnabledMethod;
     FJavaClassMethod IsVerboseLoggingEnabledMethod;
     FJavaClassMethod SetCreativeDebuggerEnabledMethod;
     FJavaClassMethod SetTestDeviceAdvertisingIdentifiersMethod;

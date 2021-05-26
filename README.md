@@ -8,7 +8,13 @@ Link to extension
 
 ## Import the Plugin
 
-Add the `AppLovinMAX` plugin to the `Plugins` directory in the root directory of your UE4 project.
+Copy the `AppLovinMAX` plugin to the `Plugins` directory for your project.
+
+Add AppLovin as a dependency to `PublicDependencyModuleNames` array inside of your app's `APPNAME.Build.cs` file:
+
+```c#
+PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AppLovinMAX" });
+```
 
 ## Requirements
 
@@ -120,30 +126,41 @@ UAppLovinMAX::Initialize("SDK_KEY");
 
 ## Loading an Interstitial Ad
 
-The following code shows you how to attach listeners and load the first interstitial: ==TODO: Verify==
+The following code shows you how to attach listeners and load the first interstitial.
 
 ```cpp
+// UMyWidget.cpp (UMyWidget inherits from UObject to access TimerManager)
+
+#include "UMyWidget.h"
+#include "AppLovinMAX.h"
+
+// For retry timer logic
+#include "Async/Async.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+
 const FString InterstitialAdUnitId = "YOUR_AD_UNIT_ID";
 int RetryAttempt = 0;
+FTimerHandle LoadTimerHandle;
 
-static void InitializeInterstitialAds()
+void UMyWidget::InitializeInterstitialAds()
 {
     // Attach function delegates
-    UAppLovinMAX::OnInterstitialLoadedDelegate.Add(&OnInterstitialLoaded);
-    UAppLovinMAX::OnInterstitialLoadFailedDelegate.Add(&OnInterstitialLoadFailed);
-    UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.Add(&OnInterstitialAdFailedToDisplay);
-    UAppLovinMAX::OnInterstitialHiddenDelegate.Add(&OnInterstitialHidden);
+    UAppLovinMAX::OnInterstitialLoadedDelegate.AddUObject(this, &UMyWidget::OnInterstitialLoaded);
+    UAppLovinMAX::OnInterstitialLoadFailedDelegate.AddUObject(this, &UMyWidget::OnInterstitialLoadFailed);
+    UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.AddUObject(this, &UMyWidget::OnInterstitialAdFailedToDisplay);
+    UAppLovinMAX::OnInterstitialHiddenDelegate.AddUObject(this, &UMyWidget::OnInterstitialHidden);
     
     // Load first interstitial
     LoadInterstitial();
 }
 
-static void LoadInterstitial()
+void UMyWidget::LoadInterstitial()
 {
     UAppLovinMAX::LoadInterstitial(InterstitialAdUnitId);
 }
 
-static void OnInterstitialLoaded(const FAdInfo& AdInfo)
+void UMyWidget::OnInterstitialLoaded(const FAdInfo &AdInfo)
 {
     // Interstitial ad is ready to be shown. UAppLovinMAX::IsInterstitialReady(InterstitialAdUnitId) will now return 'true'
 
@@ -151,24 +168,25 @@ static void OnInterstitialLoaded(const FAdInfo& AdInfo)
     RetryAttempt = 0;
 }
 
-static void OnInterstitialLoadFailed(const FAdInfo& AdInfo, const int ErrorCode)
+void UMyWidget::OnInterstitialLoadFailed(const FAdInfo &AdInfo, const int ErrorCode)
 {
     // Interstitial ad failed to load 
     // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds)
     
     RetryAttempt++;
-    float RetryDelay = FMath::Pow(2.0f, FMath::Min(6, RetryAttempt));
-            
-    // TODO: Add timer logic 
+    AsyncTask(ENamedThreads::GameThread, [this]() {           
+        float RetryDelay = FMath::Pow(2.0f, FMath::Min(6, RetryAttempt));
+        GetWorld()->GetTimerManager().SetTimer(LoadTimerHandle, this, &UMyWidget::LoadInterstitial, RetryDelay, false);
+    });
 }
 
-static void OnInterstitialAdFailedToDisplay(const FAdInfo& AdInfo, const int ErrorCode)
+void UMyWidget::OnInterstitialAdFailedToDisplay(const FAdInfo &AdInfo, const int ErrorCode)
 {
     // Interstitial ad failed to display. AppLovin recommends that you load the next ad.
     LoadInterstitial();
 }
 
-static void OnInterstitialHidden(const FAdInfo& AdInfo)
+void UMyWidget::OnInterstitialHidden(const FAdInfo &AdInfo)
 {
     // Interstitial ad is hidden. Pre-load the next ad.
     LoadInterstitial();
@@ -193,12 +211,74 @@ if (UAppLovinMAX::IsInterstitialReady(InterstitialAdUnitId))
 The following code shows you how to attach listeners and load the first rewarded ad: ==TODO==
 
 ```cpp
-const FString RewardedAdUnitId = "YOUR_AD_UNIT_ID";
-int retryAttempt = 0;
+// UMyWidget.cpp (UMyWidget inherits from UObject to access TimerManager)
 
-void InitializeRewardedAds()
-{
+#include "UMyWidget.h"
+#include "AppLovinMAX.h"
+
+// For retry timer logic
+#include "Async/Async.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
+
+const FString RewardedAdUnitId = "YOUR_AD_UNIT_ID";
+int RetryAttempt = 0;
+FTimerHandle LoadTimerHandle;
+
+void UMyWidget::InitializeRewardedAds()
+{   
     // Attach function delegates
+    UAppLovinMAX::OnRewardedAdLoadedDelegate.AddUObject(this, &UMyWidget::OnRewardedAdLoaded);
+    UAppLovinMAX::OnRewardedAdLoadFailedDelegate.AddUObject(this, &UMyWidget::OnRewardedAdLoadFailed);
+    UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.AddUObject(this, &UMyWidget::OnRewardedAdFailedToDisplay);
+    UAppLovinMAX::OnRewardedAdHiddenDelegate.AddUObject(this, &UMyWidget::OnRewardedAdHidden);
+    UAppLovinMAX::FOnRewardedAdReceivedRewardDelegate.AddUObject(this, &UMyWidget::OnRewardedAdReceivedReward);
+    
+    // Load first rewarded ad
+    LoadRewardedAd();
+}
+
+void UMyWidget::LoadRewardedAd()
+{
+    UAppLovinMAX::LoadRewardedAd(RewardedAdUnitId);
+}
+
+void UMyWidget::OnRewardedAdLoaded(const FAdInfo &AdInfo)
+{
+    // Rewarded ad is ready to be shown. UAppLovinMAX::IsRewardedAdReady(RewardedAdUnitId) will now return 'true'
+
+    // Reset retry attempt
+    RetryAttempt = 0;
+}
+
+void UMyWidget::OnRewardedAdLoadFailed(const FAdInfo &AdInfo, const int ErrorCode)
+{
+    // Rewarded ad failed to load 
+    // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds)
+    
+    RetryAttempt++;
+    
+    AsyncTask(ENamedThreads::GameThread, [this]() {           
+        float RetryDelay = FMath::Pow(2.0f, FMath::Min(6, RetryAttempt));
+        GetWorld()->GetTimerManager().SetTimer(LoadTimerHandle, this, &UMyWidget::LoadRewardedAd, RetryDelay, false);
+    });
+}
+
+void UMyWidget::OnRewardedAdFailedToDisplay(const FAdInfo &AdInfo, const int ErrorCode)
+{
+    // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
+    LoadRewardedAd();
+}
+
+void UMyWidget::OnRewardedAdHidden(const FAdInfo &AdInfo)
+{
+    // Rewarded ad is hidden. Pre-load the next ad.
+    LoadRewardedAd();
+}
+
+void UMyWidget::OnRewardedAdReceivedReward(const FAdInfo &AdInfo, const FReward &Reward)
+{
+    // Rewarded ad was displayed and user should receive the reward
 }
 ```
 
@@ -221,9 +301,7 @@ To learn how to receive callbacks to your currency server, see our [MAX S2S Rewa
 
 The following sections show you how to load and then show and hide a banner ad.
 
-## Programmatic Method
-
-### Creating a Banner
+## Creating a Banner
 
 To load a banner, call `CreateBanner()`, passing it your Ad Unit ID and desired banner position:
 
@@ -245,7 +323,7 @@ The above example creates a banner at the bottom-center of the display ( `Bottom
 
 Set your banner background color to any `FColor`, for example `FColor::Black`.
 
-### Showing/Hiding a Banner
+## Showing/Hiding a Banner
 
 To show a banner, call `ShowBanner()`:
 
@@ -261,7 +339,7 @@ UAppLovinMAX::HideBanner(BannerAdUnitId);
 
 # MRECs
 
-### Loading an MREC
+## Loading an MREC
 
 To load an MREC, call `CreateMRec()`, passing in your Ad Unit ID and desired adview position:
 
@@ -276,7 +354,7 @@ void InitializeMRecAds()
 }
 ```
 
-### Showing/Hiding an MRec
+## Showing/Hiding an MRec
 
 To show an MREC ad, call `ShowMRec()`:
 

@@ -21,6 +21,7 @@ THIRD_PARTY_INCLUDES_END
 
 void UAppLovinMAX::Initialize()
 {
+    // Pass empty string as SDK key
     UAppLovinMAX::Initialize(FString());
 }
 
@@ -158,12 +159,12 @@ bool UAppLovinMAX::IsMuted()
 #endif
 }
 
-void UAppLovinMAX::SetVerboseLogging(bool bEnabled)
+void UAppLovinMAX::SetVerboseLoggingEnabled(bool bEnabled)
 {
 #if PLATFORM_IOS
-    [GetIOSPlugin() setVerboseLogging:bEnabled];
+    [GetIOSPlugin() setVerboseLoggingEnabled:bEnabled];
 #elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetVerboseLogging(bEnabled);
+    GetAndroidPlugin()->SetVerboseLoggingEnabled(bEnabled);
 #endif
 }
 
@@ -410,6 +411,7 @@ bool UAppLovinMAX::IsInterstitialReady(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::ShowInterstitial(const FString &AdUnitIdentifier)
 {
+    // Pass empty string as placement
     UAppLovinMAX::ShowInterstitial(AdUnitIdentifier, FString());
 }
 
@@ -459,6 +461,7 @@ bool UAppLovinMAX::IsRewardedAdReady(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::ShowRewardedAd(const FString &AdUnitIdentifier)
 {
+    // Pass empty string as placement
     UAppLovinMAX::ShowRewardedAd(AdUnitIdentifier, FString());
 }
 

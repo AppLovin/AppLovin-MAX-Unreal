@@ -274,7 +274,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     return self.sdk.settings.muted;
 }
 
-- (void)setVerboseLogging:(BOOL)enabled
+- (void)setVerboseLoggingEnabled:(BOOL)enabled
 {
     if ( [self isPluginInitialized] )
     {
@@ -675,6 +675,11 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     parameters[@"rewardAmount"] = [@(rewardAmountInt) stringValue];
     
     [self sendUnrealEventWithName: @"OnRewardedAdReceivedRewardEvent" parameters: parameters];
+}
+
+- (void)didPayRevenueForAd:(MAAd *)ad
+{
+    // TODO: Implement
 }
 
 #pragma mark - Internal Methods

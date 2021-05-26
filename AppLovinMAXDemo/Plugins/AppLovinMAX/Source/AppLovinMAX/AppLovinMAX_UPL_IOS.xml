@@ -2,10 +2,10 @@
 <!-- AppLovin plugin additions -->
 <root>
   <init>
-    <log text="AppLovin iOS SDK init"/>
+    <log text="AppLovin IOS SDK init"/>
   </init>
 
-  <!-- update Info.plist -->
   <iosPListUpdates>
+    <!-- Add any updates to Info.plist here -->
   </iosPListUpdates>
 </root>

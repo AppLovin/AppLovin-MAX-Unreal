@@ -23,7 +23,7 @@ FJavaAndroidAppLovinMAX::FJavaAndroidAppLovinMAX()
     , SetUserIdMethod(GetClassMethod("setUserId", "(Ljava/lang/String;)V"))
     , SetMutedMethod(GetClassMethod("setMuted", "(Z)V"))
     , IsMutedMethod(GetClassMethod("isMuted", "()Z"))
-    , SetVerboseLoggingMethod(GetClassMethod("setVerboseLogging", "(Z)V"))
+    , SetVerboseLoggingEnabledMethod(GetClassMethod("setVerboseLoggingEnabled", "(Z)V"))
     , IsVerboseLoggingEnabledMethod(GetClassMethod("isVerboseLoggingEnabled", "()Z"))
     , SetCreativeDebuggerEnabledMethod(GetClassMethod("setCreativeDebuggerEnabled", "(Z)V"))
     , SetTestDeviceAdvertisingIdentifiersMethod(GetClassMethod("setTestDeviceAdvertisingIds", "([Ljava/lang/String;)V"))
@@ -133,9 +133,9 @@ bool FJavaAndroidAppLovinMAX::IsMuted()
     return CallMethod<bool>(IsMutedMethod);
 }
 
-void FJavaAndroidAppLovinMAX::SetVerboseLogging( bool bEnabled )
+void FJavaAndroidAppLovinMAX::SetVerboseLoggingEnabled( bool bEnabled )
 {
-    CallMethod<void>(SetVerboseLoggingMethod, bEnabled);
+    CallMethod<void>(SetVerboseLoggingEnabledMethod, bEnabled);
 }
 
 bool FJavaAndroidAppLovinMAX::IsVerboseLoggingEnabled()
