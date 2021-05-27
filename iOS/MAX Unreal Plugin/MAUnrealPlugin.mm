@@ -14,7 +14,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void max_unreal_dispatch_on_main_thread(dispatch_block_t block)
+void dispatchOnMainQueue(dispatch_block_t block)
 {
     if ( block )
     {
@@ -78,7 +78,7 @@ void max_unreal_dispatch_on_main_thread(dispatch_block_t block)
 @property (nonatomic, strong, nullable) UIColor *publisherBannerBackgroundColor;
 
 @property (nonatomic, weak) UIView *unrealMainView;
-@property (nonatomic) UnrealEventCallback eventCallback;
+@property (nonatomic, assign) UnrealEventCallback eventCallback;
 
 @end
 
@@ -104,11 +104,10 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         self.adViewPositions = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adViewConstraints = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adUnitIdentifiersToShowAfterCreate = [NSMutableArray arrayWithCapacity: 2];
-        
         self.unrealMainView = mainView;
         self.eventCallback = eventCallback;
         
-        max_unreal_dispatch_on_main_thread(^{
+        dispatchOnMainQueue(^{
             self.safeAreaBackground = [[UIView alloc] init];
             self.safeAreaBackground.hidden = YES;
             self.safeAreaBackground.backgroundColor = UIColor.clearColor;
@@ -708,7 +707,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)createAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat atPosition:(NSString *)adViewPosition
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         [self log: @"Creating %@ with ad unit identifier \"%@\" and position: \"%@\"", adFormat, adUnitIdentifier, adViewPosition];
         
         // Retrieve ad view from the map
@@ -733,7 +732,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)setAdViewBackgroundColorForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat hexColorCode:(NSString *)hexColorCode
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         [self log: @"Setting %@ with ad unit identifier \"%@\" to color: \"%@\"", adFormat, adUnitIdentifier, hexColorCode];
         
         // In some cases, black color may get redrawn on each frame update, resulting in an undesired flicker
@@ -748,7 +747,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)setAdViewPlacement:(nullable NSString *)placement forAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         [self log: @"Setting placement \"%@\" for \"%@\" with ad unit identifier \"%@\"", placement, adFormat, adUnitIdentifier];
         
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
@@ -758,7 +757,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)updateAdViewPosition:(NSString *)adViewPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         // Check if the previous position is same as the new position. If so, no need to update the position again.
         NSString *previousPosition = self.adViewPositions[adUnitIdentifier];
         if ( !adViewPosition || [adViewPosition isEqualToString: previousPosition] ) return;
@@ -770,7 +769,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)setAdViewExtraParameterForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat key:(NSString *)key value:(nullable NSString *)value
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         [self log: @"Setting %@ extra with key: \"%@\" value: \"%@\"", adFormat, key, value];
         
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
@@ -799,7 +798,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)showAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         [self log: @"Showing %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
         
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
@@ -820,7 +819,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)hideAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         [self log: @"Hiding %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
         [self.adUnitIdentifiersToShowAfterCreate removeObject: adUnitIdentifier];
         
@@ -834,7 +833,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)destroyAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
-    max_unreal_dispatch_on_main_thread(^{
+    dispatchOnMainQueue(^{
         [self log: @"Destroying %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
         
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
@@ -1059,7 +1058,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
             adView.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2);
             
             CGFloat width;
-            // If the publiser has a background color set - set the width to the height of the screen, to span the ad across the screen after it is rotated.
+            // If the publisher has a background color set - set the width to the height of the screen, to span the ad across the screen after it is rotated.
             if ( self.publisherBannerBackgroundColor )
             {
                 width = CGRectGetHeight(KEY_WINDOW.bounds);
@@ -1092,7 +1091,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
             self.verticalAdViewFormats[adUnitIdentifier] = adFormat;
         }
     }
-    // Otherwise, publisher will likely construct his own views around the adview
+    // Otherwise, publisher will likely construct their own views around the adview
     else
     {
         self.safeAreaBackground.hidden = YES;
@@ -1164,9 +1163,6 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
              @"revenue" : [@(ad.revenue) stringValue]};
 }
 
-/**
- * Serializes the given key-value pair data to a string
- */
 - (NSString *)serialize:(NSDictionary<NSString *, NSString *> *)dict
 {
     NSMutableString *result = [[NSMutableString alloc] initWithCapacity: 64];

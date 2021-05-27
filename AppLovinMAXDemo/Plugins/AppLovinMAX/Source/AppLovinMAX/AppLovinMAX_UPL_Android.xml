@@ -18,7 +18,7 @@
   <!-- optional files or directories to copy or delete from Intermediate/Android/APK after ndk-build -->
   <resourceCopies>
     <copyFile src="$S(PluginDir)/../ThirdParty/Android/applovin-max-unreal-plugin.aar" dst="$S(BuildDir)/libs/applovin-max-unreal-plugin.aar" />
-    <copyFile src="$S(PluginDir)/../ThirdParty/Android/applovin-sdk-10.2.1.aar" dst="$S(BuildDir)/libs/applovin-sdk-10.2.1.aar" />
+    <copyFile src="$S(PluginDir)/../ThirdParty/Android/applovin-sdk-10.3.0.aar" dst="$S(BuildDir)/libs/applovin-sdk-10.3.0.aar" />
   </resourceCopies>
 
   <!-- optional updates applied to AndroidManifest.xml -->
@@ -68,7 +68,7 @@
           }
 
           dependencies.implementation(name: 'applovin-max-unreal-plugin', ext: 'aar')
-          dependencies.implementation(name: 'applovin-sdk-10.2.1', ext: 'aar')
+          dependencies.implementation(name: 'applovin-sdk-10.3.0', ext: 'aar')
         </insert>
       </true>
     </if>

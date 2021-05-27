@@ -1217,15 +1217,15 @@ public class AppLovinMAX
         return adInfo;
     }
 
-    public static String serialize(Map<String, String> map)
+    private static String serialize(Map<String, String> map)
     {
         final StringBuilder stringBuilder = new StringBuilder( 64 );
         for ( Map.Entry<String, String> entry : map.entrySet() )
         {
             stringBuilder.append( entry.getKey() );
-            stringBuilder.append( "=" );
+            stringBuilder.append( SERIALIZED_KEY_VALUE_SEPARATOR );
             stringBuilder.append( entry.getValue() );
-            stringBuilder.append( "\n" );
+            stringBuilder.append( SERIALIZED_KEY_VALUE_PAIR_SEPARATOR );
         }
 
         return stringBuilder.toString();

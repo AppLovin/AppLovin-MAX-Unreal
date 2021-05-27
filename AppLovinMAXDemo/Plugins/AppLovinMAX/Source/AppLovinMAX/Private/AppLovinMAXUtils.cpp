@@ -12,7 +12,7 @@ FString AppLovinMAXUtils::ParseMapIntoString(const TMap<FString, FString> &Map)
     {
         Serialization += Entry.Key;
         Serialization += _DictKeyValueSeparator;
-        Serialization += *Entry.Value;
+        Serialization += Entry.Value;
         Serialization += _DictKeyValuePairSeparator;
     }
     return Serialization;

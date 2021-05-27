@@ -64,6 +64,11 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
         DEMO_LOG("Rewarded ad hidden");
     });
 
+    UAppLovinMAX::OnRewardedAdClickedDelegate.AddLambda([](const FAdInfo &AdInfo)
+    {
+        DEMO_LOG("Rewarded ad clicked");
+    });
+
     UAppLovinMAX::OnRewardedAdReceivedRewardDelegate.AddLambda([](const FAdInfo &AdInfo, const FReward &Reward)
     {
         DEMO_LOG("Rewarded ad received reward: %s", *Reward.ToString());
@@ -76,6 +81,11 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
         DEMO_LOG("Banner loaded");
     });
 
+    UAppLovinMAX::OnBannerAdClickedDelegate.AddLambda([](const FAdInfo &AdInfo)
+    {
+        DEMO_LOG("Banner clicked");
+    });
+
     UAppLovinMAX::OnBannerAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)
     {
         DEMO_LOG("Banner ad failed to load with error code: %d", ErrorCode);
@@ -86,6 +96,11 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
     UAppLovinMAX::OnMRecAdLoadedDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
         DEMO_LOG("MREC loaded");
+    });
+
+    UAppLovinMAX::OnMRecAdClickedDelegate.AddLambda([](const FAdInfo &AdInfo)
+    {
+        DEMO_LOG("MREC clicked");
     });
 
     UAppLovinMAX::OnMRecAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)

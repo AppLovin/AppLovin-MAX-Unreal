@@ -29,7 +29,8 @@ void UAppLovinMAX::Initialize(const FString &SdkKey)
 {
     FString PluginVersion = FEngineVersion::Current().ToString(EVersionComponent::Patch);
 #if PLATFORM_IOS
-    [GetIOSPlugin() initialize:GetNSString(PluginVersion) sdkKey:GetNSString(SdkKey)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() initialize:PluginVersion.GetNSString() sdkKey:SdkKey.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->Initialize(PluginVersion, SdkKey);
 #endif
@@ -108,9 +109,9 @@ void UAppLovinMAX::SetDoNotSell(bool bDoNotSell)
 
 bool UAppLovinMAX::IsDoNotSell()
 {
-#if PLATFORM_IOS  // t
+#if PLATFORM_IOS
     return [GetIOSPlugin() isDoNotSell];
-#elif PLATFORM_ANDROID  // t
+#elif PLATFORM_ANDROID
     return GetAndroidPlugin()->IsDoNotSell();
 #else
     return false;
@@ -121,9 +122,9 @@ bool UAppLovinMAX::IsDoNotSell()
 
 bool UAppLovinMAX::IsTablet()
 {
-#if PLATFORM_IOS // nt
+#if PLATFORM_IOS
     return [GetIOSPlugin() isTablet];
-#elif PLATFORM_ANDROID // nt
+#elif PLATFORM_ANDROID
     return GetAndroidPlugin()->IsTablet();
 #else
     return false;
@@ -133,7 +134,8 @@ bool UAppLovinMAX::IsTablet()
 void UAppLovinMAX::SetUserId(const FString &UserId)
 {
 #if PLATFORM_IOS
-    [GetIOSPlugin() setUserId:GetNSString(UserId)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setUserId:UserId.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetUserId(UserId);
 #endif
@@ -191,6 +193,7 @@ void UAppLovinMAX::SetCreativeDebuggerEnabled(bool bEnabled)
 void UAppLovinMAX::SetTestDeviceAdvertisingIdentifiers(const TArray<FString> &AdvertisingIdentifiers)
 {
 #if PLATFORM_IOS
+    SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() setTestDeviceAdvertisingIds:GetNSArray(AdvertisingIdentifiers)];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetTestDeviceAdvertisingIdentifiers(AdvertisingIdentifiers);
@@ -208,7 +211,8 @@ void UAppLovinMAX::TrackEvent(const FString &Name)
 void UAppLovinMAX::TrackEvent(const FString &Name, const TMap<FString, FString> &Parameters)
 {
 #if PLATFORM_IOS
-    [GetIOSPlugin() trackEvent:GetNSString(Name) parameters:GetNSDictionary(Parameters)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() trackEvent:Name.GetNSString() parameters:GetNSDictionary(Parameters)];
 #elif PLATFORM_ANDROID
     FString SerializedParameters = AppLovinMAXUtils::ParseMapIntoString(Parameters);
     GetAndroidPlugin()->TrackEvent(Name, SerializedParameters);
@@ -217,25 +221,25 @@ void UAppLovinMAX::TrackEvent(const FString &Name, const TMap<FString, FString> 
 
 // MARK: Banners
 
-// T
 void UAppLovinMAX::CreateBanner(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "create banner");
     const FString BannerPositionString = GetAdViewPositionString(BannerPosition);
 #if PLATFORM_IOS
-    [GetIOSPlugin() createBannerWithAdUnitIdentifier:GetNSString(AdUnitIdentifier) atPosition:GetNSString(BannerPositionString)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() createBannerWithAdUnitIdentifier:AdUnitIdentifier.GetNSString() atPosition:BannerPositionString.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->CreateBanner(AdUnitIdentifier, BannerPositionString);
 #endif
 }
 
-// t
 void UAppLovinMAX::SetBannerBackgroundColor(const FString &AdUnitIdentifier, const FColor &Color)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner background color");
     FString HexColorCode = AppLovinMAXUtils::ParseColor(Color);
 #if PLATFORM_IOS
-    [GetIOSPlugin() setBannerBackgroundColorForAdUnitIdentifier:GetNSString(AdUnitIdentifier) hexColorCode:GetNSString(HexColorCode)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setBannerBackgroundColorForAdUnitIdentifier:AdUnitIdentifier.GetNSString() hexColorCode:HexColorCode.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetBannerBackgroundColor(AdUnitIdentifier, HexColorCode);
 #endif
@@ -245,7 +249,8 @@ void UAppLovinMAX::SetBannerPlacement(const FString &AdUnitIdentifier, const FSt
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner placement");
 #if PLATFORM_IOS
-    [GetIOSPlugin() setBannerPlacement:GetNSString(Placement) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setBannerPlacement:Placement.GetNSString() forAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetBannerPlacement(AdUnitIdentifier, Placement);
 #endif
@@ -255,7 +260,8 @@ void UAppLovinMAX::SetBannerExtraParameter(const FString &AdUnitIdentifier, cons
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner extra parameter");
 #if PLATFORM_IOS
-    [GetIOSPlugin() setBannerExtraParameterForAdUnitIdentifier:GetNSString(AdUnitIdentifier) key:GetNSString(Key) value:GetNSString(Value)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setBannerExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetBannerExtraParameter(AdUnitIdentifier, Key, Value);
 #endif
@@ -265,41 +271,42 @@ void UAppLovinMAX::UpdateBannerPosition(const FString &AdUnitIdentifier, EAdView
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update banner position");
     const FString BannerPositionString = GetAdViewPositionString(BannerPosition);
-#if PLATFORM_IOS // T
-    [GetIOSPlugin() updateBannerPosition:GetNSString(BannerPositionString) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+#if PLATFORM_IOS
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() updateBannerPosition:BannerPositionString.GetNSString() forAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->UpdateBannerPosition(AdUnitIdentifier, BannerPositionString);
 #endif
 }
 
-// T
 void UAppLovinMAX::ShowBanner(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show banner");
 #if PLATFORM_IOS
-    [GetIOSPlugin() showBannerWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() showBannerWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->ShowBanner(AdUnitIdentifier);
 #endif
 }
 
-// T
 void UAppLovinMAX::HideBanner(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "hide banner");
 #if PLATFORM_IOS
-    [GetIOSPlugin() hideBannerWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() hideBannerWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->HideBanner(AdUnitIdentifier);
 #endif
 }
 
-// nt
 void UAppLovinMAX::DestroyBanner(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "destroy banner");
 #if PLATFORM_IOS
-    [GetIOSPlugin() destroyBannerWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() destroyBannerWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->DestroyBanner(AdUnitIdentifier);
 #endif
@@ -307,79 +314,80 @@ void UAppLovinMAX::DestroyBanner(const FString &AdUnitIdentifier)
 
 // MARK: MRECs
 
-// T
 void UAppLovinMAX::CreateMRec(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "create MREC");
     const FString MRecPositionString = GetAdViewPositionString(MRecPosition);
 #if PLATFORM_IOS
-    [GetIOSPlugin() createMRecWithAdUnitIdentifier:GetNSString(AdUnitIdentifier) atPosition:GetNSString(MRecPositionString)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() createMRecWithAdUnitIdentifier:AdUnitIdentifier.GetNSString() atPosition:MRecPositionString.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->CreateMRec(AdUnitIdentifier, MRecPositionString);
 #endif
 }
 
-// nt
 void UAppLovinMAX::SetMRecPlacement(const FString &AdUnitIdentifier, const FString &Placement)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC placement");
 #if PLATFORM_IOS
-    [GetIOSPlugin() setMRecPlacement:GetNSString(Placement) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setMRecPlacement:Placement.GetNSString() forAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetMRecPlacement(AdUnitIdentifier, Placement);
 #endif
 }
 
-// nt
 void UAppLovinMAX::SetMRecExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC extra parameter");
 #if PLATFORM_IOS
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setMRecExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetMRecExtraParameter(AdUnitIdentifier, Key, Value);
 #endif
 }
 
-// t
 void UAppLovinMAX::UpdateMRecPosition(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update MREC position");
     const FString MRecPositionString = GetAdViewPositionString(MRecPosition);
 #if PLATFORM_IOS
-    [GetIOSPlugin() updateMRecPosition:GetNSString(MRecPositionString) forAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() updateMRecPosition:MRecPositionString.GetNSString() forAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->UpdateMRecPosition(AdUnitIdentifier, MRecPositionString);
 #endif
 }
 
-// T
 void UAppLovinMAX::ShowMRec(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show MREC");
 #if PLATFORM_IOS
-    [GetIOSPlugin() showMRecWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() showMRecWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->ShowMRec(AdUnitIdentifier);
 #endif
 }
 
-// T
 void UAppLovinMAX::HideMRec(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "hide MREC");
 #if PLATFORM_IOS
-    [GetIOSPlugin() hideMRecWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() hideMRecWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->HideMRec(AdUnitIdentifier);
 #endif
 }
 
-// nt
 void UAppLovinMAX::DestroyMRec(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "destroy MREC");
 #if PLATFORM_IOS
-    [GetIOSPlugin() destroyMRecWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() destroyMRecWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->DestroyMRec(AdUnitIdentifier);
 #endif
@@ -391,7 +399,8 @@ void UAppLovinMAX::LoadInterstitial(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "load interstitial");
 #if PLATFORM_IOS
-    [GetIOSPlugin() loadInterstitialWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() loadInterstitialWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->LoadInterstitial(AdUnitIdentifier);
 #endif
@@ -401,7 +410,8 @@ bool UAppLovinMAX::IsInterstitialReady(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "check interstitial loaded");
 #if PLATFORM_IOS
-    return [GetIOSPlugin() isInterstitialReadyWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    return [GetIOSPlugin() isInterstitialReadyWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     return GetAndroidPlugin()->IsInterstitialReady(AdUnitIdentifier);
 #else
@@ -419,7 +429,8 @@ void UAppLovinMAX::ShowInterstitial(const FString &AdUnitIdentifier, const FStri
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show interstitial");
 #if PLATFORM_IOS
-    [GetIOSPlugin() showInterstitialWithAdUnitIdentifier:GetNSString(AdUnitIdentifier) placement:GetNSString(Placement)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() showInterstitialWithAdUnitIdentifier:AdUnitIdentifier.GetNSString() placement:Placement.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->ShowInterstitial(AdUnitIdentifier, Placement);
 #endif
@@ -429,7 +440,8 @@ void UAppLovinMAX::SetInterstitialExtraParameter(const FString &AdUnitIdentifier
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set interstitial extra parameter");
 #if PLATFORM_IOS
-    [GetIOSPlugin() setInterstitialExtraParameterForAdUnitIdentifier:GetNSString(AdUnitIdentifier) key:GetNSString(Key) value:GetNSString(Value)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setInterstitialExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetInterstitialExtraParameter(AdUnitIdentifier, Key, Value);
 #endif
@@ -441,7 +453,8 @@ void UAppLovinMAX::LoadRewardedAd(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "load rewarded ad");
 #if PLATFORM_IOS
-    [GetIOSPlugin() loadRewardedAdWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() loadRewardedAdWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->LoadRewardedAd(AdUnitIdentifier);
 #endif
@@ -451,7 +464,8 @@ bool UAppLovinMAX::IsRewardedAdReady(const FString &AdUnitIdentifier)
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "check rewarded ad loaded");
 #if PLATFORM_IOS
-    return [GetIOSPlugin() isRewardedAdReadyWithAdUnitIdentifier:GetNSString(AdUnitIdentifier)];
+    SCOPED_AUTORELEASE_POOL;
+    return [GetIOSPlugin() isRewardedAdReadyWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
 #elif PLATFORM_ANDROID
     return GetAndroidPlugin()->IsRewardedAdReady(AdUnitIdentifier);
 #else
@@ -469,7 +483,8 @@ void UAppLovinMAX::ShowRewardedAd(const FString &AdUnitIdentifier, const FString
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show rewarded ad");
 #if PLATFORM_IOS
-    [GetIOSPlugin() showRewardedAdWithAdUnitIdentifier:GetNSString(AdUnitIdentifier) placement:GetNSString(Placement)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() showRewardedAdWithAdUnitIdentifier:AdUnitIdentifier.GetNSString() placement:Placement.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->ShowRewardedAd(AdUnitIdentifier, Placement);
 #endif
@@ -479,7 +494,8 @@ void UAppLovinMAX::SetRewardedAdExtraParameter(const FString &AdUnitIdentifier, 
 {
     UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set rewarded ad extra parameter");
 #if PLATFORM_IOS
-    [GetIOSPlugin() setRewardedAdExtraParameterForAdUnitIdentifier:GetNSString(AdUnitIdentifier) key:GetNSString(Key) value:GetNSString(Value)];
+    SCOPED_AUTORELEASE_POOL;
+    [GetIOSPlugin() setRewardedAdExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
 #elif PLATFORM_ANDROID
     GetAndroidPlugin()->SetRewardedAdExtraParameter(AdUnitIdentifier, Key, Value);
 #endif
@@ -487,7 +503,6 @@ void UAppLovinMAX::SetRewardedAdExtraParameter(const FString &AdUnitIdentifier, 
 
 // MARK: - Protected Methods
 
-// T
 FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
 {
     if (Position == EAdViewPosition::TopLeft)
@@ -528,7 +543,6 @@ FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
     }
 }
 
-// T
 void UAppLovinMAX::ValidateAdUnitIdentifier(const FString &AdUnitIdentifier, const FString &DebugPurpose)
 {
     if (AdUnitIdentifier.IsEmpty())
@@ -680,30 +694,24 @@ void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
 
 #if PLATFORM_IOS
 
-NSString *UAppLovinMAX::GetNSString(const FString &String)
-{
-    return [NSString stringWithUTF8String:TCHAR_TO_ANSI(*String)];
-}
-
 NSArray<NSString *> *UAppLovinMAX::GetNSArray(const TArray<FString> &Array)
 {
-    NSMutableArray<NSString *> *NewArray = [[NSMutableArray arrayWithCapacity:Array.Num()] autorelease];
+    NSMutableArray<NSString *> *NewArray = [NSMutableArray arrayWithCapacity:Array.Num()];
     for (auto &Element : Array)
     {
-        [NewArray addObject:GetNSString(Element)];
+        [NewArray addObject:Element.GetNSString()];
     }
-    return [NewArray copy];
+    return NewArray;
 }
 
 NSDictionary<NSString *, NSString *> *UAppLovinMAX::GetNSDictionary(const TMap<FString, FString> &Map)
 {
-    NSMutableDictionary<NSString *, NSString *> *NewDictionary = [[NSMutableDictionary dictionaryWithCapacity:Map.Num()] autorelease];
+    NSMutableDictionary<NSString *, NSString *> *NewDictionary = [NSMutableDictionary dictionaryWithCapacity:Map.Num()];
     for (auto &Entry : Map)
     {
-        NewDictionary[GetNSString(Entry.Key)] = GetNSString(*Entry.Value);
+        NewDictionary[Entry.Key.GetNSString()] = Entry.Value.GetNSString();
     }
-    [NewDictionary autorelease];
-    return [NewDictionary copy];
+    return NewDictionary;
 }
 
 extern "C" void ForwardIOSEvent(NSString *Name, NSString *Params)
