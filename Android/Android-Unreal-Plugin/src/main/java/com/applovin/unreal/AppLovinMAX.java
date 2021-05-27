@@ -54,6 +54,7 @@ public class AppLovinMAX
     private static final String SERIALIZED_KEY_VALUE_SEPARATOR      = String.valueOf( (char) 28 );
     private static final String SERIALIZED_KEY_VALUE_PAIR_SEPARATOR = String.valueOf( (char) 29 );
 
+    // Parent Fields
     private AppLovinSdk              sdk;
     private boolean                  isPluginInitialized = false;
     private boolean                  isSdkInitialized    = false;
@@ -89,8 +90,7 @@ public class AppLovinMAX
         void onReceivedEvent(final String name, final String body);
     }
 
-    // INITIALIZATION
-
+    // region Initialization
     public AppLovinMAX(final Activity activity)
     {
         gameActivity = new WeakReference<>( activity );
@@ -102,7 +102,7 @@ public class AppLovinMAX
         Activity currentActivity = getGameActivity();
         if ( currentActivity == null ) throw new IllegalStateException( "No Activity found" );
 
-        Context context = currentActivity.getApplicationContext();
+        final Context context = currentActivity.getApplicationContext();
 
         // Guard against running init logic multiple times
         if ( isPluginInitialized )
@@ -143,7 +143,7 @@ public class AppLovinMAX
         }
 
         // Initialize SDK
-        sdk = AppLovinSdk.getInstance( sdkKey, new AppLovinSdkSettings( context ), currentActivity );
+        sdk = AppLovinSdk.getInstance( sdkKeyToUse, new AppLovinSdkSettings( context ), currentActivity );
         sdk.setPluginVersion( "Unreal-" + pluginVersion );
         sdk.setMediationProvider( AppLovinMediationProvider.MAX );
 
@@ -168,7 +168,7 @@ public class AppLovinMAX
             verboseLoggingToSet = null;
         }
 
-        // Set creative debugger enabled state if needed
+        // Set creative debugger enabled if needed
         if ( creativeDebuggerEnabledToSet != null )
         {
             sdk.getSettings().setCreativeDebuggerEnabled( creativeDebuggerEnabledToSet );
@@ -186,7 +186,7 @@ public class AppLovinMAX
                 isSdkInitialized = true;
 
                 // Enable orientation change listener, so that the position can be updated for vertical banners.
-                new OrientationEventListener( getGameActivity() )
+                new OrientationEventListener( context )
                 {
                     @Override
                     public void onOrientationChanged(final int orientation)
@@ -226,9 +226,9 @@ public class AppLovinMAX
 
         sdk.showMediationDebugger();
     }
+    // endregion
 
-    // PRIVACY
-
+    // region Privacy
     public void setHasUserConsent(final boolean hasUserConsent)
     {
         AppLovinPrivacySettings.setHasUserConsent( hasUserConsent, getGameActivity() );
@@ -258,9 +258,9 @@ public class AppLovinMAX
     {
         return AppLovinPrivacySettings.isDoNotSell( getGameActivity() );
     }
+    // endregion
 
-    // GENERAL
-
+    // region General
     public boolean isTablet()
     {
         return AppLovinSdkUtils.isTablet( getGameActivity() );
@@ -345,19 +345,19 @@ public class AppLovinMAX
             testDeviceAdvertisingIdsToSet = Arrays.asList( advertisingIds );
         }
     }
+    // endregion
 
-    // EVENT TRACKING
-
+    // region Event Tracking
     public void trackEvent(final String event, final String parameters)
     {
         if ( sdk == null ) return;
 
-        final Map<String, String> deserialized = deserializeParameters( parameters );
+        final Map<String, String> deserialized = deserialize( parameters );
         sdk.getEventService().trackEvent( event, deserialized );
     }
+    // endregion
 
-    // BANNERS
-
+    // region Banners
     public void createBanner(final String adUnitId, final String bannerPosition)
     {
         createAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat(), bannerPosition );
@@ -397,9 +397,9 @@ public class AppLovinMAX
     {
         destroyAdView( adUnitId, getDeviceSpecificBannerAdViewAdFormat() );
     }
+    // endregion
 
-    // MRECS
-
+    // region MRECS
     public void createMRec(final String adUnitId, final String mrecPosition)
     {
         createAdView( adUnitId, MaxAdFormat.MREC, mrecPosition );
@@ -434,9 +434,9 @@ public class AppLovinMAX
     {
         destroyAdView( adUnitId, MaxAdFormat.MREC );
     }
+    // endregion
 
-    // INTERSTITIALS
-
+    // region Interstitials
     public void loadInterstitial(final String adUnitId)
     {
         MaxInterstitialAd interstitial = retrieveInterstitial( adUnitId );
@@ -460,9 +460,9 @@ public class AppLovinMAX
         MaxInterstitialAd interstitial = retrieveInterstitial( adUnitId );
         interstitial.setExtraParameter( key, value );
     }
+    // endregion
 
-    // REWARDED
-
+    // region Rewarded
     public void loadRewardedAd(final String adUnitId)
     {
         MaxRewardedAd rewardedAd = retrieveRewardedAd( adUnitId );
@@ -486,9 +486,9 @@ public class AppLovinMAX
         MaxRewardedAd rewardedAd = retrieveRewardedAd( adUnitId );
         rewardedAd.setExtraParameter( key, value );
     }
+    // endregion
 
-    // AD CALLBACKS
-
+    // region Ad Callbacks
     @Override
     public void onAdLoaded(MaxAd ad)
     {
@@ -530,7 +530,8 @@ public class AppLovinMAX
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
-    @Override public void onAdLoadFailed(final String adUnitId, final MaxError error)
+    @Override
+    public void onAdLoadFailed(final String adUnitId, final MaxError error)
     {
         if ( TextUtils.isEmpty( adUnitId ) )
         {
@@ -596,7 +597,7 @@ public class AppLovinMAX
     @Override
     public void onAdDisplayed(final MaxAd ad)
     {
-        // BMLs do not support [DISPLAY] events in Unity
+        // BMLs do not support [DISPLAY] events
         final MaxAdFormat adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
 
@@ -613,9 +614,10 @@ public class AppLovinMAX
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
-    @Override public void onAdDisplayFailed(final MaxAd ad, final MaxError error)
+    @Override
+    public void onAdDisplayFailed(final MaxAd ad, final MaxError error)
     {
-        // BMLs do not support [DISPLAY] events in Unity
+        // BMLs do not support [DISPLAY] events
         final MaxAdFormat adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
 
@@ -638,7 +640,7 @@ public class AppLovinMAX
     @Override
     public void onAdHidden(final MaxAd ad)
     {
-        // BMLs do not support [HIDDEN] events in Unity
+        // BMLs do not support [HIDDEN] events
         final MaxAdFormat adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
 
@@ -704,18 +706,21 @@ public class AppLovinMAX
         }
 
         final String rewardLabel = reward != null ? reward.getLabel() : "";
-        final int rewardAmountInt = reward != null ? reward.getAmount() : 0;
-        final String rewardAmount = Integer.toString( rewardAmountInt );
+        final int rewardAmount = reward != null ? reward.getAmount() : 0;
 
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = getAdInfo( ad );
         params.put( "rewardLabel", rewardLabel );
-        params.put( "rewardAmount", rewardAmount );
-        params.putAll( getAdInfo( ad ) );
+        params.put( "rewardAmount", String.valueOf( rewardAmount ) );
         sendUnrealEvent( "OnRewardedAdReceivedRewardEvent", params );
     }
 
-    // INTERNAL METHODS
+    @Override
+    public void onAdRevenuePaid(final MaxAd ad)
+    {
+        // TODO: Implement
+    }
 
+    // region Internal Methods
     private void createAdView(final String adUnitId, final MaxAdFormat adFormat, final String adViewPosition)
     {
         // Run on main thread to ensure there are no concurrency issues with other ad view methods
@@ -1136,9 +1141,6 @@ public class AppLovinMAX
                         // Store the ad view with format, so that it can be updated when the orientation changes.
                         mVerticalAdViewFormats.put( adUnitId, adFormat );
                     }
-
-                    // Hack alert: For the rotation and translation to be applied correctly, need to set the background color (Unity only, similar to what we do in Cross Promo).
-                    relativeLayout.setBackgroundColor( Color.TRANSPARENT );
                 }
             }
             else
@@ -1158,9 +1160,9 @@ public class AppLovinMAX
 
         relativeLayout.setGravity( gravity );
     }
+    // endregion
 
-    // Utility Methods
-
+    // region Utility Methods
     private MaxAdFormat getDeviceSpecificBannerAdViewAdFormat()
     {
         return getDeviceSpecificBannerAdViewAdFormat( getGameActivity() );
@@ -1205,7 +1207,7 @@ public class AppLovinMAX
 
     private Map<String, String> getAdInfo(final MaxAd ad)
     {
-        HashMap<String, String> adInfo = new HashMap<>( 5 );
+        Map<String, String> adInfo = new HashMap<>( 5 );
         adInfo.put( "adUnitId", ad.getAdUnitId() );
         adInfo.put( "creativeId", !TextUtils.isEmpty( ad.getCreativeId() ) ? ad.getCreativeId() : "" );
         adInfo.put( "networkName", ad.getNetworkName() );
@@ -1215,12 +1217,7 @@ public class AppLovinMAX
         return adInfo;
     }
 
-    private void sendUnrealEvent(final String name, final Map<String, String> params)
-    {
-        eventListener.onReceivedEvent( name, propsStrFromDictionary( params ) );
-    }
-
-    public static String propsStrFromDictionary(Map<String, String> map)
+    public static String serialize(Map<String, String> map)
     {
         final StringBuilder stringBuilder = new StringBuilder( 64 );
         for ( Map.Entry<String, String> entry : map.entrySet() )
@@ -1234,7 +1231,7 @@ public class AppLovinMAX
         return stringBuilder.toString();
     }
 
-    private static Map<String, String> deserializeParameters(final String serialized)
+    private static Map<String, String> deserialize(final String serialized)
     {
         if ( !TextUtils.isEmpty( serialized ) )
         {
@@ -1261,4 +1258,12 @@ public class AppLovinMAX
             return Collections.emptyMap();
         }
     }
+    // endregion
+
+    // region Unreal Bridge
+    private void sendUnrealEvent(final String name, final Map<String, String> params)
+    {
+        eventListener.onReceivedEvent( name, serialize( params ) );
+    }
+    // endregion
 }

@@ -10,7 +10,7 @@ Link to extension
 
 Copy the `AppLovinMAX` plugin to the `Plugins` directory for your project.
 
-Add AppLovin as a dependency to `PublicDependencyModuleNames` array inside of your app's `APPNAME.Build.cs` file:
+Add `AppLovinMAX` as a dependency to the `PublicDependencyModuleNames` array inside of your app's `APPNAME.Build.cs` file:
 
 ```c#
 PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AppLovinMAX" });
@@ -38,7 +38,7 @@ UAppLovinMAX::OnSdkInitializedDelegate.AddLambda([](const FSdkConfiguration& Sdk
     // AppLovin SDK is initialized, start loading ads
 });
 
-UAppLovinMAX::SetUserId("USER_ID")
+UAppLovinMAX::SetUserId("USER_ID");
 UAppLovinMAX::Initialize("YOUR_SDK_KEY");
 ```
 
@@ -48,7 +48,7 @@ In iOS 14, Apple introduced global privacy changes that you need to comply with.
 
 ### SKAdNetwork
 
-Update your app’s `Info.plist` in Unreal's Project Settings with network-specific identifiers. See the [SKAdNetwork documentation](#skadnetwork-2) for instructions.
+Update your app’s `Info.plist` in Unreal's Project Settings with network-specific identifiers. See the [SKAdNetwork documentation](#skadnetwork-1) for instructions.
 
 ### Consent Flow
 
@@ -68,7 +68,7 @@ MAX consent flow is a standalone solution for iOS 14.5+. To ask for consent from
 
 ## Enabling MAX Consent Flow
 
-To enable MAX's built-in consent flow by using the app’s `Info.plist`, modify the `AppLovin_IOS_UPL.xml` file as follows:
+To enable MAX's built-in consent flow by using the app’s `Info.plist`, modify the `<iosPlistUpdates>` tag in `AppLovin_IOS_UPL.xml` as follows:
 
 1. Add the `NSUserTrackingUsageDescription` value. This string is how you inform your user why the app is requesting permission to use data that tracks the user or the device. AppLovin recommends that you use the string: **This only uses device info for less annoying, more relevant ads.**
 2. Create a new key named `AppLovinConsentFlowInfo`.
@@ -79,19 +79,21 @@ To enable MAX's built-in consent flow by using the app’s `Info.plist`, modify 
 The final result should look similar to this:
 
 ```xml
-<addElements tag="dict" once="true">
-    <key>NSUserTrackingUsageDescription</key>
-    <string>This only uses device info for less annoying, more relevant ads</string>
-    <key>AppLovinConsentFlowInfo</key>
-    <dict>
-        <key>AppLovinConsentFlowEnabled</key>
-        <true/>
-        <key>AppLovinConsentFlowPrivacyPolicy</key>
-        <string>https://your_company_name.com/privacy_policy</string>
-        <key>AppLovinConsentFlowTermsOfService</key>
-        <string>https://your_company_name.com/terms_of_service</string>
-    </dict>
-</addElements>
+<iosPListUpdates>
+    <addElements tag="dict" once="true">
+        <key>NSUserTrackingUsageDescription</key>
+        <string>This only uses device info for less annoying, more relevant ads</string>
+        <key>AppLovinConsentFlowInfo</key>
+        <dict>
+            <key>AppLovinConsentFlowEnabled</key>
+            <true/>
+            <key>AppLovinConsentFlowPrivacyPolicy</key>
+            <string>https://your_company_name.com/privacy_policy</string>
+            <key>AppLovinConsentFlowTermsOfService</key>
+            <string>https://your_company_name.com/terms_of_service</string>
+        </dict>
+    </addElements>
+</iosPListUpdates>
 ```
 
 ## Integration

@@ -25,12 +25,12 @@ TMap<FString, FString> AppLovinMAXUtils::ParseStringIntoMap(const FString &Strin
     if (String.IsEmpty()) return Result;
 
     TArray<FString> Components;
-    String.ParseIntoArray(Components, TEXT("\n"), true);
+    String.ParseIntoArray(Components, *_DictKeyValuePairSeparator, true);
 
     for (auto &Component : Components)
     {
         FString Key, Value;
-        if (Component.Split("=", &Key, &Value) && !Result.Contains(Key))
+        if (Component.Split(_DictKeyValueSeparator, &Key, &Value) && !Result.Contains(Key))
         {
             Result.Add(Key, Value);
         }

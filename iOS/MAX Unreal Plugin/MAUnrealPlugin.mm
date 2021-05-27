@@ -8,25 +8,26 @@
 
 #import "MAUnrealPlugin.h"
 
+#define KEY_WINDOW [UIApplication sharedApplication].keyWindow
 #define DEVICE_SPECIFIC_ADVIEW_AD_FORMAT ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? MAAdFormat.leader : MAAdFormat.banner
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-    void max_unreal_dispatch_on_main_thread(dispatch_block_t block)
+void max_unreal_dispatch_on_main_thread(dispatch_block_t block)
+{
+    if ( block )
     {
-        if ( block )
+        if ( [NSThread isMainThread] )
         {
-            if ( [NSThread isMainThread] )
-            {
-                block();
-            }
-            else
-            {
-                dispatch_async(dispatch_get_main_queue(), block);
-            }
+            block();
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue(), block);
         }
     }
+}
 #ifdef __cplusplus
 }
 #endif
@@ -69,6 +70,7 @@ extern "C" {
 // Banner Fields
 @property (nonatomic, strong) NSMutableDictionary<NSString *, MAAdView *> *adViews;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, MAAdFormat *> *adViewAdFormats;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, MAAdFormat *> *verticalAdViewFormats;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *adViewPositions;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSArray<NSLayoutConstraint *> *> *adViewConstraints;
 @property (nonatomic, strong) NSMutableArray<NSString *> *adUnitIdentifiersToShowAfterCreate;
@@ -98,24 +100,45 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         self.rewardedAds = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adViews = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adViewAdFormats = [NSMutableDictionary dictionaryWithCapacity: 2];
+        self.verticalAdViewFormats = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adViewPositions = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adViewConstraints = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adUnitIdentifiersToShowAfterCreate = [NSMutableArray arrayWithCapacity: 2];
         
-        self.safeAreaBackground = [[UIView alloc] init];
-        self.safeAreaBackground.hidden = YES;
-        self.safeAreaBackground.backgroundColor = UIColor.clearColor;
-        self.safeAreaBackground.translatesAutoresizingMaskIntoConstraints = NO;
-        self.safeAreaBackground.userInteractionEnabled = NO;
-        
         self.unrealMainView = mainView;
         self.eventCallback = eventCallback;
+        
+        max_unreal_dispatch_on_main_thread(^{
+            self.safeAreaBackground = [[UIView alloc] init];
+            self.safeAreaBackground.hidden = YES;
+            self.safeAreaBackground.backgroundColor = UIColor.clearColor;
+            self.safeAreaBackground.translatesAutoresizingMaskIntoConstraints = NO;
+            self.safeAreaBackground.userInteractionEnabled = NO;
+            
+            [self.unrealMainView addSubview: self.safeAreaBackground];
+        });
+        
+        // Enable orientation change listener, so that the position can be updated for vertical banners.
+        [[NSNotificationCenter defaultCenter] addObserverForName: UIDeviceOrientationDidChangeNotification
+                                                          object: nil
+                                                           queue: [NSOperationQueue mainQueue]
+                                                      usingBlock:^(NSNotification *notification) {
+            
+            for ( NSString *adUnitIdentifier in self.verticalAdViewFormats )
+            {
+                [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: self.verticalAdViewFormats[adUnitIdentifier]];
+            }
+        }];
     }
     return self;
 }
 
 - (void)initialize:(NSString *)pluginVersion sdkKey:(NSString *)sdkKey
 {
+    // TODO: Temporary Swizzling
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    [infoDict setValue: @"com.revolverolver.flipmania" forKey: @"CFBundleIdentifier"];
+    
     // Guard against running init logic multiple times
     if ( [self isPluginInitialized] )
     {
@@ -167,15 +190,14 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         self.verboseLoggingToSet = nil;
     }
     
-    // Set creative debugger enabled state if needed
+    // Set creative debugger enabled if needed
     if ( self.creativeDebuggerEnabledToSet )
     {
         self.sdk.settings.creativeDebuggerEnabled = self.creativeDebuggerEnabledToSet.boolValue;
         self.creativeDebuggerEnabledToSet = nil;
     }
     
-    [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration)
-     {
+    [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
         [self log: @"SDK initialized"];
         
         self.sdkConfiguration = configuration;
@@ -329,7 +351,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 #pragma mark - Event Tracking
 
-- (void)trackEvent:(NSString *)event parameters:(NSDictionary<NSString *, id> *)parameters
+- (void)trackEvent:(NSString *)event parameters:(NSDictionary<NSString *, NSString *> *)parameters
 {
     [self.sdk.eventService trackEvent: event parameters: parameters];
 }
@@ -481,7 +503,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         [self positionAdViewForAd: ad];
         
         // Do not auto-refresh by default if the ad view is not showing yet (e.g. first load during app launch and publisher does not automatically show banner upon load success)
-        // We will resume auto-refresh in -[MAUnityAdManager showBannerWithAdUnitIdentifier:].
+        // We will resume auto-refresh in -[MAUnrealPlugin showBannerWithAdUnitIdentifier:].
         if ( adView && [adView isHidden] )
         {
             [adView stopAutoRefresh];
@@ -566,7 +588,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)didDisplayAd:(MAAd *)ad
 {
-    // BMLs do not support [DISPLAY] events in Unity
+    // BMLs do not support [DISPLAY] events
     MAAdFormat *adFormat = ad.format;
     if ( adFormat != MAAdFormat.interstitial && adFormat != MAAdFormat.rewarded ) return;
     
@@ -585,7 +607,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)didFailToDisplayAd:(MAAd *)ad withError:(MAError *)error
 {
-    // BMLs do not support [DISPLAY] events in Unity
+    // BMLs do not support [DISPLAY] events
     MAAdFormat *adFormat = ad.format;
     if ( adFormat != MAAdFormat.interstitial && adFormat != MAAdFormat.rewarded ) return;
     
@@ -607,7 +629,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)didHideAd:(MAAd *)ad
 {
-    // BMLs do not support [HIDDEN] events in Unity
+    // BMLs do not support [HIDDEN] events
     MAAdFormat *adFormat = ad.format;
     if ( adFormat != MAAdFormat.interstitial && adFormat != MAAdFormat.rewarded ) return;
     
@@ -715,15 +737,8 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         [self log: @"Setting %@ with ad unit identifier \"%@\" to color: \"%@\"", adFormat, adUnitIdentifier, hexColorCode];
         
         // In some cases, black color may get redrawn on each frame update, resulting in an undesired flicker
-        UIColor *convertedColor;
-        if ( [hexColorCode containsString: @"FF000000"] )
-        {
-            convertedColor = [UIColor al_colorWithHexString: @"FF000001"];
-        }
-        else
-        {
-            convertedColor = [UIColor al_colorWithHexString: hexColorCode];
-        }
+        NSString *hexColorCodeToUse = [hexColorCode containsString: @"FF000000"] ? @"FF000001" : hexColorCode;
+        UIColor *convertedColor = [UIColor al_colorWithHexString: hexColorCodeToUse];
         
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         self.publisherBannerBackgroundColor = convertedColor;
@@ -830,6 +845,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         [self.adViews removeObjectForKey: adUnitIdentifier];
         [self.adViewPositions removeObjectForKey: adUnitIdentifier];
         [self.adViewAdFormats removeObjectForKey: adUnitIdentifier];
+        [self.verticalAdViewFormats removeObjectForKey: adUnitIdentifier];
     });
 }
 
@@ -883,11 +899,6 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (MAAdView *)retrieveAdViewForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat atPosition:(NSString *)adViewPosition
 {
-    return [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat atPosition: adViewPosition attach: YES];
-}
-
-- (MAAdView *)retrieveAdViewForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat atPosition:(NSString *)adViewPosition attach:(BOOL)attach
-{
     MAAdView *result = self.adViews[adUnitIdentifier];
     if ( !result && adViewPosition )
     {
@@ -898,12 +909,8 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         
         self.adViews[adUnitIdentifier] = result;
         
-        // If this is programmatic (non native RN)
-        if ( attach )
-        {
-            self.adViewPositions[adUnitIdentifier] = adViewPosition;
-            [self.unrealMainView addSubview: result];
-        }
+        self.adViewPositions[adUnitIdentifier] = adViewPosition;
+        [self.unrealMainView addSubview: result];
     }
     
     return result;
@@ -925,6 +932,8 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     // Deactivate any previous constraints so that the banner can be positioned again.
     NSArray<NSLayoutConstraint *> *activeConstraints = self.adViewConstraints[adUnitIdentifier];
     [NSLayoutConstraint deactivateConstraints: activeConstraints];
+    adView.transform = CGAffineTransformIdentity;
+    [self.verticalAdViewFormats removeObjectForKey: adUnitIdentifier];
     
     // Ensure superview contains the safe area background.
     if ( ![superview.subviews containsObject: self.safeAreaBackground] )
@@ -935,7 +944,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     
     // Deactivate any previous constraints and reset visibility state so that the safe area background can be positioned again.
     [NSLayoutConstraint deactivateConstraints: self.safeAreaBackground.constraints];
-    self.safeAreaBackground.hidden = NO;
+    self.safeAreaBackground.hidden = adView.hidden;
     
     CGSize adViewSize = [[self class] adViewSizeForAdFormat: adFormat];
     
@@ -995,6 +1004,92 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
             {
                 [constraints addObject: [adView.bottomAnchor constraintEqualToAnchor: layoutGuide.bottomAnchor]];
             }
+        }
+    }
+    // Check if the publisher wants vertical banners.
+    else if ( [adViewPosition isEqual: @"center_left"] || [adViewPosition isEqual: @"center_right"] )
+    {
+        if ( MAAdFormat.mrec == adFormat )
+        {
+            [constraints addObject: [adView.widthAnchor constraintEqualToConstant: adViewSize.width]];
+            
+            if ( [adViewPosition isEqual: @"center_left"] )
+            {
+                [constraints addObjectsFromArray: @[[adView.centerYAnchor constraintEqualToAnchor: layoutGuide.centerYAnchor],
+                                                    [adView.leftAnchor constraintEqualToAnchor: superview.leftAnchor]]];
+                
+                [constraints addObjectsFromArray: @[[self.safeAreaBackground.rightAnchor constraintEqualToAnchor: layoutGuide.leftAnchor],
+                                                    [self.safeAreaBackground.leftAnchor constraintEqualToAnchor: superview.leftAnchor]]];
+            }
+            else // center_right
+            {
+                [constraints addObjectsFromArray: @[[adView.centerYAnchor constraintEqualToAnchor: layoutGuide.centerYAnchor],
+                                                    [adView.rightAnchor constraintEqualToAnchor: superview.rightAnchor]]];
+                
+                [constraints addObjectsFromArray: @[[self.safeAreaBackground.leftAnchor constraintEqualToAnchor: layoutGuide.rightAnchor],
+                                                    [self.safeAreaBackground.rightAnchor constraintEqualToAnchor: superview.rightAnchor]]];
+            }
+        }
+        else
+        {
+            /* Align the center of the view such that when rotated it snaps into place.
+             *
+             *                  +---+---+-------+
+             *                  |   |           |
+             *                  |   |           |
+             *                  |   |           |
+             *                  |   |           |
+             *                  |   |           |
+             *                  |   |           |
+             *    +-------------+---+-----------+--+
+             *    |             | + |   +       |  |
+             *    +-------------+---+-----------+--+
+             *                  <+> |           |
+             *                  |+  |           |
+             *                  ||  |           |
+             *                  ||  |           |
+             *                  ||  |           |
+             *                  ||  |           |
+             *                  +|--+-----------+
+             *                   v
+             *            Banner Half Height
+             */
+            self.safeAreaBackground.hidden = YES;
+            
+            adView.transform = CGAffineTransformRotate(CGAffineTransformIdentity, M_PI_2);
+            
+            CGFloat width;
+            // If the publiser has a background color set - set the width to the height of the screen, to span the ad across the screen after it is rotated.
+            if ( self.publisherBannerBackgroundColor )
+            {
+                width = CGRectGetHeight(KEY_WINDOW.bounds);
+            }
+            // Otherwise - we shouldn't span the banner the width of the realm (there might be user-interactable UI on the sides)
+            else
+            {
+                width = adViewSize.width;
+            }
+            [constraints addObject: [adView.widthAnchor constraintEqualToConstant: width]];
+            
+            // Set constraints such that the center of the banner aligns with the center left or right as needed. That way, once rotated, the banner snaps into place.
+            [constraints addObject: [adView.centerYAnchor constraintEqualToAnchor: superview.centerYAnchor]];
+            
+            // Place the center of the banner half the height of the banner away from the side. If we align the center exactly with the left/right anchor, only half the banner will be visible.
+            CGFloat bannerHalfHeight = adViewSize.height / 2.0;
+            UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+            if ( [adViewPosition isEqual: @"center_left"] )
+            {
+                NSLayoutAnchor *anchor = ( orientation == UIInterfaceOrientationLandscapeRight ) ? layoutGuide.leftAnchor : superview.leftAnchor;
+                [constraints addObject: [adView.centerXAnchor constraintEqualToAnchor: anchor constant: bannerHalfHeight]];
+            }
+            else // CenterRight
+            {
+                NSLayoutAnchor *anchor = ( orientation == UIInterfaceOrientationLandscapeLeft ) ? layoutGuide.rightAnchor : superview.rightAnchor;
+                [constraints addObject: [adView.centerXAnchor constraintEqualToAnchor: anchor constant: -bannerHalfHeight]];
+            }
+            
+            // Store the ad view with format, so that it can be updated when the orientation changes.
+            self.verticalAdViewFormats[adUnitIdentifier] = adFormat;
         }
     }
     // Otherwise, publisher will likely construct his own views around the adview
@@ -1058,6 +1153,8 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     }
 }
 
+#pragma mark - Utility Methods
+
 - (NSDictionary<NSString *, NSString *> *)adInfoForAd:(MAAd *)ad
 {
     return @{@"adUnitId" : ad.adUnitIdentifier,
@@ -1067,27 +1164,32 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
              @"revenue" : [@(ad.revenue) stringValue]};
 }
 
-- (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
-{
-    NSString *serializedParameters = [self propsStrFromDictionary: parameters];
-    if ( self.eventCallback )
-    {
-        self.eventCallback(name, serializedParameters);
-    }
-}
-
-- (NSString *)propsStrFromDictionary:(NSDictionary<NSString *, NSString *> *)dict
+/**
+ * Serializes the given key-value pair data to a string
+ */
+- (NSString *)serialize:(NSDictionary<NSString *, NSString *> *)dict
 {
     NSMutableString *result = [[NSMutableString alloc] initWithCapacity: 64];
     [dict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop)
      {
         [result appendString: key];
-        [result appendString: @"="];
+        [result appendString: ALSerializeKeyValueSeparator];
         [result appendString: obj];
-        [result appendString: @"\n"];
+        [result appendString: ALSerializeKeyValuePairSeparator];
     }];
     
     return result;
+}
+
+#pragma mark - Unreal Bridge
+
+- (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
+{
+    NSString *serializedParameters = [self serialize: parameters];
+    if ( self.eventCallback )
+    {
+        self.eventCallback(name, serializedParameters);
+    }
 }
 
 @end

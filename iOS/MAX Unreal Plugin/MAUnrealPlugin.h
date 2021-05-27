@@ -37,14 +37,14 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 - (void)setUserId:(NSString *)userId;
 - (void)setMuted:(BOOL)muted;
 - (BOOL)isMuted;
-- (void)setVerboseLogging:(BOOL)enabled;
+- (void)setVerboseLoggingEnabled:(BOOL)enabled;
 - (BOOL)isVerboseLoggingEnabled;
 - (void)setCreativeDebuggerEnabled:(BOOL)enabled;
 - (void)setTestDeviceAdvertisingIds:(NSArray<NSString *> *)testDeviceAdvertisingIds;
 
 #pragma mark - Event Tracking
 
-- (void)trackEvent:(NSString *)event parameters:(NSDictionary<NSString *, id> *)parameters;
+- (void)trackEvent:(NSString *)event parameters:(NSDictionary<NSString *, NSString *> *)parameters;
 
 #pragma mark - Banners
 
