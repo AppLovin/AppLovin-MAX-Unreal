@@ -20,7 +20,6 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 - (instancetype)initWithView:(UIView *)mainView eventCallback:(UnrealEventCallback)eventCallback;
 - (void)initialize:(NSString *)pluginVersion sdkKey:(NSString *)sdkKey;
 - (BOOL)isInitialized;
-- (void)showMediationDebugger;
 
 #pragma mark - Privacy
 
@@ -34,6 +33,7 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 #pragma mark - General
 
 - (BOOL)isTablet;
+- (void)showMediationDebugger;
 - (void)setUserId:(NSString *)userId;
 - (void)setMuted:(BOOL)muted;
 - (BOOL)isMuted;

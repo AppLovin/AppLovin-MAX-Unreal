@@ -47,15 +47,6 @@ bool UAppLovinMAX::IsInitialized()
 #endif
 }
 
-void UAppLovinMAX::ShowMediationDebugger()
-{
-#if PLATFORM_IOS
-    [GetIOSPlugin() showMediationDebugger];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->ShowMediationDebugger();
-#endif
-}
-
 // MARK: Privacy (T)
 
 void UAppLovinMAX::SetHasUserConsent(bool bHasUserConsent)
@@ -128,6 +119,15 @@ bool UAppLovinMAX::IsTablet()
     return GetAndroidPlugin()->IsTablet();
 #else
     return false;
+#endif
+}
+
+void UAppLovinMAX::ShowMediationDebugger()
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() showMediationDebugger];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->ShowMediationDebugger();
 #endif
 }
 

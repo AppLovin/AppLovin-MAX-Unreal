@@ -61,13 +61,6 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static bool IsInitialized();
 
-    /**
-     * Present the mediation debugger UI.
-     * This debugger tool provides the status of your integration for each third-party ad network.
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void ShowMediationDebugger();
-
     // MARK: - Privacy
 
     /**
@@ -120,6 +113,13 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static bool IsTablet();
+
+    /**
+     * Present the mediation debugger UI.
+     * This debugger tool provides the status of your integration for each third-party ad network.
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void ShowMediationDebugger();
 
     /**
      * Set an identifier for the current user. This identifier will be tied to SDK events and our optional S2S postbacks.

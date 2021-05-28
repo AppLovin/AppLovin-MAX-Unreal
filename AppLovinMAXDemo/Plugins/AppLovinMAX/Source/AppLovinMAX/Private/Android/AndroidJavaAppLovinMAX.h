@@ -17,7 +17,6 @@ public:
     // MARK: Initialization
     void Initialize(const FString &PluginVersion, const FString &SdkKey);
     bool IsInitialized();
-    void ShowMediationDebugger();
 
     // MARK: Privacy
     void SetHasUserConsent( bool bHasUserConsent );
@@ -29,6 +28,7 @@ public:
 
     // MARK: General
     bool IsTablet();
+    void ShowMediationDebugger();
     void SetUserId( const FString &UserId );
     void SetMuted( bool bMuted );
     bool IsMuted();
@@ -76,7 +76,6 @@ private:
 
     FJavaClassMethod InitializeMethod;
     FJavaClassMethod IsInitializedMethod;
-    FJavaClassMethod ShowMediationDebuggerMethod;
 
     FJavaClassMethod SetHasUserConsentMethod;
     FJavaClassMethod HasUserConsentMethod;
@@ -86,6 +85,7 @@ private:
     FJavaClassMethod IsDoNotSellMethod;
 
     FJavaClassMethod IsTabletMethod;
+    FJavaClassMethod ShowMediationDebuggerMethod;
     FJavaClassMethod SetUserIdMethod;
     FJavaClassMethod SetMutedMethod;
     FJavaClassMethod IsMutedMethod;

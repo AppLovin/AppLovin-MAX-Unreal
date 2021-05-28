@@ -12,7 +12,6 @@ FJavaAndroidAppLovinMAX::FJavaAndroidAppLovinMAX()
     : FJavaClassObject(GetClassName(), "(Landroid/app/Activity;)V", FAndroidApplication::GetGameActivityThis())
     , InitializeMethod(GetClassMethod("initialize", "(Ljava/lang/String;Ljava/lang/String;Lcom/applovin/unreal/AppLovinMAX$EventListener;)V"))
     , IsInitializedMethod(GetClassMethod("isInitialized", "()Z"))
-    , ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V"))
     , SetHasUserConsentMethod(GetClassMethod("setHasUserConsent", "(Z)V"))
     , HasUserConsentMethod(GetClassMethod("hasUserConsent", "()Z"))
     , SetIsAgeRestrictedUserMethod(GetClassMethod("setIsAgeRestrictedUser", "(Z)V"))
@@ -20,6 +19,7 @@ FJavaAndroidAppLovinMAX::FJavaAndroidAppLovinMAX()
     , SetDoNotSellMethod(GetClassMethod("setDoNotSell", "(Z)V"))
     , IsDoNotSellMethod(GetClassMethod("isDoNotSell", "()Z"))
     , IsTabletMethod(GetClassMethod("isTablet", "()Z"))
+    , ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V"))
     , SetUserIdMethod(GetClassMethod("setUserId", "(Ljava/lang/String;)V"))
     , SetMutedMethod(GetClassMethod("setMuted", "(Z)V"))
     , IsMutedMethod(GetClassMethod("isMuted", "()Z"))
@@ -74,11 +74,6 @@ bool FJavaAndroidAppLovinMAX::IsInitialized()
     return CallMethod<bool>(IsInitializedMethod);
 }
 
-void FJavaAndroidAppLovinMAX::ShowMediationDebugger()
-{
-    CallMethod<void>(ShowMediationDebuggerMethod);
-}
-
 // MARK: - Privacy
 
 void FJavaAndroidAppLovinMAX::SetHasUserConsent( bool bHasUserConsent )
@@ -116,6 +111,11 @@ bool FJavaAndroidAppLovinMAX::IsDoNotSell()
 bool FJavaAndroidAppLovinMAX::IsTablet()
 {
     return CallMethod<bool>(IsTabletMethod);
+}
+
+void FJavaAndroidAppLovinMAX::ShowMediationDebugger()
+{
+    CallMethod<void>(ShowMediationDebuggerMethod);
 }
 
 void FJavaAndroidAppLovinMAX::SetUserId( const FString &UserId )

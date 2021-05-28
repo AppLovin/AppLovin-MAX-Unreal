@@ -218,17 +218,6 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     return [self isPluginInitialized] && [self isSDKInitialized];
 }
 
-- (void)showMediationDebugger
-{
-    if ( !_sdk )
-    {
-        [self log: @"Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize(...);'!"];
-        return;
-    }
-    
-    [self.sdk showMediationDebugger];
-}
-
 #pragma mark - Privacy
 
 - (void)setHasUserConsent:(BOOL)hasUserConsent
@@ -266,6 +255,17 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 - (BOOL)isTablet
 {
     return [UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad;
+}
+
+- (void)showMediationDebugger
+{
+    if ( !_sdk )
+    {
+        [self log: @"Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize(...);'!"];
+        return;
+    }
+    
+    [self.sdk showMediationDebugger];
 }
 
 - (void)setUserId:(NSString *)userId
