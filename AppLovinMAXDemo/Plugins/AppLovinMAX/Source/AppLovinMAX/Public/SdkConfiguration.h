@@ -32,7 +32,7 @@ struct APPLOVINMAX_API FSdkConfiguration
 
     /** Get the consent dialog state for this user. If no such determination could be made, `EConsentDialogState::Unknown` will be returned. */
     EConsentDialogState ConsentDialogState;
-    
+
     /** Get the country code for this user. */
     FString CountryCode;
 

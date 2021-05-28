@@ -123,7 +123,7 @@ public:
 
     /**
      * Set an identifier for the current user. This identifier will be tied to SDK events and our optional S2S postbacks.
-     * 
+     *
      * If you're using reward validation, you can optionally set an identifier to be included with currency validation postbacks.
      * For example, a username or email. We'll include this in the postback when we ping your currency endpoint from our server.
      * @param UserId - The user identifier to be set

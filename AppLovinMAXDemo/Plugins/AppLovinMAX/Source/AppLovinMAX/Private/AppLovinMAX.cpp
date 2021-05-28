@@ -594,9 +594,7 @@ void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
     {
         FAdInfo AdInfo(Body);
 
-        FAdError AdError{FCString::Atoi(*Body.FindRef(TEXT("errorCode"))),
-            Body.FindRef(TEXT("errorMessage")),
-            Body.FindRef(TEXT("errorAdLoadFailureInfo"))};
+        FAdError AdError{FCString::Atoi(*Body.FindRef(TEXT("errorCode"))), Body.FindRef(TEXT("errorMessage")), Body.FindRef(TEXT("errorAdLoadFailureInfo"))};
 
         if (Name == TEXT("OnBannerAdLoadedEvent"))
         {
