@@ -560,7 +560,7 @@ public class AppLovinMAX
 
         Map<String, String> params = new HashMap<>();
         params.put( "adUnitId", adUnitId );
-        params.put( "errorCode", Integer.toString( error.getCode() ) );
+        params.putAll( getErrorInfo( error ) );
         sendUnrealEvent( name, params );
     }
 
@@ -632,8 +632,8 @@ public class AppLovinMAX
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put( "errorCode", Integer.toString( error.getCode() ) );
         params.putAll( getAdInfo( ad ) );
+        params.putAll( getErrorInfo( error ) );
         sendUnrealEvent( name, params );
     }
 
@@ -1215,6 +1215,16 @@ public class AppLovinMAX
         adInfo.put( "revenue", String.valueOf( ad.getRevenue() ) );
 
         return adInfo;
+    }
+
+    private Map<String, String> getErrorInfo(final MaxError error)
+    {
+        Map<String, String> errorInfo = new HashMap<>( 5 );
+        errorInfo.put( "errorCode", String.valueOf( error.getCode() ) );
+        errorInfo.put( "errorMessage", !TextUtils.isEmpty( error.getMessage() ) ? error.getMessage() : "" );
+        errorInfo.put( "errorAdLoadFailureInfo", !TextUtils.isEmpty( error.getAdLoadFailureInfo() ) ? error.getAdLoadFailureInfo() : "" );
+
+        return errorInfo;
     }
 
     private static String serialize(Map<String, String> map)

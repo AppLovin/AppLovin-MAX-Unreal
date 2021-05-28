@@ -6,14 +6,14 @@
 // nt
 FSdkConfiguration::FSdkConfiguration(const TMap<FString, FString> &EventBody)
 {
-    CountryCode = EventBody.FindRef("countryCode");
+    CountryCode = EventBody.FindRef(TEXT("countryCode"));
 
-    FString ConsentDialogStateStr = EventBody.FindRef("consentDialogState");
-    if (ConsentDialogStateStr == "1")
+    FString ConsentDialogStateStr = EventBody.FindRef(TEXT("consentDialogState"));
+    if (ConsentDialogStateStr == TEXT("1"))
     {
         ConsentDialogState = EConsentDialogState::Applies;
     }
-    else if (ConsentDialogStateStr == "2")
+    else if (ConsentDialogStateStr == TEXT("2"))
     {
         ConsentDialogState = EConsentDialogState::DoesNotApply;
     }
@@ -23,20 +23,20 @@ FSdkConfiguration::FSdkConfiguration(const TMap<FString, FString> &EventBody)
     }
 
 #if PLATFORM_IOS
-    FString AppTrackingStatusStr = EventBody.FindRef("appTrackingStatus");
-    if (AppTrackingStatusStr == "-1")
+    FString AppTrackingStatusStr = EventBody.FindRef(TEXT("appTrackingStatus"));
+    if (AppTrackingStatusStr == TEXT("-1"))
     {
         AppTrackingStatus = EAppTrackingStatus::Unavailable;
     }
-    else if (AppTrackingStatusStr == "0")
+    else if (AppTrackingStatusStr == TEXT("0"))
     {
         AppTrackingStatus = EAppTrackingStatus::NotDetermined;
     }
-    else if (AppTrackingStatusStr == "1")
+    else if (AppTrackingStatusStr == TEXT("1"))
     {
         AppTrackingStatus = EAppTrackingStatus::Restricted;
     }
-    else if (AppTrackingStatusStr == "2")
+    else if (AppTrackingStatusStr == TEXT("2"))
     {
         AppTrackingStatus = EAppTrackingStatus::Denied;
     }

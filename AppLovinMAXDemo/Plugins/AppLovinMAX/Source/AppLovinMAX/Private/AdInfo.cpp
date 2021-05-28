@@ -5,15 +5,15 @@
 
 FAdInfo::FAdInfo(const TMap<FString, FString> &EventBody)
 {
-    AdUnitIdentifier = EventBody.FindRef("adUnitId");
-    NetworkName = EventBody.FindRef("networkName");
-    CreativeIdentifier = EventBody.FindRef("creativeId");
-    Placement = EventBody.FindRef("placement");
+    AdUnitIdentifier = EventBody.FindRef(TEXT("adUnitId"));
+    NetworkName = EventBody.FindRef(TEXT("networkName"));
+    CreativeIdentifier = EventBody.FindRef(TEXT("creativeId"));
+    Placement = EventBody.FindRef(TEXT("placement"));
 
-    if (EventBody.Contains("revenue"))
+    if (EventBody.Contains(TEXT("revenue")))
     {
         // NOTE: Defaults to 0 if revenue string cannot be converted to double
-        Revenue = FCString::Atod(*EventBody.FindRef("revenue"));
+        Revenue = FCString::Atod(*EventBody.FindRef(TEXT("revenue")));
     }
     else
     {

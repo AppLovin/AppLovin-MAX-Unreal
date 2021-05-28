@@ -552,8 +552,10 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
         return;
     }
     
-    [self sendUnrealEventWithName: name parameters: @{@"adUnitId" : adUnitIdentifier,
-                                                      @"errorCode" : [@(error.code) stringValue]}];
+    NSMutableDictionary *parameters = [[self errorInfoForError: error] mutableCopy];
+    parameters[@"adUnitId"] = adUnitIdentifier;
+    
+    [self sendUnrealEventWithName: name parameters: parameters];
 }
 
 - (void)didClickAd:(MAAd *)ad
@@ -621,7 +623,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     }
     
     NSMutableDictionary *parameters = [[self adInfoForAd: ad] mutableCopy];
-    parameters[@"errorCode"] = [@(error.code) stringValue];
+    [parameters addEntriesFromDictionary: [self errorInfoForError: error]];
     
     [self sendUnrealEventWithName: name parameters: parameters];
 }
@@ -700,7 +702,31 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)didPayRevenueForAd:(MAAd *)ad
 {
-    // TODO: Implement
+    NSString *name;
+    MAAdFormat *adFormat = ad.format;
+    if ( MAAdFormat.banner == adFormat || MAAdFormat.leader == adFormat )
+    {
+        name = @"OnBannerAdRevenuePaidEvent";
+    }
+    else if ( MAAdFormat.mrec == adFormat )
+    {
+        name = @"OnMRecAdRevenuePaidEvent";
+    }
+    else if ( MAAdFormat.interstitial == adFormat )
+    {
+        name = @"OnInterstitialAdRevenuePaidEvent";
+    }
+    else if ( MAAdFormat.rewarded == adFormat )
+    {
+        name = @"OnRewardedAdRevenuePaidEvent";
+    }
+    else
+    {
+        [self logInvalidAdFormat: adFormat];
+        return;
+    }
+    
+    [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
 #pragma mark - Internal Methods
@@ -1161,6 +1187,13 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
              @"networkName" : ad.networkName,
              @"placement" : ad.placement ?: @"",
              @"revenue" : [@(ad.revenue) stringValue]};
+}
+
+- (NSDictionary<NSString *, NSString *> *)errorInfoForError:(MAError *)error
+{
+    return @{@"errorCode" : [@(error.code) stringValue],
+             @"errorMessage" : error.message ?: @"",
+             @"errorAdLoadFailureInfo" : error.adLoadFailureInfo ?: @""};
 }
 
 - (NSString *)serialize:(NSDictionary<NSString *, NSString *> *)dict

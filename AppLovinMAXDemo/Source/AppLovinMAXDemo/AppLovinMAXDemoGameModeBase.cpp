@@ -25,16 +25,22 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
     UAppLovinMAX::OnInterstitialLoadedDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
         DEMO_LOG("Interstitial loaded");
+        DEMO_LOG("%s", *AdInfo.ToString());
     });
 
-    UAppLovinMAX::OnInterstitialLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)
+    UAppLovinMAX::OnInterstitialLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("Interstitial failed to load with error code: %d", ErrorCode);
+        DEMO_LOG("Interstitial failed to load with error: %s", *AdError.Message);
     });
 
-    UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)
+    UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("Interstitial failed to display with error code: %d", ErrorCode);
+        DEMO_LOG("Interstitial failed to display with error: %s", *AdError.Message);
+    });
+
+    UAppLovinMAX::OnInterstitialClickedDelegate.AddLambda([](const FAdInfo &AdInfo)
+    {
+        DEMO_LOG("Interstitial clicked");
     });
 
     UAppLovinMAX::OnInterstitialHiddenDelegate.AddLambda([](const FAdInfo &AdInfo)
@@ -49,14 +55,14 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
         DEMO_LOG("Rewarded ad loaded");
     });
 
-    UAppLovinMAX::OnRewardedAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)
+    UAppLovinMAX::OnRewardedAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("Rewarded ad failed to load with error code: %d", ErrorCode);
+        DEMO_LOG("Rewarded ad failed to load with error: %s", *AdError.Message);
     });
 
-    UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)
+    UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("Rewrded ad failed to display with error code: %d", ErrorCode);
+        DEMO_LOG("Rewarded ad failed to display with error: %s", *AdError.Message);
     });
 
     UAppLovinMAX::OnRewardedAdHiddenDelegate.AddLambda([](const FAdInfo &AdInfo)
@@ -69,7 +75,7 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
         DEMO_LOG("Rewarded ad clicked");
     });
 
-    UAppLovinMAX::OnRewardedAdReceivedRewardDelegate.AddLambda([](const FAdInfo &AdInfo, const FReward &Reward)
+    UAppLovinMAX::OnRewardedAdReceivedRewardDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdReward &Reward)
     {
         DEMO_LOG("Rewarded ad received reward: %s", *Reward.ToString());
     });
@@ -86,9 +92,9 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
         DEMO_LOG("Banner clicked");
     });
 
-    UAppLovinMAX::OnBannerAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)
+    UAppLovinMAX::OnBannerAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("Banner ad failed to load with error code: %d", ErrorCode);
+        DEMO_LOG("Banner ad failed to load with error: %s", *AdError.Message);
     });
 
     // MRec Ads
@@ -103,8 +109,8 @@ void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
         DEMO_LOG("MREC clicked");
     });
 
-    UAppLovinMAX::OnMRecAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const int ErrorCode)
+    UAppLovinMAX::OnMRecAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("MREC ad failed to load with error code: %d", ErrorCode);
+        DEMO_LOG("MREC ad failed to load with error: %s", *AdError.Message);
     });
 }

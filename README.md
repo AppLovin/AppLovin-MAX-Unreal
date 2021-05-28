@@ -170,7 +170,7 @@ void UMyWidget::OnInterstitialLoaded(const FAdInfo &AdInfo)
     RetryAttempt = 0;
 }
 
-void UMyWidget::OnInterstitialLoadFailed(const FAdInfo &AdInfo, const int ErrorCode)
+void UMyWidget::OnInterstitialLoadFailed(const FAdInfo &AdInfo, const FAdError &AdError)
 {
     // Interstitial ad failed to load 
     // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds)
@@ -182,7 +182,7 @@ void UMyWidget::OnInterstitialLoadFailed(const FAdInfo &AdInfo, const int ErrorC
     });
 }
 
-void UMyWidget::OnInterstitialAdFailedToDisplay(const FAdInfo &AdInfo, const int ErrorCode)
+void UMyWidget::OnInterstitialAdFailedToDisplay(const FAdInfo &AdInfo, const FAdError &AdError)
 {
     // Interstitial ad failed to display. AppLovin recommends that you load the next ad.
     LoadInterstitial();
@@ -253,7 +253,7 @@ void UMyWidget::OnRewardedAdLoaded(const FAdInfo &AdInfo)
     RetryAttempt = 0;
 }
 
-void UMyWidget::OnRewardedAdLoadFailed(const FAdInfo &AdInfo, const int ErrorCode)
+void UMyWidget::OnRewardedAdLoadFailed(const FAdInfo &AdInfo, const FAdError &AdError)
 {
     // Rewarded ad failed to load 
     // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds)
@@ -266,7 +266,7 @@ void UMyWidget::OnRewardedAdLoadFailed(const FAdInfo &AdInfo, const int ErrorCod
     });
 }
 
-void UMyWidget::OnRewardedAdFailedToDisplay(const FAdInfo &AdInfo, const int ErrorCode)
+void UMyWidget::OnRewardedAdFailedToDisplay(const FAdInfo &AdInfo, const FAdError &AdError)
 {
     // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
     LoadRewardedAd();
@@ -278,7 +278,7 @@ void UMyWidget::OnRewardedAdHidden(const FAdInfo &AdInfo)
     LoadRewardedAd();
 }
 
-void UMyWidget::OnRewardedAdReceivedReward(const FAdInfo &AdInfo, const FReward &Reward)
+void UMyWidget::OnRewardedAdReceivedReward(const FAdInfo &AdInfo, const FAdReward &Reward)
 {
     // Rewarded ad was displayed and user should receive the reward
 }

@@ -2,8 +2,9 @@
 
 #pragma once
 
+#include "AdError.h"
 #include "AdInfo.h"
-#include "Reward.h"
+#include "AdReward.h"
 #include "SdkConfiguration.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AppLovinMAX.generated.h"
@@ -393,31 +394,35 @@ public:
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnSdkInitializedDelegate, const FSdkConfiguration & /*SdkConfiguration*/);
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnBannerAdLoadedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnBannerAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const int /*ErrorCode*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnBannerAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnBannerAdClickedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnBannerAdExpandedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnBannerAdCollapsedDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnBannerAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnMRecAdLoadedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMRecAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const int /*ErrorCode*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMRecAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnMRecAdClickedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnMRecAdExpandedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnMRecAdCollapsedDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnMRecAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialLoadedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const int /*ErrorCode*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialHiddenDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialDisplayedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const int /*ErrorCode*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialClickedDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdLoadedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const int /*ErrorCode*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdDisplayedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdHiddenDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdClickedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const int /*ErrorCode*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdReceivedRewardDelegate, const FAdInfo & /*AdInfo*/, const FReward & /*Reward*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdReceivedRewardDelegate, const FAdInfo & /*AdInfo*/, const FAdReward & /*Reward*/);
 
     static FOnSdkInitializedDelegate OnSdkInitializedDelegate;
 
@@ -426,12 +431,14 @@ public:
     static FOnBannerAdClickedDelegate OnBannerAdClickedDelegate;
     static FOnBannerAdExpandedDelegate OnBannerAdExpandedDelegate;
     static FOnBannerAdCollapsedDelegate OnBannerAdCollapsedDelegate;
+    static FOnBannerAdRevenuePaidDelegate OnBannerAdRevenuePaidDelegate;
 
     static FOnMRecAdLoadedDelegate OnMRecAdLoadedDelegate;
     static FOnMRecAdLoadFailedDelegate OnMRecAdLoadFailedDelegate;
     static FOnMRecAdClickedDelegate OnMRecAdClickedDelegate;
     static FOnMRecAdExpandedDelegate OnMRecAdExpandedDelegate;
     static FOnMRecAdCollapsedDelegate OnMRecAdCollapsedDelegate;
+    static FOnMRecAdRevenuePaidDelegate OnMRecAdRevenuePaidDelegate;
 
     static FOnInterstitialLoadedDelegate OnInterstitialLoadedDelegate;
     static FOnInterstitialLoadFailedDelegate OnInterstitialLoadFailedDelegate;
@@ -439,12 +446,14 @@ public:
     static FOnInterstitialDisplayedDelegate OnInterstitialDisplayedDelegate;
     static FOnInterstitialAdFailedToDisplayDelegate OnInterstitialAdFailedToDisplayDelegate;
     static FOnInterstitialClickedDelegate OnInterstitialClickedDelegate;
+    static FOnInterstitialAdRevenuePaidDelegate OnInterstitialAdRevenuePaidDelegate;
 
     static FOnRewardedAdLoadedDelegate OnRewardedAdLoadedDelegate;
     static FOnRewardedAdLoadFailedDelegate OnRewardedAdLoadFailedDelegate;
     static FOnRewardedAdDisplayedDelegate OnRewardedAdDisplayedDelegate;
     static FOnRewardedAdHiddenDelegate OnRewardedAdHiddenDelegate;
     static FOnRewardedAdClickedDelegate OnRewardedAdClickedDelegate;
+    static FOnRewardedAdRevenuePaidDelegate OnRewardedAdRevenuePaidDelegate;
     static FOnRewardedAdFailedToDisplayDelegate OnRewardedAdFailedToDisplayDelegate;
     static FOnRewardedAdReceivedRewardDelegate OnRewardedAdReceivedRewardDelegate;
 

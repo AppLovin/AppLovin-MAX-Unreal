@@ -8,7 +8,7 @@ const FString _DictKeyValuePairSeparator = FString::Printf(TEXT("%c"), (char)29)
 FString AppLovinMAXUtils::ParseMapIntoString(const TMap<FString, FString> &Map)
 {
     FString Serialization;
-    for (auto &Entry : Map)
+    for (const TPair<FString, FString> &Entry : Map)
     {
         Serialization += Entry.Key;
         Serialization += _DictKeyValueSeparator;
@@ -27,7 +27,7 @@ TMap<FString, FString> AppLovinMAXUtils::ParseStringIntoMap(const FString &Strin
     TArray<FString> Components;
     String.ParseIntoArray(Components, *_DictKeyValuePairSeparator, true);
 
-    for (auto &Component : Components)
+    for (const FString &Component : Components)
     {
         FString Key, Value;
         if (Component.Split(_DictKeyValueSeparator, &Key, &Value) && !Result.Contains(Key))
@@ -42,5 +42,5 @@ TMap<FString, FString> AppLovinMAXUtils::ParseStringIntoMap(const FString &Strin
 FString AppLovinMAXUtils::ParseColor(const FColor &Color)
 {
     FString Hex = Color.ToHex(); // RRGGBBAA
-    return "#" + Hex.Right(2) + Hex.Left(6);
+    return TEXT("#") + Hex.Right(2) + Hex.Left(6);
 }

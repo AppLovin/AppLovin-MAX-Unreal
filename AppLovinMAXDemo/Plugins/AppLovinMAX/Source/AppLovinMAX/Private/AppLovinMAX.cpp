@@ -223,7 +223,7 @@ void UAppLovinMAX::TrackEvent(const FString &Name, const TMap<FString, FString> 
 
 void UAppLovinMAX::CreateBanner(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "create banner");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("create banner"));
     const FString BannerPositionString = GetAdViewPositionString(BannerPosition);
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
@@ -235,7 +235,7 @@ void UAppLovinMAX::CreateBanner(const FString &AdUnitIdentifier, EAdViewPosition
 
 void UAppLovinMAX::SetBannerBackgroundColor(const FString &AdUnitIdentifier, const FColor &Color)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner background color");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("set banner background color"));
     FString HexColorCode = AppLovinMAXUtils::ParseColor(Color);
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
@@ -247,7 +247,7 @@ void UAppLovinMAX::SetBannerBackgroundColor(const FString &AdUnitIdentifier, con
 
 void UAppLovinMAX::SetBannerPlacement(const FString &AdUnitIdentifier, const FString &Placement)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner placement");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("set banner placement"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() setBannerPlacement:Placement.GetNSString() forAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -258,7 +258,7 @@ void UAppLovinMAX::SetBannerPlacement(const FString &AdUnitIdentifier, const FSt
 
 void UAppLovinMAX::SetBannerExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set banner extra parameter");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("set banner extra parameter"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() setBannerExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
@@ -269,7 +269,7 @@ void UAppLovinMAX::SetBannerExtraParameter(const FString &AdUnitIdentifier, cons
 
 void UAppLovinMAX::UpdateBannerPosition(const FString &AdUnitIdentifier, EAdViewPosition BannerPosition)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update banner position");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("update banner position"));
     const FString BannerPositionString = GetAdViewPositionString(BannerPosition);
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
@@ -281,7 +281,7 @@ void UAppLovinMAX::UpdateBannerPosition(const FString &AdUnitIdentifier, EAdView
 
 void UAppLovinMAX::ShowBanner(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show banner");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("show banner"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() showBannerWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -292,7 +292,7 @@ void UAppLovinMAX::ShowBanner(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::HideBanner(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "hide banner");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("hide banner"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() hideBannerWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -303,7 +303,7 @@ void UAppLovinMAX::HideBanner(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::DestroyBanner(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "destroy banner");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("destroy banner"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() destroyBannerWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -316,7 +316,7 @@ void UAppLovinMAX::DestroyBanner(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::CreateMRec(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "create MREC");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("create MREC"));
     const FString MRecPositionString = GetAdViewPositionString(MRecPosition);
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
@@ -328,7 +328,7 @@ void UAppLovinMAX::CreateMRec(const FString &AdUnitIdentifier, EAdViewPosition M
 
 void UAppLovinMAX::SetMRecPlacement(const FString &AdUnitIdentifier, const FString &Placement)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC placement");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("set MREC placement"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() setMRecPlacement:Placement.GetNSString() forAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -339,7 +339,7 @@ void UAppLovinMAX::SetMRecPlacement(const FString &AdUnitIdentifier, const FStri
 
 void UAppLovinMAX::SetMRecExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set MREC extra parameter");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("set MREC extra parameter"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() setMRecExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
@@ -350,7 +350,7 @@ void UAppLovinMAX::SetMRecExtraParameter(const FString &AdUnitIdentifier, const 
 
 void UAppLovinMAX::UpdateMRecPosition(const FString &AdUnitIdentifier, EAdViewPosition MRecPosition)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "update MREC position");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("update MREC position"));
     const FString MRecPositionString = GetAdViewPositionString(MRecPosition);
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
@@ -362,7 +362,7 @@ void UAppLovinMAX::UpdateMRecPosition(const FString &AdUnitIdentifier, EAdViewPo
 
 void UAppLovinMAX::ShowMRec(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show MREC");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("show MREC"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() showMRecWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -373,7 +373,7 @@ void UAppLovinMAX::ShowMRec(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::HideMRec(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "hide MREC");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("hide MREC"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() hideMRecWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -384,7 +384,7 @@ void UAppLovinMAX::HideMRec(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::DestroyMRec(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "destroy MREC");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("destroy MREC"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() destroyMRecWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -397,7 +397,7 @@ void UAppLovinMAX::DestroyMRec(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::LoadInterstitial(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "load interstitial");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("load interstitial"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() loadInterstitialWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -408,7 +408,7 @@ void UAppLovinMAX::LoadInterstitial(const FString &AdUnitIdentifier)
 
 bool UAppLovinMAX::IsInterstitialReady(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "check interstitial loaded");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("check interstitial loaded"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     return [GetIOSPlugin() isInterstitialReadyWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -427,7 +427,7 @@ void UAppLovinMAX::ShowInterstitial(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::ShowInterstitial(const FString &AdUnitIdentifier, const FString &Placement)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show interstitial");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("show interstitial"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() showInterstitialWithAdUnitIdentifier:AdUnitIdentifier.GetNSString() placement:Placement.GetNSString()];
@@ -438,7 +438,7 @@ void UAppLovinMAX::ShowInterstitial(const FString &AdUnitIdentifier, const FStri
 
 void UAppLovinMAX::SetInterstitialExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set interstitial extra parameter");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("set interstitial extra parameter"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() setInterstitialExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
@@ -451,7 +451,7 @@ void UAppLovinMAX::SetInterstitialExtraParameter(const FString &AdUnitIdentifier
 
 void UAppLovinMAX::LoadRewardedAd(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "load rewarded ad");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("load rewarded ad"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() loadRewardedAdWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -462,7 +462,7 @@ void UAppLovinMAX::LoadRewardedAd(const FString &AdUnitIdentifier)
 
 bool UAppLovinMAX::IsRewardedAdReady(const FString &AdUnitIdentifier)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "check rewarded ad loaded");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("check rewarded ad loaded"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     return [GetIOSPlugin() isRewardedAdReadyWithAdUnitIdentifier:AdUnitIdentifier.GetNSString()];
@@ -481,7 +481,7 @@ void UAppLovinMAX::ShowRewardedAd(const FString &AdUnitIdentifier)
 
 void UAppLovinMAX::ShowRewardedAd(const FString &AdUnitIdentifier, const FString &Placement)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "show rewarded ad");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("show rewarded ad"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() showRewardedAdWithAdUnitIdentifier:AdUnitIdentifier.GetNSString() placement:Placement.GetNSString()];
@@ -492,7 +492,7 @@ void UAppLovinMAX::ShowRewardedAd(const FString &AdUnitIdentifier, const FString
 
 void UAppLovinMAX::SetRewardedAdExtraParameter(const FString &AdUnitIdentifier, const FString &Key, const FString &Value)
 {
-    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, "set rewarded ad extra parameter");
+    UAppLovinMAX::ValidateAdUnitIdentifier(AdUnitIdentifier, TEXT("set rewarded ad extra parameter"));
 #if PLATFORM_IOS
     SCOPED_AUTORELEASE_POOL;
     [GetIOSPlugin() setRewardedAdExtraParameterForAdUnitIdentifier:AdUnitIdentifier.GetNSString() key:Key.GetNSString() value:Value.GetNSString()];
@@ -507,39 +507,39 @@ FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
 {
     if (Position == EAdViewPosition::TopLeft)
     {
-        return "top_left";
+        return TEXT("top_left");
     }
     else if (Position == EAdViewPosition::TopCenter)
     {
-        return "top_center";
+        return TEXT("top_center");
     }
     else if (Position == EAdViewPosition::TopRight)
     {
-        return "top_right";
+        return TEXT("top_right");
     }
     else if (Position == EAdViewPosition::Centered)
     {
-        return "centered";
+        return TEXT("centered");
     }
     else if (Position == EAdViewPosition::CenterLeft)
     {
-        return "center_left";
+        return TEXT("center_left");
     }
     else if (Position == EAdViewPosition::CenterRight)
     {
-        return "center_right";
+        return TEXT("center_right");
     }
     else if (Position == EAdViewPosition::BottomLeft)
     {
-        return "bottom_left";
+        return TEXT("bottom_left");
     }
     else if (Position == EAdViewPosition::BottomCenter)
     {
-        return "bottom_center";
+        return TEXT("bottom_center");
     }
     else  // Position == EAdViewPosition::BottomRight
     {
-        return "bottom_right";
+        return TEXT("bottom_right");
     }
 }
 
@@ -560,28 +560,32 @@ UAppLovinMAX::FOnBannerAdLoadFailedDelegate UAppLovinMAX::OnBannerAdLoadFailedDe
 UAppLovinMAX::FOnBannerAdClickedDelegate UAppLovinMAX::OnBannerAdClickedDelegate;
 UAppLovinMAX::FOnBannerAdExpandedDelegate UAppLovinMAX::OnBannerAdExpandedDelegate;
 UAppLovinMAX::FOnBannerAdCollapsedDelegate UAppLovinMAX::OnBannerAdCollapsedDelegate;
+UAppLovinMAX::FOnBannerAdRevenuePaidDelegate UAppLovinMAX::OnBannerAdRevenuePaidDelegate;
 UAppLovinMAX::FOnMRecAdLoadedDelegate UAppLovinMAX::OnMRecAdLoadedDelegate;
 UAppLovinMAX::FOnMRecAdLoadFailedDelegate UAppLovinMAX::OnMRecAdLoadFailedDelegate;
 UAppLovinMAX::FOnMRecAdClickedDelegate UAppLovinMAX::OnMRecAdClickedDelegate;
 UAppLovinMAX::FOnMRecAdExpandedDelegate UAppLovinMAX::OnMRecAdExpandedDelegate;
 UAppLovinMAX::FOnMRecAdCollapsedDelegate UAppLovinMAX::OnMRecAdCollapsedDelegate;
+UAppLovinMAX::FOnMRecAdRevenuePaidDelegate UAppLovinMAX::OnMRecAdRevenuePaidDelegate;
 UAppLovinMAX::FOnInterstitialLoadedDelegate UAppLovinMAX::OnInterstitialLoadedDelegate;
 UAppLovinMAX::FOnInterstitialLoadFailedDelegate UAppLovinMAX::OnInterstitialLoadFailedDelegate;
 UAppLovinMAX::FOnInterstitialHiddenDelegate UAppLovinMAX::OnInterstitialHiddenDelegate;
 UAppLovinMAX::FOnInterstitialDisplayedDelegate UAppLovinMAX::OnInterstitialDisplayedDelegate;
 UAppLovinMAX::FOnInterstitialAdFailedToDisplayDelegate UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate;
 UAppLovinMAX::FOnInterstitialClickedDelegate UAppLovinMAX::OnInterstitialClickedDelegate;
+UAppLovinMAX::FOnInterstitialAdRevenuePaidDelegate UAppLovinMAX::OnInterstitialAdRevenuePaidDelegate;
 UAppLovinMAX::FOnRewardedAdLoadedDelegate UAppLovinMAX::OnRewardedAdLoadedDelegate;
 UAppLovinMAX::FOnRewardedAdLoadFailedDelegate UAppLovinMAX::OnRewardedAdLoadFailedDelegate;
 UAppLovinMAX::FOnRewardedAdDisplayedDelegate UAppLovinMAX::OnRewardedAdDisplayedDelegate;
 UAppLovinMAX::FOnRewardedAdHiddenDelegate UAppLovinMAX::OnRewardedAdHiddenDelegate;
 UAppLovinMAX::FOnRewardedAdClickedDelegate UAppLovinMAX::OnRewardedAdClickedDelegate;
+UAppLovinMAX::FOnRewardedAdRevenuePaidDelegate UAppLovinMAX::OnRewardedAdRevenuePaidDelegate;
 UAppLovinMAX::FOnRewardedAdFailedToDisplayDelegate UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate;
 UAppLovinMAX::FOnRewardedAdReceivedRewardDelegate UAppLovinMAX::OnRewardedAdReceivedRewardDelegate;
 
 void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
 {
-    if (Name == "OnSdkInitializedEvent")
+    if (Name == TEXT("OnSdkInitializedEvent"))
     {
         FSdkConfiguration SdkConfiguration(Body);
         UAppLovinMAX::OnSdkInitializedDelegate.Broadcast(SdkConfiguration);
@@ -589,98 +593,118 @@ void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
     else  // Ad Events
     {
         FAdInfo AdInfo(Body);
-        int ErrorCode = FCString::Atoi(*Body.FindRef("errorCode"));
-        if (Name == "OnBannerAdLoadedEvent")
+
+        FAdError AdError{FCString::Atoi(*Body.FindRef(TEXT("errorCode"))),
+            Body.FindRef(TEXT("errorMessage")),
+            Body.FindRef(TEXT("errorAdLoadFailureInfo"))};
+
+        if (Name == TEXT("OnBannerAdLoadedEvent"))
         {
             UAppLovinMAX::OnBannerAdLoadedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnBannerAdLoadFailedEvent")
+        else if (Name == TEXT("OnBannerAdLoadFailedEvent"))
         {
-            UAppLovinMAX::OnBannerAdLoadFailedDelegate.Broadcast(AdInfo, ErrorCode);
+            UAppLovinMAX::OnBannerAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
         }
-        else if (Name == "OnBannerAdClickedEvent")
+        else if (Name == TEXT("OnBannerAdClickedEvent"))
         {
             UAppLovinMAX::OnBannerAdClickedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnBannerAdExpandedEvent")
+        else if (Name == TEXT("OnBannerAdExpandedEvent"))
         {
             UAppLovinMAX::OnBannerAdExpandedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnBannerAdCollapsedEvent")
+        else if (Name == TEXT("OnBannerAdCollapsedEvent"))
         {
             UAppLovinMAX::OnBannerAdCollapsedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnMRecAdLoadedEvent")
+        else if (Name == TEXT("OnBannerAdRevenuePaidEvent"))
+        {
+            UAppLovinMAX::OnBannerAdRevenuePaidDelegate.Broadcast(AdInfo);
+        }
+        else if (Name == TEXT("OnMRecAdLoadedEvent"))
         {
             UAppLovinMAX::OnMRecAdLoadedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnMRecAdLoadFailedEvent")
+        else if (Name == TEXT("OnMRecAdLoadFailedEvent"))
         {
-            UAppLovinMAX::OnMRecAdLoadFailedDelegate.Broadcast(AdInfo, ErrorCode);
+            UAppLovinMAX::OnMRecAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
         }
-        else if (Name == "OnMRecAdClickedEvent")
+        else if (Name == TEXT("OnMRecAdClickedEvent"))
         {
             UAppLovinMAX::OnMRecAdClickedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnMRecAdExpandedEvent")
+        else if (Name == TEXT("OnMRecAdExpandedEvent"))
         {
             UAppLovinMAX::OnMRecAdExpandedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnMRecAdCollapsedEvent")
+        else if (Name == TEXT("OnMRecAdCollapsedEvent"))
         {
             UAppLovinMAX::OnMRecAdCollapsedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnInterstitialLoadedEvent")
+        else if (Name == TEXT("OnMRecAdRevenuePaidEvent"))
+        {
+            UAppLovinMAX::OnMRecAdRevenuePaidDelegate.Broadcast(AdInfo);
+        }
+        else if (Name == TEXT("OnInterstitialLoadedEvent"))
         {
             UAppLovinMAX::OnInterstitialLoadedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnInterstitialLoadFailedEvent")
+        else if (Name == TEXT("OnInterstitialLoadFailedEvent"))
         {
-            UAppLovinMAX::OnInterstitialLoadFailedDelegate.Broadcast(AdInfo, ErrorCode);
+            UAppLovinMAX::OnInterstitialLoadFailedDelegate.Broadcast(AdInfo, AdError);
         }
-        else if (Name == "OnInterstitialHiddenEvent")
+        else if (Name == TEXT("OnInterstitialHiddenEvent"))
         {
             UAppLovinMAX::OnInterstitialHiddenDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnInterstitialDisplayedEvent")
+        else if (Name == TEXT("OnInterstitialDisplayedEvent"))
         {
             UAppLovinMAX::OnInterstitialDisplayedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnInterstitialAdFailedToDisplayEvent")
+        else if (Name == TEXT("OnInterstitialAdFailedToDisplayEvent"))
         {
-            UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.Broadcast(AdInfo, ErrorCode);
+            UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
         }
-        else if (Name == "OnInterstitialClickedEvent")
+        else if (Name == TEXT("OnInterstitialClickedEvent"))
         {
             UAppLovinMAX::OnInterstitialClickedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnRewardedAdLoadedEvent")
+        else if (Name == TEXT("OnInterstitialAdRevenuePaidEvent"))
+        {
+            UAppLovinMAX::OnInterstitialAdRevenuePaidDelegate.Broadcast(AdInfo);
+        }
+        else if (Name == TEXT("OnRewardedAdLoadedEvent"))
         {
             UAppLovinMAX::OnRewardedAdLoadedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnRewardedAdLoadFailedEvent")
+        else if (Name == TEXT("OnRewardedAdLoadFailedEvent"))
         {
-            UAppLovinMAX::OnRewardedAdLoadFailedDelegate.Broadcast(AdInfo, ErrorCode);
+            UAppLovinMAX::OnRewardedAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
         }
-        else if (Name == "OnRewardedAdDisplayedEvent")
+        else if (Name == TEXT("OnRewardedAdDisplayedEvent"))
         {
             UAppLovinMAX::OnRewardedAdDisplayedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnRewardedAdHiddenEvent")
+        else if (Name == TEXT("OnRewardedAdHiddenEvent"))
         {
             UAppLovinMAX::OnRewardedAdHiddenDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnRewardedAdClickedEvent")
+        else if (Name == TEXT("OnRewardedAdClickedEvent"))
         {
             UAppLovinMAX::OnRewardedAdClickedDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnRewardedAdFailedToDisplayEvent")
+        else if (Name == TEXT("OnRewardedAdRevenuePaidEvent"))
         {
-            UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.Broadcast(AdInfo, ErrorCode);
+            UAppLovinMAX::OnRewardedAdRevenuePaidDelegate.Broadcast(AdInfo);
         }
-        else if (Name == "OnRewardedAdReceivedRewardEvent")
+        else if (Name == TEXT("OnRewardedAdFailedToDisplayEvent"))
         {
-            FReward Reward{Body.FindRef("rewardLabel"), FCString::Atoi(*Body.FindRef("rewardAmount"))};
+            UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
+        }
+        else if (Name == TEXT("OnRewardedAdReceivedRewardEvent"))
+        {
+            FAdReward Reward{Body.FindRef(TEXT("rewardLabel")), FCString::Atoi(*Body.FindRef(TEXT("rewardAmount")))};
             UAppLovinMAX::OnRewardedAdReceivedRewardDelegate.Broadcast(AdInfo, Reward);
         }
         else
@@ -697,7 +721,7 @@ void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
 NSArray<NSString *> *UAppLovinMAX::GetNSArray(const TArray<FString> &Array)
 {
     NSMutableArray<NSString *> *NewArray = [NSMutableArray arrayWithCapacity:Array.Num()];
-    for (auto &Element : Array)
+    for (const FString &Element : Array)
     {
         [NewArray addObject:Element.GetNSString()];
     }
@@ -707,7 +731,7 @@ NSArray<NSString *> *UAppLovinMAX::GetNSArray(const TArray<FString> &Array)
 NSDictionary<NSString *, NSString *> *UAppLovinMAX::GetNSDictionary(const TMap<FString, FString> &Map)
 {
     NSMutableDictionary<NSString *, NSString *> *NewDictionary = [NSMutableDictionary dictionaryWithCapacity:Map.Num()];
-    for (auto &Entry : Map)
+    for (const TPair<FString, FString> &Entry : Map)
     {
         NewDictionary[Entry.Key.GetNSString()] = Entry.Value.GetNSString();
     }
