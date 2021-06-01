@@ -12,6 +12,6 @@ DEFINE_LOG_CATEGORY(LogAppLovinMAX);
 #define MAX_W(message, ...)           UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__)
 #define MAX_E(message, ...)           UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__)
 
-#define MAX_USER_DEBUG(message, ...)      { if( UAppLovinMAX::IsVerboseLoggingEnabled() ) { UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__) }}
-#define MAX_USER_WARN(message, ...)    { if( UAppLovinMAX::IsVerboseLoggingEnabled() ) { UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__) }}
-#define MAX_USER_ERROR(message, ...)      { if( UAppLovinMAX::IsVerboseLoggingEnabled() ) { UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__) }}
+#define MAX_USER_DEBUG(message, ...)      { if (UAppLovinMAX::IsVerboseLoggingEnabled()) { UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__) }}
+#define MAX_USER_WARN(message, ...)    { if (UAppLovinMAX::IsVerboseLoggingEnabled()) { UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__) }}
+#define MAX_USER_ERROR(message, ...)      { if (UAppLovinMAX::IsVerboseLoggingEnabled()) { UE_LOG(LogAppLovinMAX, Log, TEXT(message), ##__VA_ARGS__) }}
