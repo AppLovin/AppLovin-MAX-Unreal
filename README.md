@@ -8,9 +8,12 @@ Link to extension
 
 ## Import the Plugin
 
-Copy the `AppLovinMAX` plugin to the `Plugins` directory for your project.
+Take the following steps to import the plugin into your project:
 
-Add `AppLovinMAX` as a dependency to the `PublicDependencyModuleNames` array inside of your app's `APPNAME.Build.cs` file:
+1. Go to the directory in your project containing the file `{PROJECTNAME}.uproject`
+2. Create a `Plugins` directory if it does not exist.
+3. Move the `AppLovinMAX` directory to the `Plugins` directory in your project.
+4. Add `AppLovinMAX` as a dependency to the `PublicDependencyModuleNames` array inside of your app's `{PROJECTNAME}.Build.cs` file:
 
 ```c#
 PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AppLovinMAX" });
@@ -19,21 +22,19 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 ## Requirements
 
 - Unreal Engine 4.x
-- For Android: ==TODO==
 - For iOS builds:
     - Your build will fail if you do not build with Xcode 12 or higher. [The App Store now requires apps to be built with Xcode 12.](https://developer.apple.com/news/?id=ib31uj1j) AppLovin recommends that you update Xcode to version 12.5 or higher in order to stay ahead of anticipated minimum requirements.
-    - The AppLovin MAX plugin requires CocoaPods. Install CocoaPods by following the instructions at [the CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html#getting-started).
 
 ## Initialize the SDK
 
-Attach a function delegate to the `OnSdkInitializedDelegate` and initialize the SDK as soon as your app launches, as in the following code sample.
+Attach a function delegate to the `OnSdkInitializedDelegate` and initialize the SDK as soon as your app launches, as in the code sample below.
 
 You may want to tag users with your own internal user ID so that you can then receive the ID in an impression-level user revenue API or in [S2S-rewarded](https://dash.applovin.com/documentation/mediation/s2s-rewarded-callback-api) postbacks. If so, set the user ID before you initialize the SDK.
 
 ```cpp
 #include "AppLovinMAX.h"
 
-UAppLovinMAX::OnSdkInitializedDelegate.AddLambda([](const FSdkConfiguration& SdkConfiguration)
+UAppLovinMAX::OnSdkInitializedDelegate.AddLambda([](const FSdkConfiguration &SdkConfiguration)
 {
     // AppLovin SDK is initialized, start loading ads
 });
@@ -90,7 +91,7 @@ The final result should look similar to this:
             <key>AppLovinConsentFlowPrivacyPolicy</key>
             <string>https://your_company_name.com/privacy_policy</string>
             <key>AppLovinConsentFlowTermsOfService</key>
-            <string>https://your_company_name.com/terms_of_service</string>
+			<string>https://your_company_name.com/terms_of_service</string>
         </dict>
     </addElements>
 </iosPListUpdates>
@@ -128,7 +129,7 @@ UAppLovinMAX::Initialize("SDK_KEY");
 
 ## Loading an Interstitial Ad
 
-The following code shows you how to attach listeners and load the first interstitial.
+The following code shows you how to bind to delegates and load the first interstitial.
 
 ```cpp
 // UMyWidget.cpp (UMyWidget inherits from UObject to access TimerManager)
@@ -141,13 +142,13 @@ The following code shows you how to attach listeners and load the first intersti
 #include "Engine/World.h"
 #include "TimerManager.h"
 
-const FString InterstitialAdUnitId = "YOUR_AD_UNIT_ID";
+const FString InterstitialAdUnitId = TEXT("YOUR_AD_UNIT_ID");
 int RetryAttempt = 0;
 FTimerHandle LoadTimerHandle;
 
 void UMyWidget::InitializeInterstitialAds()
 {
-    // Attach function delegates
+    // Bind member functions to delegates
     UAppLovinMAX::OnInterstitialLoadedDelegate.AddUObject(this, &UMyWidget::OnInterstitialLoaded);
     UAppLovinMAX::OnInterstitialLoadFailedDelegate.AddUObject(this, &UMyWidget::OnInterstitialLoadFailed);
     UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.AddUObject(this, &UMyWidget::OnInterstitialAdFailedToDisplay);
@@ -210,7 +211,7 @@ if (UAppLovinMAX::IsInterstitialReady(InterstitialAdUnitId))
 
 ## Loading a Rewarded Ad
 
-The following code shows you how to attach listeners and load the first rewarded ad: ==TODO==
+The following code shows you how to bind to delegates and load the first rewarded ad:
 
 ```cpp
 // UMyWidget.cpp (UMyWidget inherits from UObject to access TimerManager)
@@ -223,13 +224,13 @@ The following code shows you how to attach listeners and load the first rewarded
 #include "Engine/World.h"
 #include "TimerManager.h"
 
-const FString RewardedAdUnitId = "YOUR_AD_UNIT_ID";
+const FString RewardedAdUnitId = TEXT("YOUR_AD_UNIT_ID");
 int RetryAttempt = 0;
 FTimerHandle LoadTimerHandle;
 
 void UMyWidget::InitializeRewardedAds()
 {   
-    // Attach function delegates
+	// Bind member functions to delegates
     UAppLovinMAX::OnRewardedAdLoadedDelegate.AddUObject(this, &UMyWidget::OnRewardedAdLoaded);
     UAppLovinMAX::OnRewardedAdLoadFailedDelegate.AddUObject(this, &UMyWidget::OnRewardedAdLoadFailed);
     UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.AddUObject(this, &UMyWidget::OnRewardedAdFailedToDisplay);
@@ -301,18 +302,16 @@ To learn how to receive callbacks to your currency server, see our [MAX S2S Rewa
 
 # Banners
 
-The following sections show you how to load and then show and hide a banner ad.
-
 ## Creating a Banner
 
 To load a banner, call `CreateBanner()`, passing it your Ad Unit ID and desired banner position:
 
 ```cpp
-const FString BannerAdUnitId = "YOUR_AD_UNIT_ID";
+const FString BannerAdUnitId = TEXT("YOUR_AD_UNIT_ID");
 
 void InitializeBannerAds()
 {
-        // Banners are automatically sized to 320×50 on phones and 728×90 on tablets
+	// Banners are automatically sized to 320×50 on phones and 728×90 on tablets
     // You may call the utility method AppLovinMAX.isTablet() to help with view sizing adjustments
     UAppLovinMAX::CreateBanner(BannerAdUnitId, EAdViewPosition::BottomCenter);
     
@@ -323,15 +322,17 @@ void InitializeBannerAds()
 
 The above example creates a banner at the bottom-center of the display ( `BottomCenter`). The complete list of position options are `TopLeft`, `TopCenter`, `TopRight`, `Centered`, `CenterLeft`, `CenterRight`, `BottomLeft`, `BottomCenter`, and `BottomRight`.
 
-Set your banner background color to any `FColor`, for example `FColor::Black`.
+Set your banner background color to any `FColor`, for example `FColor::Black` or `FColor::FromHex("#FFF200")` (yellow).
 
-## Showing/Hiding a Banner
+## Showing a Banner
 
 To show a banner, call `ShowBanner()`:
 
 ```cpp
 UAppLovinMAX::ShowBanner(BannerAdUnitId);
 ```
+
+## Hiding a Banner
 
 To hide a banner, call `HideBanner()`:
 
@@ -356,13 +357,15 @@ void InitializeMRecAds()
 }
 ```
 
-## Showing/Hiding an MRec
+## Showing an MREC
 
 To show an MREC ad, call `ShowMRec()`:
 
 ```cpp
 UAppLovinMAX::ShowMRec(MRecAdUnitId);
 ```
+
+## Hiding an MREC
 
 To hide an MREC ad, call `HideMRec()`:
 
@@ -464,6 +467,22 @@ AppLovin MAX helps you to obtain CCPA opt-out values on behalf of supported medi
 
 To learn how to implement Facebook’s Limited Data Use flag, read the [Facebook developer documentation](https://developers.facebook.com/docs/marketing-apis/data-processing-options).
 
+# Error Codes
+
+Your ad display delegate or callback interface will receive a call if an ad failed to load or failed to display. This call will be accompanied by an error code. This page describes the error codes you may see.
+
+### Error Object
+
+The error that you receive in your callback is a first-class error object , `AdError`. This object has three properties:
+
+1. `Code` — the error code, which you can find in the table below.
+2. `Message` — a human-readable message that describes the error.
+3. `AdLoadFailureInfo` — a description string that, when present, contains error codes and reasons why each mediated network failed to load an ad.
+
+## MAX Error Codes
+
+[Same as documentation here](https://dash.applovin.com/documentation/mediation/react-native/getting-started/errorcodes#error-codes)
+
 # SKAdNetwork
 
 Apple provides SKAdNetwork as a privacy-safe way for ad networks like AppLovin to track installs. Until iOS 14, ad networks could attribute campaigns based on a user’s IDFA. But starting with iOS 14, ad networks are less able to use IDFAs to attribute which users have installed based on which ads they have interacted with.
@@ -474,7 +493,14 @@ You can no longer rely on IDFA to track ad campaign performance. If you support 
 
 ## How Do I Implement SKAdNetwork?
 
-Same as [iOS SKAdNetwork documentation section](https://dash.applovin.com/documentation/mediation/ios/getting-started/skadnetwork-info#how-do-i-implement-skadnetwork?).
+To use SKAdNetwork, determine the set of networks that have permission to show ads within your app, and check their checkboxes in the Info.plist Generator below. Then add each network’s `SKAdNetworkIdentifier` list, as shown in concatenated form in the code segment generated by the **Info.plist Generator**, to your app’s `Info.plist` file (e.g., by including it under `iosPListUpdates` in `AppLovinMAX_IOS_UPL.xml`). For more information, see [“SKAdNetwork: Configuring the Participating Apps”](https://developer.apple.com/documentation/storekit/skadnetwork/configuring_the_participating_apps) in Apple’s StoreKit Developer documentation.
+
+If you only need SKAdNetwork identifiers for the AppLovin network (not for any of the other ad networks that AppLovin mediates), you can also retrieve that list in the JSON or XML structure that is returned if you request one of the following URLs:
+
+- https://dash.applovin.com/docs/v1/skadnetwork_ids.json (JSON)
+- https://dash.applovin.com/docs/v1/skadnetwork_ids.xml (XML)
+
+If you also need SKAdNetwork identifiers for other mediated ad networks that you integrated with MAX, check those networks in the **Info.plist Generator** below. This will update the `Info.plist` code segment in the Generator by adding each of those networks’ `SKAdNetworkIdentifier` lists. (If you do not check any networks, only the `SKAdNetworkIdentifier` list from the AppLovin network will appear in the code segment.)
 
 # Advanced Settings
 
@@ -482,7 +508,7 @@ This page explains some advanced features of the AppLovin SDK. You will learn ho
 
 ## Ad Placements
 
-You can set a placement name for each ad unit (for example, “Rewarded VideoLevels”, “INTER_levelEnd”, or “RewardedVideoCoinStore”). This can help you aggregate statistics for different placement categories.
+You can set a placement name for each ad unit (for example, "Rewarded VideoLevels", "INTER_levelEnd", or "RewardedVideoCoinStore"). This can help you aggregate statistics for different placement categories.
 
 Below are code snippets that show you how to set the placement name for various ad formats. Note that for banners and MRECs you must set the placement name before you load the banner or MREC.
 
@@ -540,3 +566,64 @@ Verbose Logging On: true
 ```
 
 AppLovin SDK tags its logs with the tag **/AppLovinSdk: [AppLovinSdk]**.
+
+## Creative ID and Network Name
+
+You can retrieve the creative ID and the network name of displayed ads of various mediated networks. Refer to the [Creative Debugger](https://dash.applovin.com/documentation/mediation/unreal/testing-networks/creative-debugger) documentation for more information.
+
+---
+
+# MAX Demo App
+
+MAX Demo App is a sample app that demonstrates how you can integrate MAX into your mobile apps.
+
+You can integrate those network SDKs that you desire. Then you can monitor the callbacks that MAX makes to your app that notify you of events for each ad format. This way you can ensure that you have completed the integration successfully.
+
+AppLovin recommends that you use [Test Mode](https://dash.applovin.com/documentation/mediation/unreal/testing-networks/test-mode) with this **Demo App** as you load and show ads during the testing process.You can find the open-source MAX demo apps in the AppLovin [Unreal Engine repository](https://github.com/AppLovin/AppLovin-MAX-Unreal).
+
+Watch the repository in order to receive the latest notifications on **MAX Demo App** updates and SDK releases.
+
+# Creative Debugger
+
+With the AppLovin MAX SDK, you can expose comprehensive ad information in your apps. You can identify problematic ads when you incorporate the creative debugger into your test environments, QA processes, and support ticket systems.
+
+The creative debugger displays a button over fullscreen ads when you complete a special gesture (described in the video below). If you then press the button that appears, you will see an alert that contains information about the current ad (such as its mediated network and creative ID), and you will be able to report creative issues for that ad.
+
+To disable the creative debugger in code, pass `false` to the `SetCreativeDebuggerEnabled()` method of the MAX SDK:
+
+```cpp
+UAppLovinMAX::SetCreativeDebuggerEnabled(false);
+```
+
+## Creative ID
+
+You can also retrieve the creative ID of displayed ads of various mediated networks. You can do this either by using the creative debugger, or by using one of the ad lifecycle callbacks in the MAX SDK. The following code shows you how to do this with the MAX SDK in the "ad displayed" callback of an interstitial ad:
+
+```cpp
+UAppLovinMAX::OnInterstitialDisplayedDelegate.AddLambda([](const FAdInfo &AdInfo)
+{
+    FString CreativeId = AdInfo.CreativeIdentifier;
+});                                            
+```
+
+## Network Name
+
+You can also retrieve the name of the ad network that is responsible for an ad. The following code shows you how to do this with the MAX SDK in the "ad displayed" callback of an interstitial ad:
+
+```cpp
+UAppLovinMAX::OnInterstitialDisplayedDelegate.AddLambda([](const FAdInfo &AdInfo)
+{
+    FString NetworkName = AdInfo.NetworkName;
+});       
+```
+
+# Mediation Debugger
+
+## Displaying the Mediation Debugger
+
+To display the Mediation Debugger, make the following call:
+
+```cpp
+UAppLovinMAX::ShowMediationDebugger();
+```
+

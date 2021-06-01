@@ -34,7 +34,7 @@
   <!-- optional additions to proguard -->
   <proguardAdditions> </proguardAdditions>
 
-  <!-- optional AAR imports additions (uncomment to use SDK hosted on Gradle) -->
+  <!-- optional AAR imports additions -->
   <!-- <AARImports> -->
   <!--   <if condition="bEnabled"> -->
   <!--     <true> -->

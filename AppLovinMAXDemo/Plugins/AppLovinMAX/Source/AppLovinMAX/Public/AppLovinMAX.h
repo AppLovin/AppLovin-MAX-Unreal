@@ -147,7 +147,8 @@ public:
     static bool IsMuted();
 
     /**
-     * Toggle verbose logging of AppLovin SDK. If enabled, AppLovin messages will appear in standard application log accessible via console. Log messages in Unreal are tagged with the "LogAppLovinMAX" category, and all other log messages will have the "AppLovinSdk" tag. 
+     * Toggle verbose logging of AppLovin SDK. If enabled, AppLovin messages will appear in standard application log accessible via console. Log messages in Unreal are tagged with the "LogAppLovinMAX" category, and all other log messages will have the
+     * "AppLovinSdk" tag.
      * @param bEnabled - True if verbose logging should be enabled
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
@@ -458,6 +459,8 @@ public:
     static FOnRewardedAdReceivedRewardDelegate OnRewardedAdReceivedRewardDelegate;
 
 protected:
+    // MARK: - Utility Methods
+
     static FString GetAdViewPositionString(EAdViewPosition AdViewPosition);
     static void ValidateAdUnitIdentifier(const FString &AdUnitIdentifier, const FString &DebugPurpose);
 
