@@ -717,7 +717,39 @@ public class AppLovinMAX
     @Override
     public void onAdRevenuePaid(final MaxAd ad)
     {
-        // TODO: Implement
+        final MaxAdFormat adFormat = ad.getFormat();
+        final String name;
+        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat )
+        {
+            name = "OnBannerAdRevenuePaidEvent";
+        }
+        else if ( MaxAdFormat.MREC == adFormat )
+        {
+            name = "OnMRecAdRevenuePaidEvent";
+        }
+        else if ( MaxAdFormat.CROSS_PROMO == adFormat )
+        {
+            name = "OnCrossPromoAdRevenuePaidEvent";
+        }
+        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
+        {
+            name = "OnInterstitialAdRevenuePaidEvent";
+        }
+        else if ( MaxAdFormat.REWARDED == adFormat )
+        {
+            name = "OnRewardedAdRevenuePaidEvent";
+        }
+        else if ( MaxAdFormat.REWARDED_INTERSTITIAL == adFormat )
+        {
+            name = "OnRewardedInterstitialAdRevenuePaidEvent";
+        }
+        else
+        {
+            logInvalidAdFormat( adFormat );
+            return;
+        }
+
+        sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     // region Internal Methods

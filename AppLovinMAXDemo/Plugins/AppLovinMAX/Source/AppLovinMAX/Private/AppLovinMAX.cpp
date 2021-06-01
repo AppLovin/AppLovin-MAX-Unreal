@@ -17,7 +17,7 @@ THIRD_PARTY_INCLUDES_END
 #include "Android/AndroidJNI.h"
 #endif
 
-// MARK: - Initialization (T)
+// MARK: - Initialization
 
 void UAppLovinMAX::Initialize()
 {
@@ -46,7 +46,7 @@ bool UAppLovinMAX::IsInitialized()
 #endif
 }
 
-// MARK: - Privacy (T)
+// MARK: - Privacy
 
 void UAppLovinMAX::SetHasUserConsent(bool bHasUserConsent)
 {
@@ -108,7 +108,7 @@ bool UAppLovinMAX::IsDoNotSell()
 #endif
 }
 
-// MARK: - General (T)
+// MARK: - General
 
 bool UAppLovinMAX::IsTablet()
 {
@@ -197,7 +197,7 @@ void UAppLovinMAX::SetTestDeviceAdvertisingIdentifiers(const TArray<FString> &Ad
 #endif
 }
 
-// MARK: - Event Tracking (T)
+// MARK: - Event Tracking
 
 void UAppLovinMAX::TrackEvent(const FString &Name)
 {
@@ -374,7 +374,7 @@ void UAppLovinMAX::DestroyMRec(const FString &AdUnitIdentifier)
 #endif
 }
 
-// MARK: - Interstitials (T)
+// MARK: - Interstitials
 
 void UAppLovinMAX::LoadInterstitial(const FString &AdUnitIdentifier)
 {
@@ -424,7 +424,7 @@ void UAppLovinMAX::SetInterstitialExtraParameter(const FString &AdUnitIdentifier
 #endif
 }
 
-// MARK: - Rewarded (T)
+// MARK: - Rewarded
 
 void UAppLovinMAX::LoadRewardedAd(const FString &AdUnitIdentifier)
 {
@@ -684,7 +684,7 @@ void UAppLovinMAX::ValidateAdUnitIdentifier(const FString &AdUnitIdentifier, con
     }
 }
 
-// MARK: - IOS (T)
+// MARK: - IOS
 // Note that Objective-C in Unreal does not compile with ARC, but we are only passing
 // autoreleased objects to ARC-compiled plugin code, which allows us to avoid manual release.
 
@@ -731,7 +731,7 @@ MAUnrealPlugin *UAppLovinMAX::GetIOSPlugin()
 
 #endif
 
-// MARK: - Android (T)
+// MARK: - Android
 
 #if PLATFORM_ANDROID
 

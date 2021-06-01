@@ -3,7 +3,6 @@
 #include "SdkConfiguration.h"
 #include "AppLovinMAXUtils.h"
 
-// nt
 FSdkConfiguration::FSdkConfiguration(const TMap<FString, FString> &EventBody)
 {
     CountryCode = EventBody.FindRef(TEXT("countryCode"));
