@@ -134,10 +134,6 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)initialize:(NSString *)pluginVersion sdkKey:(NSString *)sdkKey
 {
-    // TODO: Temporary Swizzling
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    [infoDict setValue: @"com.revolverolver.flipmania" forKey: @"CFBundleIdentifier"];
-    
     // Guard against running init logic multiple times
     if ( [self isPluginInitialized] )
     {

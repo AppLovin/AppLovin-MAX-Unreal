@@ -474,7 +474,7 @@ void UAppLovinMAX::SetRewardedAdExtraParameter(const FString &AdUnitIdentifier, 
 #endif
 }
 
-// MARK: - Delegates 
+// MARK: - Delegates
 
 // Static Delegate Initialization
 UAppLovinMAX::FOnSdkInitializedDelegate UAppLovinMAX::OnSdkInitializedDelegate;
