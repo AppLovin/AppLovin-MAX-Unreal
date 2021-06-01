@@ -17,6 +17,8 @@ THIRD_PARTY_INCLUDES_END
 #include "Android/AndroidJNI.h"
 #endif
 
+const FString PluginVersion = TEXT("1.0");
+
 // MARK: - Initialization
 
 void UAppLovinMAX::Initialize()
@@ -27,7 +29,6 @@ void UAppLovinMAX::Initialize()
 
 void UAppLovinMAX::Initialize(const FString &SdkKey)
 {
-    FString PluginVersion = FEngineVersion::Current().ToString(EVersionComponent::Patch);
 #if PLATFORM_IOS
     [GetIOSPlugin() initialize:PluginVersion.GetNSString() sdkKey:SdkKey.GetNSString()];
 #elif PLATFORM_ANDROID

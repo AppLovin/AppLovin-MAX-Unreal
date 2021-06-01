@@ -5,7 +5,7 @@ using System.IO;
 
 public class AppLovinMAX : ModuleRules
 {
-	private const string VersionString = "4.26.2";
+	private const string PluginVersion = "1.0";
 
 	public AppLovinMAX(ReadOnlyTargetRules Target) : base(Target)
 	{
@@ -74,7 +74,7 @@ public class AppLovinMAX : ModuleRules
 				AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
-				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + VersionString );
+				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + PluginVersion );
 
 				AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 			}
@@ -103,7 +103,7 @@ public class AppLovinMAX : ModuleRules
 				AdditionalPropertiesForReceipt.Add( "AndroidPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_Android.xml" ) );
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
-				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + VersionString );
+				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + PluginVersion );
 			}
 			else
 			{
