@@ -35,14 +35,14 @@
   <proguardAdditions> </proguardAdditions>
 
   <!-- optional AAR imports additions -->
-  <!-- <AARImports> -->
-  <!--   <if condition="bEnabled"> -->
-  <!--     <true> -->
-  <!--       <insertValue value="com.applovin,applovin-sdk,+@aar" /> -->
-  <!--       <insertNewline/> -->
-  <!--     </true> -->
-  <!--   </if> -->
-  <!-- </AARImports> -->
+  <AARImports>
+    <if condition="bEnabled">
+      <true>
+        <insertValue value="com.applovin,applovin-sdk,+@aar" />
+        <insertNewline/>
+      </true>
+    </if>
+  </AARImports>
 
   <!-- optional base build.gradle additions -->
   <baseBuildGradleAdditions>
@@ -68,7 +68,6 @@
           }
 
           dependencies.implementation(name: 'applovin-max-unreal-plugin', ext: 'aar')
-          dependencies.implementation(name: 'applovin-sdk-10.3.0', ext: 'aar')
         </insert>
       </true>
     </if>

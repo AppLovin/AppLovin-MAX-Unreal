@@ -2,13 +2,13 @@ plugins {
     id("com.android.library")
 }
 
-private val versionMajor = 4
-private val versionMinor = 2
-private val versionPatch = 1
+private val versionMajor = 1
+private val versionMinor = 0
+private val versionPatch = 0
 
 var libraryVersionName by extra("${versionMajor}.${versionMinor}.${versionPatch}")
 var libraryVersionCode by extra((versionMajor * 10000) + (versionMinor * 100) + versionPatch)
-var libraryArtifactId by extra("applovin-max-unity-plugin")
+var libraryArtifactId by extra("applovin-max-unreal-plugin")
 var libraryArtifactName by extra("${libraryArtifactId}-${libraryVersionName}.aar")
 
 var libraryVersions = rootProject.extra["versions"] as Map<*, *>
@@ -27,7 +27,7 @@ android {
 
     flavorDimensions("default")
     productFlavors {
-        // Flavor when building Unity Plugin as a standalone product
+        // Flavor when building Unreal Plugin as a standalone product
         create("standalone") {
             buildConfigField("boolean", "IS_TEST_APP", "false")
         }
@@ -57,9 +57,6 @@ dependencies {
     else {
         compileOnly ("com.applovin:applovin-sdk:+@aar")
     }
-
-    // Unity
-    compileOnly("com.unity.player:android-sdk:1.0@jar")
 }
 
 repositories {

@@ -17,7 +17,7 @@ THIRD_PARTY_INCLUDES_END
 #include "Android/AndroidJNI.h"
 #endif
 
-const FString PluginVersion = TEXT("1.0");
+const FString PluginVersion = TEXT("1.0.0");
 
 // MARK: - Initialization
 

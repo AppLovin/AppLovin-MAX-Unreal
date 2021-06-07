@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep public class com.applovin.mediation.unity.* { *; }
+-keep public class com.applovin.unreal.* { *; }

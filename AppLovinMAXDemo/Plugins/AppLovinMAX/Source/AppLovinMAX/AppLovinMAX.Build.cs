@@ -5,7 +5,7 @@ using System.IO;
 
 public class AppLovinMAX : ModuleRules
 {
-	private const string PluginVersion = "1.0";
+	private const string PluginVersion = "1.0.0";
 
 	public AppLovinMAX(ReadOnlyTargetRules Target) : base(Target)
 	{
@@ -89,7 +89,6 @@ public class AppLovinMAX : ModuleRules
 		{
 			string AppLovinAndroidPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "Android" );
 			string AppLovinPluginPath = Path.Combine( AppLovinAndroidPath, "applovin-max-unreal-plugin.aar" );
-			string AppLovinSDKPath = Path.Combine( AppLovinAndroidPath, "applovin-sdk-10.3.0.aar" );
 			if ( File.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin Android Plugin found" );
