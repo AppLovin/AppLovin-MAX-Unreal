@@ -6,6 +6,10 @@
 FSdkConfiguration::FSdkConfiguration(const TMap<FString, FString> &EventBody)
 {
     CountryCode = EventBody.FindRef(TEXT("countryCode"));
+    HasUserConsent = EventBody.FindRef(TEXT("hasUserConsent")) == TEXT("true");
+    IsAgeRestrictedUser = EventBody.FindRef(TEXT("isAgeRestrictedUser")) == TEXT("true");
+    IsDoNotSell = EventBody.FindRef(TEXT("isDoNotSell")) == TEXT("true");
+    IsTablet = EventBody.FindRef(TEXT("isTablet")) == TEXT("true");
 
     FString ConsentDialogStateStr = EventBody.FindRef(TEXT("consentDialogState"));
     if (ConsentDialogStateStr == TEXT("1"))

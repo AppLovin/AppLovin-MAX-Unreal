@@ -16,16 +16,15 @@ extern "C" {
 #endif
 void dispatchOnMainQueue(dispatch_block_t block)
 {
-    if ( block )
+    if ( !block ) return;
+
+    if ( [NSThread isMainThread] )
     {
-        if ( [NSThread isMainThread] )
-        {
-            block();
-        }
-        else
-        {
-            dispatch_async(dispatch_get_main_queue(), block);
-        }
+        block();
+    }
+    else
+    {
+        dispatch_async(dispatch_get_main_queue(), block);
     }
 }
 #ifdef __cplusplus
@@ -202,11 +201,29 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     }];
 }
 
-- (NSDictionary<NSString *, id> *)initializationMessage
+- (NSDictionary<NSString *, NSString *> *)initializationMessage
 {
-    return @{@"consentDialogState" : [@(self.sdkConfiguration.consentDialogState) stringValue],
-             @"appTrackingStatus" : [@(self.sdkConfiguration.appTrackingTransparencyStatus) stringValue],
-             @"countryCode" : self.sdkConfiguration.countryCode};
+    NSMutableDictionary<NSString *, NSString *> *message = [NSMutableDictionary dictionaryWithCapacity: 7];
+    
+    if ( self.sdkConfiguration )
+    {
+        message[@"consentDialogState"] = [@(self.sdkConfiguration.consentDialogState) stringValue];
+        message[@"appTrackingStatus"] = [@(self.sdkConfiguration.appTrackingTransparencyStatus) stringValue];
+        message[@"countryCode"] = self.sdkConfiguration.countryCode;
+    }
+    else
+    {
+        message[@"consentDialogState"] = [@(ALConsentDialogStateUnknown) stringValue];
+    }
+    
+    // Use "true" string to represent boolean value of true
+    message[@"hasUserConsent"] = [ALPrivacySettings hasUserConsent] ? @"true" : @"false";
+    message[@"isAgeRestrictedUser"] = [ALPrivacySettings isAgeRestrictedUser] ? @"true" : @"false";
+    message[@"isDoNotSell"] = [ALPrivacySettings isDoNotSell] ? @"true" : @"false";
+    message[@"isTablet"] = [self isTablet] ? @"true" : @"false";
+    
+    return message;
+
 }
 
 - (BOOL)isInitialized
@@ -521,7 +538,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
-- (void)didFailToLoadAdForAdUnitIdentifier:(NSString *)adUnitIdentifier withError:(nonnull MAError *)error
+- (void)didFailToLoadAdForAdUnitIdentifier:(NSString *)adUnitIdentifier withError:(MAError *)error
 {
     if ( !adUnitIdentifier )
     {

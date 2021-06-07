@@ -107,7 +107,7 @@ public class AppLovinMAX
         // Guard against running init logic multiple times
         if ( isPluginInitialized )
         {
-            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage() );
+            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
             return;
         }
 
@@ -198,17 +198,32 @@ public class AppLovinMAX
                     }
                 }.enable();
 
-                sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage() );
+                sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
             }
         } );
     }
 
-    private Map<String, String> getInitializationMessage()
+    private Map<String, String> getInitializationMessage(final Context context)
     {
-        Map<String, String> args = new HashMap<>( 2 );
-        args.put( "consentDialogState", Integer.toString( sdkConfiguration.getConsentDialogState().ordinal() ) );
-        args.put( "countryCode", sdkConfiguration.getCountryCode() );
-        return args;
+        Map<String, String> message = new HashMap<>( 6 );
+
+        if ( sdkConfiguration != null )
+        {
+            message.put( "consentDialogState", String.valueOf( sdkConfiguration.getConsentDialogState().ordinal() ) );
+            message.put( "countryCode", sdkConfiguration.getCountryCode() );
+        }
+        else
+        {
+            message.put( "consentDialogState", String.valueOf( AppLovinSdkConfiguration.ConsentDialogState.UNKNOWN.ordinal() ) );
+        }
+
+        // Use "true" string to represent boolean value of true
+        message.put( "hasUserConsent", String.valueOf( AppLovinPrivacySettings.hasUserConsent( context ) ) );
+        message.put( "isAgeRestrictedUser", String.valueOf( AppLovinPrivacySettings.isAgeRestrictedUser( context ) ) );
+        message.put( "isDoNotSell", String.valueOf( AppLovinPrivacySettings.isDoNotSell( context ) ) );
+        message.put( "isTablet", String.valueOf( AppLovinSdkUtils.isTablet( context ) ) );
+
+        return message;
     }
 
     public boolean isInitialized()
