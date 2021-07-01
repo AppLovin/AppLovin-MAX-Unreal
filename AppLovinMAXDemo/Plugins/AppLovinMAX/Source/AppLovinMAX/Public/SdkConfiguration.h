@@ -15,7 +15,7 @@ enum class EConsentDialogState : uint8
 };
 
 UENUM()
-enum class EAppTrackingStatus : uint8  // Only for iOS
+enum class EAppTrackingStatus : uint8 // Only for iOS
 {
     Unavailable,
     NotDetermined,

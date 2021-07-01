@@ -514,7 +514,7 @@ void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
         FSdkConfiguration SdkConfiguration(Body);
         UAppLovinMAX::OnSdkInitializedDelegate.Broadcast(SdkConfiguration);
     }
-    else  // Ad Events
+    else // Ad Events
     {
         FAdInfo AdInfo(Body);
         FAdError AdError{FCString::Atoi(*Body.FindRef(TEXT("errorCode"))), Body.FindRef(TEXT("errorMessage")), Body.FindRef(TEXT("errorAdLoadFailureInfo"))};
@@ -671,7 +671,7 @@ FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
     {
         return TEXT("bottom_center");
     }
-    else  // Position == EAdViewPosition::BottomRight
+    else // Position == EAdViewPosition::BottomRight
     {
         return TEXT("bottom_right");
     }
@@ -724,8 +724,8 @@ MAUnrealPlugin *UAppLovinMAX::GetIOSPlugin()
     static MAUnrealPlugin *PluginInstance = nil;
     static dispatch_once_t OnceToken;
     dispatch_once(&OnceToken, ^{
-      UIView *MainView = (UIView *)[IOSAppDelegate GetDelegate].IOSView;
-      PluginInstance = [[MAUnrealPlugin alloc] initWithView:MainView eventCallback:&ForwardIOSEvent];
+        UIView *MainView = (UIView *)[IOSAppDelegate GetDelegate].IOSView;
+        PluginInstance = [[MAUnrealPlugin alloc] initWithView:MainView eventCallback:&ForwardIOSEvent];
     });
     return PluginInstance;
 }

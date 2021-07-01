@@ -41,6 +41,6 @@ TMap<FString, FString> AppLovinMAXUtils::ParseStringIntoMap(const FString &Strin
 
 FString AppLovinMAXUtils::ParseColor(const FColor &Color)
 {
-    FString Hex = Color.ToHex();  // RRGGBBAA
+    FString Hex = Color.ToHex(); // RRGGBBAA
     return TEXT("#") + Hex.Right(2) + Hex.Left(6);
 }

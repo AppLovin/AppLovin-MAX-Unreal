@@ -14,4 +14,4 @@ namespace AppLovinMAXUtils
 
     /** Returns the hexadecimal color code as #AARRGGBB for the given FColor. */
     FString ParseColor(const FColor &Color);
-}
+} // namespace AppLovinMAXUtils

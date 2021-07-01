@@ -43,7 +43,7 @@ FSdkConfiguration::FSdkConfiguration(const TMap<FString, FString> &EventBody)
     {
         AppTrackingStatus = EAppTrackingStatus::Denied;
     }
-    else  // "3" is authorized
+    else // "3" is authorized
     {
         AppTrackingStatus = EAppTrackingStatus::Authorized;
     }
