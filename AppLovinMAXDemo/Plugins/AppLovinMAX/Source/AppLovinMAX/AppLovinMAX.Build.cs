@@ -37,9 +37,9 @@ public class AppLovinMAX : ModuleRules
 				// Add the AppLovin SDK framework
 				PublicAdditionalFrameworks.Add(
 					new Framework(
-						"AppLovinSDK",								// Framework name
-						AppLovinSDKPath,							// Zipped framework path
-						"Resources/AppLovinSDKResources.bundle"		// Resources path in ZIP
+						"AppLovinSDK",                          // Framework name
+						AppLovinSDKPath,                        // Zipped framework path
+						"Resources/AppLovinSDKResources.bundle" // Resources path in ZIP
 					)
 				);
 
