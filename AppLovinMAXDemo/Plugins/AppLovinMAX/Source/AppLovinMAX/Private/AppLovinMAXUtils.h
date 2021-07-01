@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 
-
 namespace AppLovinMAXUtils
 {
     /** Returns serialized string for a TMap to forward to native iOS and Android plugins. */

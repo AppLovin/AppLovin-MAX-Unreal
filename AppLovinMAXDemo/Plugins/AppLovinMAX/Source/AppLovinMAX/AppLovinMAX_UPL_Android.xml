@@ -7,6 +7,11 @@
 
     <!-- check if using Gradle -->
     <setBoolFromProperty result="bGradle" ini="Engine" section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" property="bEnableGradle" default="false"/>
+    <if condition="bGradle">
+        <false>
+            <log text="AppLovin Android SDK requires Gradle"/>
+        </false>
+    </if>
 
     <!-- get packaging for Applovin from ini and reset it if architecture not supported -->
     <setBoolFromProperty result="bEnabled" ini="Engine" section="AppLovin" property="bEnabled" default="true"/>
@@ -25,7 +30,7 @@
     <if condition="bEnabled">
       <true>
         <addPermission android:name="android.permission.INTERNET" />
-        <addPermission android:name="android.permission.ACCESS_WIFI_STATE" />
+        <addPermission android:name="android.permission.ACCESS_NETWORK_STATE" />
       </true>
     </if>
   </androidManifestUpdates>
@@ -102,7 +107,7 @@
     <if condition="bEnabled">
       <true>
         <insert>
-          import com.applovin.unreal.AppLovinMAX;
+          import com.applovin.unreal.MaxUnrealPlugin;
         </insert>
       </true>
     </if>
@@ -119,10 +124,10 @@
       <true>
         <insert>
         // Begin AppLovin gameActivityClassAdditions
-        public class AppLovinMAXListener implements AppLovinMAX.EventListener {
+        public class MaxUnrealPluginListener implements MaxUnrealPlugin.EventListener {
           public native void forwardEvent(String name, String params);
 
-          public AppLovinMAXListener() {}
+          public MaxUnrealPluginListener() {}
 
           @Override
           public void onReceivedEvent(String name, String params)

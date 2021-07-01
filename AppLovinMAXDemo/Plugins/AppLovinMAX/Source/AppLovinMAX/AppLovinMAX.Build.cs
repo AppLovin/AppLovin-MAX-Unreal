@@ -34,11 +34,12 @@ public class AppLovinMAX : ModuleRules
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
 				
-				// Add the AppLovin framework
+				// Add the AppLovin SDK framework
 				PublicAdditionalFrameworks.Add(
 					new Framework(
-						"AppLovinSDK",
-						AppLovinSDKPath
+						"AppLovinSDK",								// Framework name
+						AppLovinSDKPath,							// Zipped framework path
+						"Resources/AppLovinSDKResources.bundle"		// Resources path in ZIP
 					)
 				);
 

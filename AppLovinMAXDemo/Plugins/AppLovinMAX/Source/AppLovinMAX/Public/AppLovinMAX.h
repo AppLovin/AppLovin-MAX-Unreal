@@ -13,7 +13,7 @@
 #if PLATFORM_IOS
 @class MAUnrealPlugin;
 #elif PLATFORM_ANDROID
-class FJavaAndroidAppLovinMAX;
+class FJavaAndroidMaxUnrealPlugin;
 #endif
 
 // MARK: - Enums
@@ -470,6 +470,6 @@ protected:
     static NSDictionary<NSString *, NSString *> *GetNSDictionary(const TMap<FString, FString> &Map);
     static MAUnrealPlugin *GetIOSPlugin();
 #elif PLATFORM_ANDROID
-    static TSharedPtr<FJavaAndroidAppLovinMAX> GetAndroidPlugin();
+    static TSharedPtr<FJavaAndroidMaxUnrealPlugin> GetAndroidPlugin();
 #endif
 };

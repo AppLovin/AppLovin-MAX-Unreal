@@ -12,7 +12,7 @@ THIRD_PARTY_INCLUDES_START
 THIRD_PARTY_INCLUDES_END
 
 #elif PLATFORM_ANDROID
-#include "Android/AndroidJavaAppLovinMAX.h"
+#include "Android/AndroidJavaMaxUnrealPlugin.h"
 #include "Android/AndroidApplication.h"
 #include "Android/AndroidJNI.h"
 #endif
@@ -737,7 +737,7 @@ MAUnrealPlugin *UAppLovinMAX::GetIOSPlugin()
 #if PLATFORM_ANDROID
 
 // Implementation for Java method declared in AppLovinMAX_UPL_Android.xml
-extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024AppLovinMAXListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
+extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
 {
     FString Name = FJavaHelper::FStringFromParam(env, name);
     FString Params = FJavaHelper::FStringFromParam(env, params);
@@ -745,10 +745,14 @@ extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024AppLo
     ForwardEvent(Name, ParamsMap);
 }
 
-TSharedPtr<FJavaAndroidAppLovinMAX> UAppLovinMAX::GetAndroidPlugin()
+TSharedPtr<FJavaAndroidMaxUnrealPlugin> UAppLovinMAX::GetAndroidPlugin()
 {
-    static TSharedPtr<FJavaAndroidAppLovinMAX, ESPMode::ThreadSafe> instance = MakeShared<FJavaAndroidAppLovinMAX, ESPMode::ThreadSafe>();
-    return instance;
+    static TSharedPtr<FJavaAndroidMaxUnrealPlugin, ESPMode::ThreadSafe> Instance;
+    if (!Instance.IsValid())
+    {
+        Instance = MakeShared<FJavaAndroidMaxUnrealPlugin, ESPMode::ThreadSafe>();
+    }
+    return Instance;
 }
 
 #endif
