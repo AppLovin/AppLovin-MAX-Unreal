@@ -21,7 +21,7 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 
 ## Requirements
 
-- Unreal Engine 4.x
+- Unreal Engine 4.25+
 - For iOS builds:
     - Your build will fail if you do not build with Xcode 12 or higher. [The App Store now requires apps to be built with Xcode 12.](https://developer.apple.com/news/?id=ib31uj1j) AppLovin recommends that you update Xcode to version 12.5 or higher in order to stay ahead of anticipated minimum requirements.
 
