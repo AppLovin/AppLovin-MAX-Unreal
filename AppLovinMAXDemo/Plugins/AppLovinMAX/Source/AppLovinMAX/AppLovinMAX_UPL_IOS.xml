@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AppLovin plugin additions -->
+<root>
+  <init>
+    <log text="AppLovin IOS SDK init"/>
+  </init>
+
+  <iosPListUpdates>
+    <!-- Add any updates to Info.plist here -->
+  </iosPListUpdates>
+</root>

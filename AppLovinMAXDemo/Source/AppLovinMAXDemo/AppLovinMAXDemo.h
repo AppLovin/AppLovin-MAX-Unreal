@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright AppLovin Corporation. All Rights Reserved.
 
 #pragma once
 
