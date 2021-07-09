@@ -87,7 +87,7 @@ PublicAdditionalFrameworks.Add(
 
 
 def main():
-    print("NOTE: This script only installs AppLovin adapters. Please follow the instructions at the end of installation to complete your integration.\n")
+    print("NOTE: This script only installs AppLovin adapters and does not retrieve the third-party SDKs. Please refer to the README to complete your integration.\n")
 
     print("> Updating CocoaPods repos... (this may take a while)")
     subprocess.call(["pod", "--silent", "repo", "update"])
@@ -96,11 +96,7 @@ def main():
     parse_pods(pods)
 
     print(f"\n> Installed {len(adapter_code)} adapter(s)")
-    print("\nINTEGRATION STEPS")
-    print("\n1. Go to https://dash.applovin.com/documentation/mediation/manual-integration-ios")
-    print("2. Follow the instructions for \"Preparing Mediated Networks\". Add any necessary changes to Info.plist in AppLovinMAX_UPL_IOS.xml")
-    print("3. Download the third-party SDKs required by each installed adapter and create a corresponding '.embeddedframework.zip' file under ThirdParty/IOS")
-    print("4. Copy the iOS build rules below into AppLovinMAX.Build.cs. You will also need to add build rules for the third-party SDKs")
+    print("> Copy the iOS build rules below into AppLovinMAX.Build.cs. You will also need to add build rules for the third-party SDKs later.")
     print("\n".join(adapter_code))
 
 if __name__ == "__main__":

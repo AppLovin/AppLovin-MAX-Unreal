@@ -12,5 +12,5 @@ This document includes instructions for integrating MAX mediation network adapte
 2. Run `install_adapters.py` to download the adapters.
 3. Follow the instructions for ["Preparing Mediated Networks"](https://dash.applovin.com/documentation/mediation/manual-integration-ios"). Add any necessary changes to `Info.plist` in `AppLovinMAX_UPL_IOS.xml`
 4. Download the third-party SDKs required by each installed adapter and create a corresponding `*.embeddedframework.zip` file in the directory `ThirdParty/IOS`.
-5. Copy the iOS build rules below into `AppLovinMAX.Build.cs`. You will also need to add build rules for the third-party SDKs.
+5. Add an iOS build rule for any third-party dependencies to `AppLovinMAX.Build.cs`
 
