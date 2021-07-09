@@ -6,6 +6,8 @@
   </init>
 
   <iosPListUpdates>
-    <!-- Add any updates to Info.plist here -->
+    <addElements tag="dict" once="true">
+      <!-- Add any updates to Info.plist here -->
+    </addElements>
   </iosPListUpdates>
 </root>
