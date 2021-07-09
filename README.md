@@ -573,6 +573,16 @@ You can retrieve the creative ID and the network name of displayed ads of variou
 
 ---
 
+# Preparing Mediated Networks
+
+## Android
+
+Follow the instructions [here](https://dash.applovin.com/documentation/mediation/android/mediation-adapters) to generate a list of Gradle dependencies to add under `<AARImports>` in `AppLovinMAX_UPL_Android.xml`.
+
+## iOS
+
+Please refer to [this README](https://github.com/AppLovin/AppLovin-MAX-Unreal/tree/master/AppLovinMAXDemo/Plugins/AppLovinMAX/Source/ThirdParty/IOS/Adapters) to integrate MAX mediation network adapters in your app.
+
 # MAX Demo App
 
 MAX Demo App is a sample app that demonstrates how you can integrate MAX into your mobile apps.
