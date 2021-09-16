@@ -1085,10 +1085,15 @@ public class MaxUnrealPlugin
             return;
         }
 
-        final String adViewPosition = mAdViewPositions.get( adUnitId );
         final RelativeLayout relativeLayout = (RelativeLayout) adView.getParent();
+        if ( relativeLayout == null )
+        {
+            e( adFormat.getLabel() + "'s parent does not exist" );
+            return;
+        }
 
         // Size the ad
+        final String adViewPosition = mAdViewPositions.get( adUnitId );
         final AdViewSize adViewSize = getAdViewSize( adFormat );
         final int width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.widthDp );
         final int height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.heightDp );
