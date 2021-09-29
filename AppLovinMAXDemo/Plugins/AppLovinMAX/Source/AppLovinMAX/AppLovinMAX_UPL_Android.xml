@@ -42,7 +42,7 @@
   <AARImports>
     <if condition="bEnabled">
       <true>
-        <insertValue value="com.applovin,applovin-sdk,+@aar" />
+        <insertValue value="com.applovin,applovin-sdk,10.3.2@aar" />
         <insertNewline/>
       </true>
     </if>
@@ -68,6 +68,11 @@
         <insertNewline/>
         <insert>
               }
+        </insert>
+        <insert>
+            // You may add any additional repositories for other ad networks here
+        </insert>
+        <insert>
             }
           }
 
