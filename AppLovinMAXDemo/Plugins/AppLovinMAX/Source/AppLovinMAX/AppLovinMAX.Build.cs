@@ -5,7 +5,7 @@ using System.IO;
 
 public class AppLovinMAX : ModuleRules
 {
-	private const string PluginVersion = "1.0.0";
+	private const string PluginVersion = "1.0.1";
 
 	public AppLovinMAX(ReadOnlyTargetRules Target) : base(Target)
 	{
