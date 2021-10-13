@@ -7,8 +7,6 @@
 
   <iosPListUpdates>
     <addElements tag="dict" once="true">
-      <key>NSAdvertisingAttributionReportEndpoint</key>
-      <string>https://postbacks-app.com</string>
       <!-- Add any updates to Info.plist here -->
     </addElements>
   </iosPListUpdates>
