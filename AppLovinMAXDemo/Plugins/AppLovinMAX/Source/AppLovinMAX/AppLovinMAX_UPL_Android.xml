@@ -8,9 +8,9 @@
     <!-- check if using Gradle -->
     <setBoolFromProperty result="bGradle" ini="Engine" section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" property="bEnableGradle" default="false"/>
     <if condition="bGradle">
-        <false>
-            <log text="AppLovin Android SDK requires Gradle"/>
-        </false>
+      <false>
+        <log text="AppLovin Android SDK requires Gradle"/>
+      </false>
     </if>
 
     <!-- get packaging for Applovin from ini and reset it if architecture not supported -->
@@ -36,7 +36,18 @@
   </androidManifestUpdates>
 
   <!-- optional additions to proguard -->
-  <proguardAdditions> </proguardAdditions>
+  <proguardAdditions>
+    <if condition="bEnabled">
+      <true>
+        <insert>
+          # UE4
+          -keep public class com.epicgames.ue4.GameActivity$MaxUnrealPluginListener { *; }
+          # UE5
+          -keep public class com.epicgames.unreal.GameActivity$MaxUnrealPluginListener { *; }
+        </insert>
+      </true>
+    </if>
+  </proguardAdditions>
 
   <!-- optional AAR imports additions -->
   <AARImports>
@@ -129,7 +140,8 @@
       <true>
         <insert>
         // Begin AppLovin gameActivityClassAdditions
-        public class MaxUnrealPluginListener implements MaxUnrealPlugin.EventListener {
+        public class MaxUnrealPluginListener implements MaxUnrealPlugin.EventListener
+        {
           public native void forwardEvent(String name, String params);
 
           public MaxUnrealPluginListener() {}

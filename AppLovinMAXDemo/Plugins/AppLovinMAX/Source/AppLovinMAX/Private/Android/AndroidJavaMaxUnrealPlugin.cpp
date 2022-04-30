@@ -6,6 +6,7 @@
 
 #include "Android/AndroidApplication.h"
 #include "Android/AndroidJNI.h"
+#include "Misc/EngineVersion.h"
 
 FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
     : FJavaClassObject(GetClassName(), "(Landroid/app/Activity;)V", FAndroidApplication::GetGameActivityThis()),
@@ -62,7 +63,16 @@ void FJavaAndroidMaxUnrealPlugin::Initialize(const FString &PluginVersion, const
     JNIEnv *JEnv = FAndroidApplication::GetJavaEnv();
 
     // Create listener for Android plugin event handling
-    jclass ListenerClass = FAndroidApplication::FindJavaClass("com/epicgames/ue4/GameActivity$MaxUnrealPluginListener");
+    jclass ListenerClass;
+    if (FEngineVersion::Current().GetMajor() == 4) // UE4
+    {
+      ListenerClass = FAndroidApplication::FindJavaClass("com/epicgames/ue4/GameActivity$MaxUnrealPluginListener");
+    }
+    else // UE5+
+    {
+      ListenerClass = FAndroidApplication::FindJavaClass("com/epicgames/unreal/GameActivity$MaxUnrealPluginListener");
+    }
+
     jmethodID Constructor = JEnv->GetMethodID(ListenerClass, "<init>", "()V");
     auto LocalListener = NewScopedJavaObject(JEnv, JEnv->NewObject(ListenerClass, Constructor));
 

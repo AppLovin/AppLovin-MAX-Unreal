@@ -17,7 +17,7 @@ THIRD_PARTY_INCLUDES_END
 #include "Android/AndroidJNI.h"
 #endif
 
-const FString PluginVersion = TEXT("1.0.1");
+const FString PluginVersion = TEXT("1.1.0");
 
 // MARK: - Initialization
 
@@ -736,13 +736,27 @@ MAUnrealPlugin *UAppLovinMAX::GetIOSPlugin()
 
 #if PLATFORM_ANDROID
 
-// Implementation for Java method declared in AppLovinMAX_UPL_Android.xml
-extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
+// The JNI implementations are for the Java method declared in AppLovinMAX_UPL_Android.xml.
+// The multiple function signatures match the different GameActivity names between Unreal Engine versions.
+
+void JavaForwardEventHelper(JNIEnv *env, jobject thiz, jstring name, jstring params)
 {
     FString Name = FJavaHelper::FStringFromParam(env, name);
     FString Params = FJavaHelper::FStringFromParam(env, params);
     TMap<FString, FString> ParamsMap = AppLovinMAXUtils::ParseStringIntoMap(Params);
     ForwardEvent(Name, ParamsMap);
+}
+
+// UE4
+extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
+{
+    JavaForwardEventHelper(env, thiz, name, params);
+}
+
+// UE5 
+extern "C" JNIEXPORT void JNICALL Java_com_epicgames_unreal_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
+{
+    JavaForwardEventHelper(env, thiz, name, params);
 }
 
 TSharedPtr<FJavaAndroidMaxUnrealPlugin> UAppLovinMAX::GetAndroidPlugin()
