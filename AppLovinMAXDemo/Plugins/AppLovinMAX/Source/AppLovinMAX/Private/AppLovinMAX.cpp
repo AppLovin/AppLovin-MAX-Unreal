@@ -3,6 +3,7 @@
 #include "AppLovinMAX.h"
 #include "AppLovinMAXLogger.h"
 #include "AppLovinMAXUtils.h"
+#include "Interfaces/IPluginManager.h"
 
 #if PLATFORM_IOS
 #include "IOS/IOSAppDelegate.h"
@@ -17,8 +18,6 @@ THIRD_PARTY_INCLUDES_END
 #include "Android/AndroidJNI.h"
 #endif
 
-const FString PluginVersion = TEXT("1.1.0");
-
 // MARK: - Initialization
 
 void UAppLovinMAX::Initialize()
@@ -29,6 +28,9 @@ void UAppLovinMAX::Initialize()
 
 void UAppLovinMAX::Initialize(const FString &SdkKey)
 {
+    TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin("AppLovinMAX");
+    FString PluginVersion = Plugin->GetDescriptor().VersionName;
+
 #if PLATFORM_IOS
     [GetIOSPlugin() initialize:PluginVersion.GetNSString() sdkKey:SdkKey.GetNSString()];
 #elif PLATFORM_ANDROID

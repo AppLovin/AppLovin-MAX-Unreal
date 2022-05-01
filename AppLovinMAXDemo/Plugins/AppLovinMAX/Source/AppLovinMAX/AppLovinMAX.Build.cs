@@ -5,8 +5,6 @@ using System.IO;
 
 public class AppLovinMAX : ModuleRules
 {
-	private const string PluginVersion = "1.1.0";
-
 	public AppLovinMAX(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
@@ -20,6 +18,7 @@ public class AppLovinMAX : ModuleRules
 			{
 				"CoreUObject",
 				"Engine",
+				"Projects"
 			}
 		);
 		
@@ -77,7 +76,6 @@ public class AppLovinMAX : ModuleRules
 				AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
-				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + PluginVersion );
 
 				AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 			}
@@ -105,7 +103,6 @@ public class AppLovinMAX : ModuleRules
 				AdditionalPropertiesForReceipt.Add( "AndroidPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_Android.xml" ) );
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
-				PublicDefinitions.Add( "UE4_APPLOVIN_VER=" + PluginVersion );
 			}
 			else
 			{
