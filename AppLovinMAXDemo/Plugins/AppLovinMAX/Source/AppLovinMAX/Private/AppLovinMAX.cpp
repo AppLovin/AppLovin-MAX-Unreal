@@ -3,6 +3,7 @@
 #include "AppLovinMAX.h"
 #include "AppLovinMAXLogger.h"
 #include "AppLovinMAXUtils.h"
+#include "Interfaces/IPluginManager.h"
 
 #if PLATFORM_IOS
 #include "IOS/IOSAppDelegate.h"
@@ -17,8 +18,6 @@ THIRD_PARTY_INCLUDES_END
 #include "Android/AndroidJNI.h"
 #endif
 
-const FString PluginVersion = TEXT("1.0.1");
-
 // MARK: - Initialization
 
 void UAppLovinMAX::Initialize()
@@ -29,6 +28,9 @@ void UAppLovinMAX::Initialize()
 
 void UAppLovinMAX::Initialize(const FString &SdkKey)
 {
+    TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin("AppLovinMAX");
+    FString PluginVersion = Plugin->GetDescriptor().VersionName;
+
 #if PLATFORM_IOS
     [GetIOSPlugin() initialize:PluginVersion.GetNSString() sdkKey:SdkKey.GetNSString()];
 #elif PLATFORM_ANDROID
@@ -736,13 +738,27 @@ MAUnrealPlugin *UAppLovinMAX::GetIOSPlugin()
 
 #if PLATFORM_ANDROID
 
-// Implementation for Java method declared in AppLovinMAX_UPL_Android.xml
-extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
+// The JNI implementations are for the Java method declared in AppLovinMAX_UPL_Android.xml.
+// The multiple function signatures match the different GameActivity names between Unreal Engine versions.
+
+void ForwardAndroidEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
 {
     FString Name = FJavaHelper::FStringFromParam(env, name);
     FString Params = FJavaHelper::FStringFromParam(env, params);
     TMap<FString, FString> ParamsMap = AppLovinMAXUtils::ParseStringIntoMap(Params);
     ForwardEvent(Name, ParamsMap);
+}
+
+// UE4
+extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
+{
+    ForwardAndroidEvent(env, thiz, name, params);
+}
+
+// UE5 
+extern "C" JNIEXPORT void JNICALL Java_com_epicgames_unreal_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
+{
+    ForwardAndroidEvent(env, thiz, name, params);
 }
 
 TSharedPtr<FJavaAndroidMaxUnrealPlugin> UAppLovinMAX::GetAndroidPlugin()

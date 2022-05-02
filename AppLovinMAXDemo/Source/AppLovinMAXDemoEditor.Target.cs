@@ -10,5 +10,9 @@ public class AppLovinMAXDemoEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "AppLovinMAXDemo" } );
+
+		// Add compiler argument to support building on macOS with Xcode 13.3+
+		bOverrideBuildEnvironment = true;
+		AdditionalCompilerArguments = "-Wno-unused-but-set-variable";
 	}
 }
