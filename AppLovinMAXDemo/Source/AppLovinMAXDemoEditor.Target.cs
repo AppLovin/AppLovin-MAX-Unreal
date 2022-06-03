@@ -12,7 +12,7 @@ public class AppLovinMAXDemoEditorTarget : TargetRules
 		ExtraModuleNames.AddRange( new string[] { "AppLovinMAXDemo" } );
 
 		// Add compiler argument to support building on macOS with Xcode 13.3+
-		bOverrideBuildEnvironment = true;
-		AdditionalCompilerArguments = "-Wno-unused-but-set-variable";
+		// bOverrideBuildEnvironment = true;
+		// AdditionalCompilerArguments = "-Wno-unused-but-set-variable";
 	}
 }
