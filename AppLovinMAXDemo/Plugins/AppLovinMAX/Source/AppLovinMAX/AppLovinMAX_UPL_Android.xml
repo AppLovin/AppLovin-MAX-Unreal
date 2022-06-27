@@ -140,7 +140,7 @@
       <true>
         <insert>
         // Begin AppLovin gameActivityClassAdditions
-        public class MaxUnrealPluginListener implements MaxUnrealPlugin.EventListener
+        public static class MaxUnrealPluginListener implements MaxUnrealPlugin.EventListener
         {
           public native void forwardEvent(String name, String params);
 
