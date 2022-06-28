@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"Version": 1010000,
+	"Version": 1010100,
 	"VersionName": "1.1.1",
 	"FriendlyName": "AppLovin MAX",
 	"Description": "AppLovin MAX Unreal Engine Plugin for Android and iOS",
