@@ -20,8 +20,6 @@
     <dumpvars/>
   </init>
 
-  <!-- optional files or directories to copy or delete from Intermediate/Android/APK after ndk-build -->
-
   <!-- optional updates applied to AndroidManifest.xml -->
   <androidManifestUpdates>
     <if condition="bEnabled">
