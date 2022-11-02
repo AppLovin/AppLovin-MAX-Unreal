@@ -88,8 +88,8 @@ public class AppLovinMAX : ModuleRules
 		}
 		else if ( Target.Platform == UnrealTargetPlatform.Android )
 		{
-			string AppLovinAndroidPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "Android" );
-			string AppLovinPluginPath = Path.Combine( AppLovinAndroidPath, "applovin-max-unreal-plugin.aar" );
+			string AppLovinAndroidPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "Android", "repository", "com", "applovin", "applovin-max-unreal-plugin", "release" );
+			string AppLovinPluginPath = Path.Combine( AppLovinAndroidPath, "applovin-max-unreal-plugin-release.aar" );
 			if ( File.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin Android Plugin found" );
