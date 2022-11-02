@@ -21,9 +21,6 @@
   </init>
 
   <!-- optional files or directories to copy or delete from Intermediate/Android/APK after ndk-build -->
-  <resourceCopies>
-    <copyFile src="$S(PluginDir)/../ThirdParty/Android/applovin-max-unreal-plugin.aar" dst="$S(BuildDir)/libs/applovin-max-unreal-plugin.aar" />
-  </resourceCopies>
 
   <!-- optional updates applied to AndroidManifest.xml -->
   <androidManifestUpdates>
@@ -55,6 +52,10 @@
       <true>
         <insertValue value="com.applovin,applovin-sdk,10.3.2@aar" />
         <insertNewline/>
+        <insertValue value="repository $S(PluginDir)/../ThirdParty/Android/repository" />
+        <insertNewline/>
+        <insertValue value="com.applovin,applovin-max-unreal-plugin,release" />
+        <insertNewline/>
       </true>
     </if>
   </AARImports>
@@ -73,21 +74,9 @@
         <insert>
           allprojects {
             repositories {
-              flatDir {
-        </insert>
-        <insertValue value="dirs '$S(BuildDir)/libs'"/>
-        <insertNewline/>
-        <insert>
-              }
-        </insert>
-        <insert>
-            // You may add any additional repositories for other ad networks here
-        </insert>
-        <insert>
+              // You may add any additional repositories for other ad networks here
             }
           }
-
-          dependencies.implementation(name: 'applovin-max-unreal-plugin', ext: 'aar')
         </insert>
       </true>
     </if>
