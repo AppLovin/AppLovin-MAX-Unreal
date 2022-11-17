@@ -70,6 +70,13 @@
     <if condition="bEnabled">
       <true>
         <insert>
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_1_8
+                  targetCompatibility = JavaVersion.VERSION_1_8
+              }
+          }
+
           allprojects {
             repositories {
               // You may add any additional repositories for other ad networks here
