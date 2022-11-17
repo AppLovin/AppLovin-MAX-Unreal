@@ -1061,7 +1061,7 @@ public class MaxUnrealPlugin
         MaxAdView result = mAdViews.get( adUnitId );
         if ( result == null && adViewPosition != null )
         {
-            result = new MaxAdView( adUnitId, adFormat, sdk, getGameActivity() );
+            result = new MaxAdView( adUnitId, adFormat, sdk, (Context) getGameActivity() );
             result.setListener( this );
 
             mAdViews.put( adUnitId, result );
