@@ -50,6 +50,7 @@ import java.util.Map;
 /**
  * Created by Ritam Sarmah on May 5 2021
  */
+@SuppressWarnings("unused")
 public class MaxUnrealPlugin
         implements MaxAdListener, MaxAdViewAdListener, MaxRewardedAdListener, MaxAdRevenueListener
 {
@@ -1251,11 +1252,11 @@ public class MaxUnrealPlugin
     {
         JSONObject adInfo = new JSONObject();
 
-        JsonUtils.putString( adInfo, "adUnitId", ad.getAdUnitId() );
-        JsonUtils.putString( adInfo, "creativeId", StringUtils.emptyIfNull( ad.getCreativeId() ) );
+        JsonUtils.putString( adInfo, "adUnitIdentifier", ad.getAdUnitId() );
+        JsonUtils.putString( adInfo, "creativeIdentifier", StringUtils.emptyIfNull( ad.getCreativeId() ) );
         JsonUtils.putString( adInfo, "networkName", ad.getNetworkName() );
         JsonUtils.putString( adInfo, "placement", StringUtils.emptyIfNull( ad.getPlacement() ) );
-        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue() );
+        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue() != 0 ? ad.getRevenue() : -1 );
 
         return adInfo;
     }
@@ -1264,9 +1265,9 @@ public class MaxUnrealPlugin
     {
         JSONObject errorInfo = new JSONObject();
 
-        JsonUtils.putInt( errorInfo, "errorCode", error.getCode() );
-        JsonUtils.putString( errorInfo, "errorMessage", error.getMessage() );
-        JsonUtils.putString( errorInfo, "errorAdLoadFailureInfo", StringUtils.emptyIfNull( error.getAdLoadFailureInfo() ) );
+        JsonUtils.putInt( errorInfo, "code", error.getCode() );
+        JsonUtils.putString( errorInfo, "message", error.getMessage() );
+        // TODO: Add updated error API, like getWaterfall
 
         return errorInfo;
     }

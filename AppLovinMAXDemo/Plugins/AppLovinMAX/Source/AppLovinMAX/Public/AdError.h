@@ -3,15 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AdError.generated.h"
 
+USTRUCT()
 struct APPLOVINMAX_API FAdError
 {
+    GENERATED_BODY()
+
     /** The error code for the error. */
-    const int Code;
+    UPROPERTY()
+    int Code;
 
     /** The error message for the error. */
-    const FString Message;
-
-    /** A description string containing error codes and reasons for why each mediated network failed to load an ad. */
-    const FString AdLoadFailureInfo;
+    UPROPERTY()
+    FString Message;
 };
