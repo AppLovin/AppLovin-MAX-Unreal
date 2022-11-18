@@ -4,6 +4,7 @@
 #include "AppLovinMAXLogger.h"
 #include "AppLovinMAXUtils.h"
 #include "Interfaces/IPluginManager.h"
+#include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
 
 #if PLATFORM_IOS
 #include "IOS/IOSAppDelegate.h"
@@ -213,7 +214,7 @@ void UAppLovinMAX::TrackEvent(const FString &Name, const TMap<FString, FString> 
 #if PLATFORM_IOS
     [GetIOSPlugin() trackEvent:Name.GetNSString() parameters:GetNSDictionary(Parameters)];
 #elif PLATFORM_ANDROID
-    FString SerializedParameters = AppLovinMAXUtils::ParseMapIntoString(Parameters);
+    FString SerializedParameters = AppLovinMAXUtils::SerializeMap(Parameters);
     GetAndroidPlugin()->TrackEvent(Name, SerializedParameters);
 #endif
 }
@@ -509,131 +510,137 @@ UAppLovinMAX::FOnRewardedAdRevenuePaidDelegate UAppLovinMAX::OnRewardedAdRevenue
 UAppLovinMAX::FOnRewardedAdFailedToDisplayDelegate UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate;
 UAppLovinMAX::FOnRewardedAdReceivedRewardDelegate UAppLovinMAX::OnRewardedAdReceivedRewardDelegate;
 
-void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
+void ForwardEvent(const FString &Name, const FString &Body)
 {
     if (Name == TEXT("OnSdkInitializedEvent"))
     {
-        FSdkConfiguration SdkConfiguration(Body);
+        FSdkConfiguration SdkConfiguration;
+        FJsonObjectConverter::JsonObjectStringToUStruct<FSdkConfiguration>(Body, &SdkConfiguration, 0, 0);
         UAppLovinMAX::OnSdkInitializedDelegate.Broadcast(SdkConfiguration);
     }
     else // Ad Events
     {
-        FAdInfo AdInfo(Body);
-        FAdError AdError{FCString::Atoi(*Body.FindRef(TEXT("errorCode"))), Body.FindRef(TEXT("errorMessage")), Body.FindRef(TEXT("errorAdLoadFailureInfo"))};
-
-        if (Name == TEXT("OnBannerAdLoadedEvent"))
-        {
-            UAppLovinMAX::OnBannerAdLoadedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnBannerAdLoadFailedEvent"))
-        {
-            UAppLovinMAX::OnBannerAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
-        }
-        else if (Name == TEXT("OnBannerAdClickedEvent"))
-        {
-            UAppLovinMAX::OnBannerAdClickedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnBannerAdExpandedEvent"))
-        {
-            UAppLovinMAX::OnBannerAdExpandedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnBannerAdCollapsedEvent"))
-        {
-            UAppLovinMAX::OnBannerAdCollapsedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnBannerAdRevenuePaidEvent"))
-        {
-            UAppLovinMAX::OnBannerAdRevenuePaidDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnMRecAdLoadedEvent"))
-        {
-            UAppLovinMAX::OnMRecAdLoadedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnMRecAdLoadFailedEvent"))
-        {
-            UAppLovinMAX::OnMRecAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
-        }
-        else if (Name == TEXT("OnMRecAdClickedEvent"))
-        {
-            UAppLovinMAX::OnMRecAdClickedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnMRecAdExpandedEvent"))
-        {
-            UAppLovinMAX::OnMRecAdExpandedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnMRecAdCollapsedEvent"))
-        {
-            UAppLovinMAX::OnMRecAdCollapsedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnMRecAdRevenuePaidEvent"))
-        {
-            UAppLovinMAX::OnMRecAdRevenuePaidDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnInterstitialLoadedEvent"))
-        {
-            UAppLovinMAX::OnInterstitialLoadedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnInterstitialLoadFailedEvent"))
-        {
-            UAppLovinMAX::OnInterstitialLoadFailedDelegate.Broadcast(AdInfo, AdError);
-        }
-        else if (Name == TEXT("OnInterstitialHiddenEvent"))
-        {
-            UAppLovinMAX::OnInterstitialHiddenDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnInterstitialDisplayedEvent"))
-        {
-            UAppLovinMAX::OnInterstitialDisplayedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnInterstitialAdFailedToDisplayEvent"))
-        {
-            UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
-        }
-        else if (Name == TEXT("OnInterstitialClickedEvent"))
-        {
-            UAppLovinMAX::OnInterstitialClickedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnInterstitialAdRevenuePaidEvent"))
-        {
-            UAppLovinMAX::OnInterstitialAdRevenuePaidDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnRewardedAdLoadedEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdLoadedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnRewardedAdLoadFailedEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
-        }
-        else if (Name == TEXT("OnRewardedAdDisplayedEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdDisplayedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnRewardedAdHiddenEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdHiddenDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnRewardedAdClickedEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdClickedDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnRewardedAdRevenuePaidEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdRevenuePaidDelegate.Broadcast(AdInfo);
-        }
-        else if (Name == TEXT("OnRewardedAdFailedToDisplayEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
-        }
-        else if (Name == TEXT("OnRewardedAdReceivedRewardEvent"))
-        {
-            FAdReward Reward{Body.FindRef(TEXT("rewardLabel")), FCString::Atoi(*Body.FindRef(TEXT("rewardAmount")))};
-            UAppLovinMAX::OnRewardedAdReceivedRewardDelegate.Broadcast(AdInfo, Reward);
-        }
-        else
-        {
-            MAX_USER_WARN("Unknown MAX Ads event fired: %s", *Name);
-        }
+        return;
+        // FAdInfo AdInfo;
+        // FJsonObjectConverter::JsonObjectStringToUStruct<FAdInfo>(Body, &AdInfo, 0, 0);
+        //
+        // FAdError AdError;
+        // FJsonObjectConverter::JsonObjectStringToUStruct<FAdError>(Body, &AdError, 0, 0);
+        //
+        // if (Name == TEXT("OnBannerAdLoadedEvent"))
+        // {
+        //     UAppLovinMAX::OnBannerAdLoadedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnBannerAdLoadFailedEvent"))
+        // {
+        //     UAppLovinMAX::OnBannerAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
+        // }
+        // else if (Name == TEXT("OnBannerAdClickedEvent"))
+        // {
+        //     UAppLovinMAX::OnBannerAdClickedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnBannerAdExpandedEvent"))
+        // {
+        //     UAppLovinMAX::OnBannerAdExpandedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnBannerAdCollapsedEvent"))
+        // {
+        //     UAppLovinMAX::OnBannerAdCollapsedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnBannerAdRevenuePaidEvent"))
+        // {
+        //     UAppLovinMAX::OnBannerAdRevenuePaidDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnMRecAdLoadedEvent"))
+        // {
+        //     UAppLovinMAX::OnMRecAdLoadedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnMRecAdLoadFailedEvent"))
+        // {
+        //     UAppLovinMAX::OnMRecAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
+        // }
+        // else if (Name == TEXT("OnMRecAdClickedEvent"))
+        // {
+        //     UAppLovinMAX::OnMRecAdClickedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnMRecAdExpandedEvent"))
+        // {
+        //     UAppLovinMAX::OnMRecAdExpandedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnMRecAdCollapsedEvent"))
+        // {
+        //     UAppLovinMAX::OnMRecAdCollapsedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnMRecAdRevenuePaidEvent"))
+        // {
+        //     UAppLovinMAX::OnMRecAdRevenuePaidDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnInterstitialLoadedEvent"))
+        // {
+        //     UAppLovinMAX::OnInterstitialLoadedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnInterstitialLoadFailedEvent"))
+        // {
+        //     UAppLovinMAX::OnInterstitialLoadFailedDelegate.Broadcast(AdInfo, AdError);
+        // }
+        // else if (Name == TEXT("OnInterstitialHiddenEvent"))
+        // {
+        //     UAppLovinMAX::OnInterstitialHiddenDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnInterstitialDisplayedEvent"))
+        // {
+        //     UAppLovinMAX::OnInterstitialDisplayedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnInterstitialAdFailedToDisplayEvent"))
+        // {
+        //     UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
+        // }
+        // else if (Name == TEXT("OnInterstitialClickedEvent"))
+        // {
+        //     UAppLovinMAX::OnInterstitialClickedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnInterstitialAdRevenuePaidEvent"))
+        // {
+        //     UAppLovinMAX::OnInterstitialAdRevenuePaidDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnRewardedAdLoadedEvent"))
+        // {
+        //     UAppLovinMAX::OnRewardedAdLoadedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnRewardedAdLoadFailedEvent"))
+        // {
+        //     UAppLovinMAX::OnRewardedAdLoadFailedDelegate.Broadcast(AdInfo, AdError);
+        // }
+        // else if (Name == TEXT("OnRewardedAdDisplayedEvent"))
+        // {
+        //     UAppLovinMAX::OnRewardedAdDisplayedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnRewardedAdHiddenEvent"))
+        // {
+        //     UAppLovinMAX::OnRewardedAdHiddenDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnRewardedAdClickedEvent"))
+        // {
+        //     UAppLovinMAX::OnRewardedAdClickedDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnRewardedAdRevenuePaidEvent"))
+        // {
+        //     UAppLovinMAX::OnRewardedAdRevenuePaidDelegate.Broadcast(AdInfo);
+        // }
+        // else if (Name == TEXT("OnRewardedAdFailedToDisplayEvent"))
+        // {
+        //     UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
+        // }
+        // else if (Name == TEXT("OnRewardedAdReceivedRewardEvent"))
+        // {
+        //     FAdReward Reward;
+        //     FJsonObjectConverter::JsonObjectStringToUStruct<FAdReward>(Body, &Reward, 0, 0);
+        //     UAppLovinMAX::OnRewardedAdReceivedRewardDelegate.Broadcast(AdInfo, Reward);
+        // }
+        // else
+        // {
+        //     MAX_USER_WARN("Unknown MAX Ads event fired: %s", *Name);
+        // }
     }
 }
 
@@ -717,8 +724,7 @@ extern "C" void ForwardIOSEvent(NSString *Name, NSString *Params)
 {
     const char *NameCString = [Name UTF8String];
     const char *ParamsCString = [Params UTF8String];
-    TMap<FString, FString> ParamsMap = AppLovinMAXUtils::ParseStringIntoMap((FString(ParamsCString)));
-    ForwardEvent((FString(NameCString)), ParamsMap);
+    ForwardEvent((FString(NameCString)), FString(ParamsCString));
 }
 
 MAUnrealPlugin *UAppLovinMAX::GetIOSPlugin()
@@ -745,8 +751,7 @@ void ForwardAndroidEvent(JNIEnv *env, jobject thiz, jstring name, jstring params
 {
     FString Name = FJavaHelper::FStringFromParam(env, name);
     FString Params = FJavaHelper::FStringFromParam(env, params);
-    TMap<FString, FString> ParamsMap = AppLovinMAXUtils::ParseStringIntoMap(Params);
-    ForwardEvent(Name, ParamsMap);
+    ForwardEvent(Name, Params);
 }
 
 // UE4

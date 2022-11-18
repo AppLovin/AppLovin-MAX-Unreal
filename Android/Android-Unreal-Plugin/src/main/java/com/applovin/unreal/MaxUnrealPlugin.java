@@ -17,6 +17,8 @@ import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.applovin.impl.sdk.utils.JsonUtils;
+import com.applovin.impl.sdk.utils.StringUtils;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.MaxAdListener;
@@ -35,6 +37,8 @@ import com.applovin.sdk.AppLovinSdkConfiguration;
 import com.applovin.sdk.AppLovinSdkSettings;
 import com.applovin.sdk.AppLovinSdkUtils;
 
+import org.json.JSONObject;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,9 +55,6 @@ public class MaxUnrealPlugin
 {
     private static final String TAG     = "MaxUnrealPlugin";
     private static final String SDK_TAG = "AppLovinSdk";
-
-    private static final String SERIALIZED_KEY_VALUE_SEPARATOR      = String.valueOf( (char) 28 );
-    private static final String SERIALIZED_KEY_VALUE_PAIR_SEPARATOR = String.valueOf( (char) 29 );
 
     // Parent Fields
     private AppLovinSdk              sdk;
@@ -204,25 +205,19 @@ public class MaxUnrealPlugin
         } );
     }
 
-    private Map<String, String> getInitializationMessage(final Context context)
+    private JSONObject getInitializationMessage(final Context context)
     {
-        Map<String, String> message = new HashMap<>( 6 );
+        JSONObject message = new JSONObject();
 
         if ( sdkConfiguration != null )
         {
-            message.put( "consentDialogState", String.valueOf( sdkConfiguration.getConsentDialogState().ordinal() ) );
-            message.put( "countryCode", sdkConfiguration.getCountryCode() );
-        }
-        else
-        {
-            message.put( "consentDialogState", String.valueOf( AppLovinSdkConfiguration.ConsentDialogState.UNKNOWN.ordinal() ) );
+            JsonUtils.putString( message, "countryCode", sdkConfiguration.getCountryCode() );
         }
 
-        // Use "true" string to represent boolean value of true
-        message.put( "hasUserConsent", String.valueOf( AppLovinPrivacySettings.hasUserConsent( context ) ) );
-        message.put( "isAgeRestrictedUser", String.valueOf( AppLovinPrivacySettings.isAgeRestrictedUser( context ) ) );
-        message.put( "isDoNotSell", String.valueOf( AppLovinPrivacySettings.isDoNotSell( context ) ) );
-        message.put( "isTablet", String.valueOf( AppLovinSdkUtils.isTablet( context ) ) );
+        JsonUtils.putBoolean( message, "hasUserConsent", AppLovinPrivacySettings.hasUserConsent( context ) );
+        JsonUtils.putBoolean( message, "isAgeRestrictedUser", AppLovinPrivacySettings.isAgeRestrictedUser( context ) );
+        JsonUtils.putBoolean( message, "isDoNotSell", AppLovinPrivacySettings.isDoNotSell( context ) );
+        JsonUtils.putBoolean( message, "isTablet", AppLovinSdkUtils.isTablet( context ) );
 
         return message;
     }
@@ -574,9 +569,9 @@ public class MaxUnrealPlugin
             return;
         }
 
-        Map<String, String> params = new HashMap<>();
-        params.put( "adUnitId", adUnitId );
-        params.putAll( getErrorInfo( error ) );
+        JSONObject params = getErrorInfo( error );
+        JsonUtils.putString( params, "adUnitId", adUnitId );
+
         sendUnrealEvent( name, params );
     }
 
@@ -647,9 +642,9 @@ public class MaxUnrealPlugin
             name = "OnRewardedAdFailedToDisplayEvent";
         }
 
-        Map<String, String> params = new HashMap<>();
-        params.putAll( getAdInfo( ad ) );
-        params.putAll( getErrorInfo( error ) );
+        JSONObject params = getAdInfo( ad );
+        JsonUtils.putAll( params, getErrorInfo( error ) );
+
         sendUnrealEvent( name, params );
     }
 
@@ -721,12 +716,10 @@ public class MaxUnrealPlugin
             return;
         }
 
-        final String rewardLabel = reward != null ? reward.getLabel() : "";
-        final int rewardAmount = reward != null ? reward.getAmount() : 0;
+        JSONObject params = getAdInfo( ad );
+        JsonUtils.putString( params, "rewardLabel", reward != null ? reward.getLabel() : "" );
+        JsonUtils.putInt( params, "rewardAmount", reward != null ? reward.getAmount() : 0 );
 
-        Map<String, String> params = getAdInfo( ad );
-        params.put( "rewardLabel", rewardLabel );
-        params.put( "rewardAmount", String.valueOf( rewardAmount ) );
         sendUnrealEvent( "OnRewardedAdReceivedRewardEvent", params );
     }
 
@@ -1254,75 +1247,52 @@ public class MaxUnrealPlugin
         }
     }
 
-    private Map<String, String> getAdInfo(final MaxAd ad)
+    private JSONObject getAdInfo(final MaxAd ad)
     {
-        Map<String, String> adInfo = new HashMap<>( 5 );
-        adInfo.put( "adUnitId", ad.getAdUnitId() );
-        adInfo.put( "creativeId", !TextUtils.isEmpty( ad.getCreativeId() ) ? ad.getCreativeId() : "" );
-        adInfo.put( "networkName", ad.getNetworkName() );
-        adInfo.put( "placement", !TextUtils.isEmpty( ad.getPlacement() ) ? ad.getPlacement() : "" );
-        adInfo.put( "revenue", String.valueOf( ad.getRevenue() ) );
+        JSONObject adInfo = new JSONObject();
+
+        JsonUtils.putString( adInfo, "adUnitId", ad.getAdUnitId() );
+        JsonUtils.putString( adInfo, "creativeId", StringUtils.emptyIfNull( ad.getCreativeId() ) );
+        JsonUtils.putString( adInfo, "networkName", ad.getNetworkName() );
+        JsonUtils.putString( adInfo, "placement", StringUtils.emptyIfNull( ad.getPlacement() ) );
+        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue() );
 
         return adInfo;
     }
 
-    private Map<String, String> getErrorInfo(final MaxError error)
+    private JSONObject getErrorInfo(final MaxError error)
     {
-        Map<String, String> errorInfo = new HashMap<>( 5 );
-        errorInfo.put( "errorCode", String.valueOf( error.getCode() ) );
-        errorInfo.put( "errorMessage", !TextUtils.isEmpty( error.getMessage() ) ? error.getMessage() : "" );
-        errorInfo.put( "errorAdLoadFailureInfo", !TextUtils.isEmpty( error.getAdLoadFailureInfo() ) ? error.getAdLoadFailureInfo() : "" );
+        JSONObject errorInfo = new JSONObject();
+
+        JsonUtils.putInt( errorInfo, "errorCode", error.getCode() );
+        JsonUtils.putString( errorInfo, "errorMessage", error.getMessage() );
+        JsonUtils.putString( errorInfo, "errorAdLoadFailureInfo", StringUtils.emptyIfNull( error.getAdLoadFailureInfo() ) );
 
         return errorInfo;
-    }
-
-    private static String serialize(Map<String, String> map)
-    {
-        final StringBuilder stringBuilder = new StringBuilder( 64 );
-        for ( Map.Entry<String, String> entry : map.entrySet() )
-        {
-            stringBuilder.append( entry.getKey() );
-            stringBuilder.append( SERIALIZED_KEY_VALUE_SEPARATOR );
-            stringBuilder.append( entry.getValue() );
-            stringBuilder.append( SERIALIZED_KEY_VALUE_PAIR_SEPARATOR );
-        }
-
-        return stringBuilder.toString();
     }
 
     private static Map<String, String> deserialize(final String serialized)
     {
         if ( !TextUtils.isEmpty( serialized ) )
         {
-            final String[] keyValuePairs = serialized.split( SERIALIZED_KEY_VALUE_PAIR_SEPARATOR ); // ["key-1<FS>value-1", "key-2<FS>value-2", "key-3<FS>value-3"]
-            final Map<String, String> deserialized = new HashMap<>( keyValuePairs.length );
-
-            for ( final String keyValuePair : keyValuePairs )
+            try
             {
-                final String[] splitPair = keyValuePair.split( SERIALIZED_KEY_VALUE_SEPARATOR );
-                if ( splitPair.length == 2 )
-                {
-                    String key = splitPair[0];
-                    String value = splitPair[1];
-
-                    // Store in deserialized map
-                    deserialized.put( key, value );
-                }
+                return JsonUtils.toStringMap( JsonUtils.jsonObjectFromJsonString( serialized, new JSONObject() ) );
             }
+            catch ( Throwable th )
+            {
+                e( "Failed to deserialize: (" + serialized + ") with exception: " + th );
+            }
+        }
 
-            return deserialized;
-        }
-        else
-        {
-            return Collections.emptyMap();
-        }
+        return Collections.emptyMap();
     }
     // endregion
 
     // region Unreal Bridge
-    private void sendUnrealEvent(final String name, final Map<String, String> params)
+    private void sendUnrealEvent(final String name, final JSONObject params)
     {
-        eventListener.onReceivedEvent( name, serialize( params ) );
+        eventListener.onReceivedEvent( name, params.toString() );
     }
     // endregion
 }
