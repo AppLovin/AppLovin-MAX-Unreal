@@ -17,4 +17,8 @@ struct APPLOVINMAX_API FAdError
     /** The error message for the error. */
     UPROPERTY()
     FString Message;
+
+    /** The underlying waterfall of ad responses. */
+    UPROPERTY()
+    FString Waterfall;
 };

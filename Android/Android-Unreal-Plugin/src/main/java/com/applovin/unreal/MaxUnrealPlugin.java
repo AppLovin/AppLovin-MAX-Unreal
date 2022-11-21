@@ -1267,7 +1267,7 @@ public class MaxUnrealPlugin
 
         JsonUtils.putInt( errorInfo, "code", error.getCode() );
         JsonUtils.putString( errorInfo, "message", error.getMessage() );
-        // TODO: Add updated error API, like getWaterfall
+        JsonUtils.putString( errorInfo, "waterfall", error.getWaterfall() != null ? error.getWaterfall().toString() : "" );
 
         return errorInfo;
     }

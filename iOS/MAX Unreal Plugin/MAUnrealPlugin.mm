@@ -1160,13 +1160,14 @@ static NSString *const TAG = @"MAUnrealPlugin";
              @"creativeIdentifier" : ad.creativeIdentifier ?: @"",
              @"networkName" : ad.networkName,
              @"placement" : ad.placement ?: @"",
-             @"revenue" : ad.revenue == 0 ? @(ad.revenue) : @(-1) };
+             @"revenue" : ad.revenue == 0 ? @(ad.revenue) : @(-1)};
 }
 
 - (NSDictionary<NSString *, id> *)errorInfoForError:(MAError *)error
 {
     return @{@"code" : @(error.code),
-             @"message" : error.message ?: @"" };
+             @"message" : error.message ?: @"",
+             @"waterfall" : error.waterfall.description ?: @""};
 }
 
 #pragma mark - Unreal Bridge
