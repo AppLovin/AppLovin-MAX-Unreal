@@ -8,7 +8,7 @@
 // MARK: - Enums
 
 UENUM()
-enum class EAppTrackingStatus : int8 // Only for iOS
+enum class EAppTrackingStatus : int8 // iOS only
 {
     Unavailable = -1,
     NotDetermined = 0,
@@ -43,7 +43,7 @@ struct APPLOVINMAX_API FSdkConfiguration
     UPROPERTY()
     bool IsTablet;
 
-    /** For iOS only. App tracking status values primarily used in conjunction with iOS 14's AppTrackingTransparency.framework. */
+    /** iOS only. App tracking status values primarily used in conjunction with iOS 14's AppTrackingTransparency.framework. */
     UPROPERTY()
     EAppTrackingStatus AppTrackingStatus;
 };

@@ -11,26 +11,6 @@
 #define KEY_WINDOW [UIApplication sharedApplication].keyWindow
 #define DEVICE_SPECIFIC_ADVIEW_AD_FORMAT ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? MAAdFormat.leader : MAAdFormat.banner
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void dispatchOnMainQueue(dispatch_block_t block)
-{
-    if ( !block ) return;
-
-    if ( [NSThread isMainThread] )
-    {
-        block();
-    }
-    else
-    {
-        dispatch_async(dispatch_get_main_queue(), block);
-    }
-}
-#ifdef __cplusplus
-}
-#endif
-
 // Internal
 @interface UIColor (ALUtils)
 + (nullable UIColor *)al_colorWithHexString:(NSString *)hexString;
@@ -48,7 +28,7 @@ void dispatchOnMainQueue(dispatch_block_t block)
 @property (nonatomic, assign, readonly, getter=al_isValidString) BOOL al_validString;
 @end
 
-@interface MAUnrealPlugin()<MAAdDelegate, MAAdViewAdDelegate, MARewardedAdDelegate>
+@interface MAUnrealPlugin()<MAAdDelegate, MAAdRevenueDelegate, MAAdViewAdDelegate, MARewardedAdDelegate>
 
 // Parent Fields
 @property (nonatomic, weak) ALSdk *sdk;
@@ -84,9 +64,6 @@ void dispatchOnMainQueue(dispatch_block_t block)
 @implementation MAUnrealPlugin
 static NSString *const SDK_TAG = @"AppLovinSdk";
 static NSString *const TAG = @"MAUnrealPlugin";
-
-static NSString *const ALSerializeKeyValueSeparator = [NSString stringWithFormat: @"%c", 28];
-static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFormat: @"%c", 29];
 
 #pragma mark - Initialization
 
@@ -180,7 +157,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     // Set verbose logging state if needed
     if ( self.verboseLoggingToSet )
     {
-        self.sdk.settings.isVerboseLogging = self.verboseLoggingToSet.boolValue;
+        self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingToSet.boolValue;
         self.verboseLoggingToSet = nil;
     }
     
@@ -201,26 +178,20 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     }];
 }
 
-- (NSDictionary<NSString *, NSString *> *)initializationMessage
+- (NSDictionary<NSString *, id> *)initializationMessage
 {
-    NSMutableDictionary<NSString *, NSString *> *message = [NSMutableDictionary dictionaryWithCapacity: 7];
+    NSMutableDictionary<NSString *, id> *message = [NSMutableDictionary dictionaryWithCapacity: 6];
     
     if ( self.sdkConfiguration )
     {
-        message[@"consentDialogState"] = [@(self.sdkConfiguration.consentDialogState) stringValue];
-        message[@"appTrackingStatus"] = [@(self.sdkConfiguration.appTrackingTransparencyStatus) stringValue];
+        message[@"appTrackingStatus"] = @(self.sdkConfiguration.appTrackingTransparencyStatus);
         message[@"countryCode"] = self.sdkConfiguration.countryCode;
     }
-    else
-    {
-        message[@"consentDialogState"] = [@(ALConsentDialogStateUnknown) stringValue];
-    }
     
-    // Use "true" string to represent boolean value of true
-    message[@"hasUserConsent"] = [ALPrivacySettings hasUserConsent] ? @"true" : @"false";
-    message[@"isAgeRestrictedUser"] = [ALPrivacySettings isAgeRestrictedUser] ? @"true" : @"false";
-    message[@"isDoNotSell"] = [ALPrivacySettings isDoNotSell] ? @"true" : @"false";
-    message[@"isTablet"] = [self isTablet] ? @"true" : @"false";
+    message[@"hasUserConsent"] = @([ALPrivacySettings hasUserConsent]);
+    message[@"isAgeRestrictedUser"] = @([ALPrivacySettings isAgeRestrictedUser]);
+    message[@"isDoNotSell"] = @([ALPrivacySettings isDoNotSell]);
+    message[@"isTablet"] = @([self isTablet]);
     
     return message;
 
@@ -272,7 +243,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)showMediationDebugger
 {
-    if ( !_sdk )
+    if ( !self.sdk )
     {
         [self log: @"Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize(...);'!"];
         return;
@@ -312,7 +283,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 {
     if ( [self isPluginInitialized] )
     {
-        self.sdk.settings.isVerboseLogging = enabled;
+        self.sdk.settings.verboseLoggingEnabled = enabled;
         self.verboseLoggingToSet = nil;
     }
     else
@@ -325,7 +296,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 {
     if ( self.sdk )
     {
-        return self.sdk.settings.isVerboseLogging;
+        return self.sdk.settings.isVerboseLoggingEnabled;
     }
     else if ( self.verboseLoggingToSet )
     {
@@ -684,16 +655,6 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     
     [self sendUnrealEventWithName: ( MAAdFormat.mrec == adFormat ) ? @"OnMRecAdCollapsedEvent" : @"OnBannerAdCollapsedEvent"
                        parameters: [self adInfoForAd: ad]];
-}
-
-- (void)didCompleteRewardedVideoForAd:(MAAd *)ad
-{
-    // This event is not forwarded
-}
-
-- (void)didStartRewardedVideoForAd:(MAAd *)ad
-{
-    // This event is not forwarded
 }
 
 - (void)didRewardUserForAd:(MAAd *)ad withReward:(MAReward *)reward
@@ -1193,43 +1154,30 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 #pragma mark - Utility Methods
 
-- (NSDictionary<NSString *, NSString *> *)adInfoForAd:(MAAd *)ad
+- (NSDictionary<NSString *, id> *)adInfoForAd:(MAAd *)ad
 {
-    return @{@"adUnitId" : ad.adUnitIdentifier,
-             @"creativeId" : ad.creativeIdentifier ?: @"",
+    return @{@"adUnitIdentifier" : ad.adUnitIdentifier,
+             @"creativeIdentifier" : ad.creativeIdentifier ?: @"",
              @"networkName" : ad.networkName,
              @"placement" : ad.placement ?: @"",
-             @"revenue" : [@(ad.revenue) stringValue]};
+             @"revenue" : ad.revenue == 0 ? @(ad.revenue) : @(-1) };
 }
 
-- (NSDictionary<NSString *, NSString *> *)errorInfoForError:(MAError *)error
+- (NSDictionary<NSString *, id> *)errorInfoForError:(MAError *)error
 {
-    return @{@"errorCode" : [@(error.code) stringValue],
-             @"errorMessage" : error.message ?: @"",
-             @"errorAdLoadFailureInfo" : error.adLoadFailureInfo ?: @""};
-}
-
-- (NSString *)serialize:(NSDictionary<NSString *, NSString *> *)dict
-{
-    NSMutableString *result = [[NSMutableString alloc] initWithCapacity: 64];
-    [dict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop)
-     {
-        [result appendString: key];
-        [result appendString: ALSerializeKeyValueSeparator];
-        [result appendString: obj];
-        [result appendString: ALSerializeKeyValuePairSeparator];
-    }];
-    
-    return result;
+    return @{@"code" : @(error.code),
+             @"message" : error.message ?: @"" };
 }
 
 #pragma mark - Unreal Bridge
 
 - (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
 {
-    NSString *serializedParameters = [self serialize: parameters];
     if ( self.eventCallback )
     {
+        NSData *data = [NSJSONSerialization dataWithJSONObject: parameters options: 0 error: nil];
+        NSString *serializedParameters = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+        
         self.eventCallback(name, serializedParameters);
     }
 }
