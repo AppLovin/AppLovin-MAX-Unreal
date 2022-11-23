@@ -11,20 +11,6 @@ FSdkConfiguration::FSdkConfiguration(const TMap<FString, FString> &EventBody)
     IsDoNotSell = EventBody.FindRef(TEXT("isDoNotSell")) == TEXT("true");
     IsTablet = EventBody.FindRef(TEXT("isTablet")) == TEXT("true");
 
-    FString ConsentDialogStateStr = EventBody.FindRef(TEXT("consentDialogState"));
-    if (ConsentDialogStateStr == TEXT("1"))
-    {
-        ConsentDialogState = EConsentDialogState::Applies;
-    }
-    else if (ConsentDialogStateStr == TEXT("2"))
-    {
-        ConsentDialogState = EConsentDialogState::DoesNotApply;
-    }
-    else
-    {
-        ConsentDialogState = EConsentDialogState::Unknown;
-    }
-
 #if PLATFORM_IOS
     FString AppTrackingStatusStr = EventBody.FindRef(TEXT("appTrackingStatus"));
     if (AppTrackingStatusStr == TEXT("-1"))

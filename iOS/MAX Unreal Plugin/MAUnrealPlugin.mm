@@ -11,26 +11,6 @@
 #define KEY_WINDOW [UIApplication sharedApplication].keyWindow
 #define DEVICE_SPECIFIC_ADVIEW_AD_FORMAT ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) ? MAAdFormat.leader : MAAdFormat.banner
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void dispatchOnMainQueue(dispatch_block_t block)
-{
-    if ( !block ) return;
-
-    if ( [NSThread isMainThread] )
-    {
-        block();
-    }
-    else
-    {
-        dispatch_async(dispatch_get_main_queue(), block);
-    }
-}
-#ifdef __cplusplus
-}
-#endif
-
 // Internal
 @interface UIColor (ALUtils)
 + (nullable UIColor *)al_colorWithHexString:(NSString *)hexString;
@@ -48,7 +28,7 @@ void dispatchOnMainQueue(dispatch_block_t block)
 @property (nonatomic, assign, readonly, getter=al_isValidString) BOOL al_validString;
 @end
 
-@interface MAUnrealPlugin()<MAAdDelegate, MAAdViewAdDelegate, MARewardedAdDelegate>
+@interface MAUnrealPlugin()<MAAdRevenueDelegate, MAAdDelegate, MAAdViewAdDelegate, MARewardedAdDelegate>
 
 // Parent Fields
 @property (nonatomic, weak) ALSdk *sdk;
@@ -180,7 +160,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     // Set verbose logging state if needed
     if ( self.verboseLoggingToSet )
     {
-        self.sdk.settings.isVerboseLogging = self.verboseLoggingToSet.boolValue;
+        self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingToSet.boolValue;
         self.verboseLoggingToSet = nil;
     }
     
@@ -207,13 +187,8 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     
     if ( self.sdkConfiguration )
     {
-        message[@"consentDialogState"] = [@(self.sdkConfiguration.consentDialogState) stringValue];
         message[@"appTrackingStatus"] = [@(self.sdkConfiguration.appTrackingTransparencyStatus) stringValue];
         message[@"countryCode"] = self.sdkConfiguration.countryCode;
-    }
-    else
-    {
-        message[@"consentDialogState"] = [@(ALConsentDialogStateUnknown) stringValue];
     }
     
     // Use "true" string to represent boolean value of true
@@ -272,7 +247,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (void)showMediationDebugger
 {
-    if ( !_sdk )
+    if ( !self.sdk )
     {
         [self log: @"Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize(...);'!"];
         return;
@@ -312,7 +287,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 {
     if ( [self isPluginInitialized] )
     {
-        self.sdk.settings.isVerboseLogging = enabled;
+        self.sdk.settings.verboseLoggingEnabled = enabled;
         self.verboseLoggingToSet = nil;
     }
     else
@@ -325,7 +300,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 {
     if ( self.sdk )
     {
-        return self.sdk.settings.isVerboseLogging;
+        return [self.sdk.settings isVerboseLoggingEnabled];
     }
     else if ( self.verboseLoggingToSet )
     {
@@ -684,16 +659,6 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     
     [self sendUnrealEventWithName: ( MAAdFormat.mrec == adFormat ) ? @"OnMRecAdCollapsedEvent" : @"OnBannerAdCollapsedEvent"
                        parameters: [self adInfoForAd: ad]];
-}
-
-- (void)didCompleteRewardedVideoForAd:(MAAd *)ad
-{
-    // This event is not forwarded
-}
-
-- (void)didStartRewardedVideoForAd:(MAAd *)ad
-{
-    // This event is not forwarded
 }
 
 - (void)didRewardUserForAd:(MAAd *)ad withReward:(MAReward *)reward
@@ -1204,9 +1169,9 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 - (NSDictionary<NSString *, NSString *> *)errorInfoForError:(MAError *)error
 {
-    return @{@"errorCode" : [@(error.code) stringValue],
-             @"errorMessage" : error.message ?: @"",
-             @"errorAdLoadFailureInfo" : error.adLoadFailureInfo ?: @""};
+    return @{@"code" : [@(error.code) stringValue],
+             @"message" : error.message ?: @"",
+             @"waterfall" : error.waterfall.description ?: @""};
 }
 
 - (NSString *)serialize:(NSDictionary<NSString *, NSString *> *)dict

@@ -48,7 +48,7 @@
   <AARImports>
     <if condition="bEnabled">
       <true>
-        <insertValue value="com.applovin,applovin-sdk,10.3.2@aar" />
+        <insertValue value="com.applovin,applovin-sdk,11.5.5@aar" />
         <insertNewline/>
         <insertValue value="repository $S(PluginDir)/../ThirdParty/Android/repository" />
         <insertNewline/>
@@ -70,6 +70,13 @@
     <if condition="bEnabled">
       <true>
         <insert>
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_1_8
+                  targetCompatibility = JavaVersion.VERSION_1_8
+              }
+          }
+
           allprojects {
             repositories {
               // You may add any additional repositories for other ad networks here
