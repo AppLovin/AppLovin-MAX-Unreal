@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# This script downloads AppLovin adapters for iOS and generates build settings for use in UE4 projects.
+# This script downloads AppLovin adapters for iOS and generates build settings for use in UE projects.
 #
 # Copyright © 2021 AppLovin Corporation. All rights reserved.
 #
