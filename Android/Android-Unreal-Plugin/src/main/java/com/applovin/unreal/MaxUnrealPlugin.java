@@ -571,7 +571,7 @@ public class MaxUnrealPlugin
         }
 
         JSONObject params = getErrorInfo( error );
-        JsonUtils.putString( params, "adUnitId", adUnitId );
+        JsonUtils.putString( params, "adUnitIdentifier", adUnitId );
 
         sendUnrealEvent( name, params );
     }
@@ -718,8 +718,8 @@ public class MaxUnrealPlugin
         }
 
         JSONObject params = getAdInfo( ad );
-        JsonUtils.putString( params, "rewardLabel", reward != null ? reward.getLabel() : "" );
-        JsonUtils.putInt( params, "rewardAmount", reward != null ? reward.getAmount() : 0 );
+        JsonUtils.putString( params, "label", reward != null ? reward.getLabel() : "" );
+        JsonUtils.putInt( params, "amount", reward != null ? reward.getAmount() : 0 );
 
         sendUnrealEvent( "OnRewardedAdReceivedRewardEvent", params );
     }
@@ -1298,6 +1298,8 @@ public class MaxUnrealPlugin
     // endregion
 
     // region Unreal Bridge
+
+    // NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so they keys must match with the corresponding UPROPERTY
     private void sendUnrealEvent(final String name, final JSONObject params)
     {
         eventListener.onReceivedEvent( name, params.toString() );

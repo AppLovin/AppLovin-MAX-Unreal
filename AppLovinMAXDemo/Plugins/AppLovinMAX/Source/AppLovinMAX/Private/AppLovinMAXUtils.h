@@ -6,7 +6,7 @@
 
 namespace AppLovinMAXUtils
 {
-    /** Returns serialized JSON string for a TMap to forward to native iOS and Android plugins. */
+    /** Returns serialized JSON for a TMap to forward to native iOS and Android plugins. */
     FString SerializeMap(const TMap<FString, FString> &Map);
 
     /** Returns the hexadecimal color code as #AARRGGBB for the given FColor. */

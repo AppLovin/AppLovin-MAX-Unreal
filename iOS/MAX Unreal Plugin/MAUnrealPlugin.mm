@@ -537,7 +537,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     
     NSMutableDictionary *parameters = [[self errorInfoForError: error] mutableCopy];
-    parameters[@"adUnitId"] = adUnitIdentifier;
+    parameters[@"adUnitIdentifier"] = adUnitIdentifier;
     
     [self sendUnrealEventWithName: name parameters: parameters];
 }
@@ -667,9 +667,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     
     NSMutableDictionary *parameters = [[self adInfoForAd: ad] mutableCopy];
-    parameters[@"rewardLabel"] = reward ? reward.label : @"";
-    NSInteger rewardAmountInt = reward ? reward.amount : 0;
-    parameters[@"rewardAmount"] = [@(rewardAmountInt) stringValue];
+    parameters[@"label"] = reward ? reward.label : @"";
+    parameters[@"amount"] = reward ? @(reward.amount) : @(0);
     
     [self sendUnrealEventWithName: @"OnRewardedAdReceivedRewardEvent" parameters: parameters];
 }
@@ -1172,6 +1171,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 #pragma mark - Unreal Bridge
 
+// NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so they keys must match with the corresponding UPROPERTY
 - (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
 {
     if ( self.eventCallback )
