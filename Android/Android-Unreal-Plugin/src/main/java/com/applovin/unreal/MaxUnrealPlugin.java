@@ -1299,7 +1299,7 @@ public class MaxUnrealPlugin
 
     // region Unreal Bridge
 
-    // NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so they keys must match with the corresponding UPROPERTY
+    // NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so the keys must match with the corresponding UPROPERTY
     private void sendUnrealEvent(final String name, final JSONObject params)
     {
         eventListener.onReceivedEvent( name, params.toString() );

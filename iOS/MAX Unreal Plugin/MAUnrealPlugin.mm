@@ -1171,7 +1171,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 #pragma mark - Unreal Bridge
 
-// NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so they keys must match with the corresponding UPROPERTY
+// NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so the keys must match with the corresponding UPROPERTY
 - (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
 {
     if ( self.eventCallback )
