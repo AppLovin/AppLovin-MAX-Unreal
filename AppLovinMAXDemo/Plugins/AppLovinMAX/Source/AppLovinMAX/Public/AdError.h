@@ -12,6 +12,6 @@ struct APPLOVINMAX_API FAdError
     /** The error message for the error. */
     const FString Message;
 
-    /** A description string containing error codes and reasons for why each mediated network failed to load an ad. */
-    const FString AdLoadFailureInfo;
+    /** The underlying waterfall of ad responses. */
+    const FString Waterfall;
 };
