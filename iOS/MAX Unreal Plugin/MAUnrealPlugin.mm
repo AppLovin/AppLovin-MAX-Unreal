@@ -28,7 +28,7 @@
 @property (nonatomic, assign, readonly, getter=al_isValidString) BOOL al_validString;
 @end
 
-@interface MAUnrealPlugin()<MAAdDelegate, MAAdRevenueDelegate, MAAdViewAdDelegate, MARewardedAdDelegate>
+@interface MAUnrealPlugin()<MAAdRevenueDelegate, MAAdDelegate, MAAdViewAdDelegate, MARewardedAdDelegate>
 
 // Parent Fields
 @property (nonatomic, weak) ALSdk *sdk;
@@ -296,7 +296,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     if ( self.sdk )
     {
-        return self.sdk.settings.isVerboseLoggingEnabled;
+        return [self.sdk.settings isVerboseLoggingEnabled];
     }
     else if ( self.verboseLoggingToSet )
     {

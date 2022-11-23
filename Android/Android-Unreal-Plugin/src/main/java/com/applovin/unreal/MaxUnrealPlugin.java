@@ -1050,12 +1050,14 @@ public class MaxUnrealPlugin
         return retrieveAdView( adUnitId, adFormat, null );
     }
 
+    @SuppressWarnings("RedundantCast")
     public MaxAdView retrieveAdView(String adUnitId, MaxAdFormat adFormat, String adViewPosition)
     {
         MaxAdView result = mAdViews.get( adUnitId );
         if ( result == null && adViewPosition != null )
         {
-            result = new MaxAdView( adUnitId, adFormat, sdk, getGameActivity() );
+            // Must explicitly cast the GameActivity to Context to avoid a crash from NoSuchMethodError
+            result = new MaxAdView( adUnitId, adFormat, sdk, (Context) getGameActivity() );
             result.setListener( this );
 
             mAdViews.put( adUnitId, result );
@@ -1112,7 +1114,12 @@ public class MaxUnrealPlugin
         else
         {
             // Figure out vertical params
-            if ( adViewPosition.contains( "top" ) )
+            if ( adViewPosition == null )
+            {
+                e( "Error positioning ad view due to null position" );
+                return;
+            }
+            else if ( adViewPosition.contains( "top" ) )
             {
                 gravity = Gravity.TOP;
             }
