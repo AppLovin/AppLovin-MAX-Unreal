@@ -3,24 +3,6 @@
 #include "AdInfo.h"
 #include "AppLovinMAXUtils.h"
 
-FAdInfo::FAdInfo(const TMap<FString, FString> &EventBody)
-{
-    AdUnitIdentifier = EventBody.FindRef(TEXT("adUnitId"));
-    NetworkName = EventBody.FindRef(TEXT("networkName"));
-    CreativeIdentifier = EventBody.FindRef(TEXT("creativeId"));
-    Placement = EventBody.FindRef(TEXT("placement"));
-
-    if (EventBody.Contains(TEXT("revenue")))
-    {
-        // NOTE: Defaults to 0 if revenue string cannot be converted to double
-        Revenue = FCString::Atod(*EventBody.FindRef(TEXT("revenue")));
-    }
-    else
-    {
-        Revenue = -1;
-    }
-}
-
 FString FAdInfo::ToString() const
 {
     TArray<FStringFormatArg> Args;

@@ -4,6 +4,7 @@
 #include "AppLovinMAXLogger.h"
 #include "AppLovinMAXUtils.h"
 #include "Interfaces/IPluginManager.h"
+#include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
 
 #if PLATFORM_IOS
 #include "IOS/IOSAppDelegate.h"
@@ -213,7 +214,7 @@ void UAppLovinMAX::TrackEvent(const FString &Name, const TMap<FString, FString> 
 #if PLATFORM_IOS
     [GetIOSPlugin() trackEvent:Name.GetNSString() parameters:GetNSDictionary(Parameters)];
 #elif PLATFORM_ANDROID
-    FString SerializedParameters = AppLovinMAXUtils::ParseMapIntoString(Parameters);
+    FString SerializedParameters = AppLovinMAXUtils::SerializeMap(Parameters);
     GetAndroidPlugin()->TrackEvent(Name, SerializedParameters);
 #endif
 }
@@ -509,17 +510,21 @@ UAppLovinMAX::FOnRewardedAdRevenuePaidDelegate UAppLovinMAX::OnRewardedAdRevenue
 UAppLovinMAX::FOnRewardedAdFailedToDisplayDelegate UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate;
 UAppLovinMAX::FOnRewardedAdReceivedRewardDelegate UAppLovinMAX::OnRewardedAdReceivedRewardDelegate;
 
-void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
+void ForwardEvent(const FString &Name, const FString &Body)
 {
     if (Name == TEXT("OnSdkInitializedEvent"))
     {
-        FSdkConfiguration SdkConfiguration(Body);
+        FSdkConfiguration SdkConfiguration;
+        FJsonObjectConverter::JsonObjectStringToUStruct<FSdkConfiguration>(Body, &SdkConfiguration, 0, 0);
         UAppLovinMAX::OnSdkInitializedDelegate.Broadcast(SdkConfiguration);
     }
     else // Ad Events
     {
-        FAdInfo AdInfo(Body);
-        FAdError AdError{FCString::Atoi(*Body.FindRef(TEXT("code"))), Body.FindRef(TEXT("message")), Body.FindRef(TEXT("waterfall"))};
+        FAdInfo AdInfo;
+        FJsonObjectConverter::JsonObjectStringToUStruct<FAdInfo>(Body, &AdInfo, 0, 0);
+
+        FAdError AdError;
+        FJsonObjectConverter::JsonObjectStringToUStruct<FAdError>(Body, &AdError, 0, 0);
 
         if (Name == TEXT("OnBannerAdLoadedEvent"))
         {
@@ -627,7 +632,8 @@ void ForwardEvent(const FString &Name, const TMap<FString, FString> &Body)
         }
         else if (Name == TEXT("OnRewardedAdReceivedRewardEvent"))
         {
-            FAdReward Reward{Body.FindRef(TEXT("rewardLabel")), FCString::Atoi(*Body.FindRef(TEXT("rewardAmount")))};
+            FAdReward Reward;
+            FJsonObjectConverter::JsonObjectStringToUStruct<FAdReward>(Body, &Reward, 0, 0);
             UAppLovinMAX::OnRewardedAdReceivedRewardDelegate.Broadcast(AdInfo, Reward);
         }
         else
@@ -717,8 +723,7 @@ extern "C" void ForwardIOSEvent(NSString *Name, NSString *Params)
 {
     const char *NameCString = [Name UTF8String];
     const char *ParamsCString = [Params UTF8String];
-    TMap<FString, FString> ParamsMap = AppLovinMAXUtils::ParseStringIntoMap((FString(ParamsCString)));
-    ForwardEvent((FString(NameCString)), ParamsMap);
+    ForwardEvent((FString(NameCString)), FString(ParamsCString));
 }
 
 MAUnrealPlugin *UAppLovinMAX::GetIOSPlugin()
@@ -745,8 +750,7 @@ void ForwardAndroidEvent(JNIEnv *env, jobject thiz, jstring name, jstring params
 {
     FString Name = FJavaHelper::FStringFromParam(env, name);
     FString Params = FJavaHelper::FStringFromParam(env, params);
-    TMap<FString, FString> ParamsMap = AppLovinMAXUtils::ParseStringIntoMap(Params);
-    ForwardEvent(Name, ParamsMap);
+    ForwardEvent(Name, Params);
 }
 
 // UE4

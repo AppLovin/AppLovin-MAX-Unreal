@@ -3,42 +3,47 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SdkConfiguration.generated.h"
 
 // MARK: - Enums
 
 UENUM()
-enum class EAppTrackingStatus : uint8 // Only for iOS
+enum class EAppTrackingStatus : int8 // iOS only
 {
-    Unavailable,
-    NotDetermined,
-    Restricted,
-    Denied,
-    Authorized
+    Unavailable = -1,
+    NotDetermined = 0,
+    Restricted = 1,
+    Denied = 2,
+    Authorized = 3
 };
 
 // MARK: - SdkConfiguration
-
+USTRUCT()
 struct APPLOVINMAX_API FSdkConfiguration
 {
-    FSdkConfiguration(const TMap<FString, FString> &EventBody);
+    GENERATED_BODY()
 
     /** Get the country code for this user. */
+    UPROPERTY()
     FString CountryCode;
 
     /** True if the user has provided consent for information sharing with AppLovin and other providers. */
+    UPROPERTY()
     bool HasUserConsent;
 
     /** True if the user is age restricted. */
+    UPROPERTY()
     bool IsAgeRestrictedUser;
 
     /** True if the user has opted out of the sale of their personal information. */
+    UPROPERTY()
     bool IsDoNotSell;
 
     /** True if the device is a tablet. */
+    UPROPERTY()
     bool IsTablet;
 
-#if PLATFORM_IOS
-    /** App tracking status values. Primarily used in conjunction with iOS 14's AppTrackingTransparency.framework. */
+    /** iOS only. App tracking status values primarily used in conjunction with iOS 14's AppTrackingTransparency.framework. */
+    UPROPERTY()
     EAppTrackingStatus AppTrackingStatus;
-#endif
 };

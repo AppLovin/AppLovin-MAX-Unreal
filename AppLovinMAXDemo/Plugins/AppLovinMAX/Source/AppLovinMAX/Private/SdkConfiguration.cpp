@@ -1,37 +1,3 @@
 // Copyright AppLovin Corporation. All Rights Reserved.
 
 #include "SdkConfiguration.h"
-#include "AppLovinMAXUtils.h"
-
-FSdkConfiguration::FSdkConfiguration(const TMap<FString, FString> &EventBody)
-{
-    CountryCode = EventBody.FindRef(TEXT("countryCode"));
-    HasUserConsent = EventBody.FindRef(TEXT("hasUserConsent")) == TEXT("true");
-    IsAgeRestrictedUser = EventBody.FindRef(TEXT("isAgeRestrictedUser")) == TEXT("true");
-    IsDoNotSell = EventBody.FindRef(TEXT("isDoNotSell")) == TEXT("true");
-    IsTablet = EventBody.FindRef(TEXT("isTablet")) == TEXT("true");
-
-#if PLATFORM_IOS
-    FString AppTrackingStatusStr = EventBody.FindRef(TEXT("appTrackingStatus"));
-    if (AppTrackingStatusStr == TEXT("-1"))
-    {
-        AppTrackingStatus = EAppTrackingStatus::Unavailable;
-    }
-    else if (AppTrackingStatusStr == TEXT("0"))
-    {
-        AppTrackingStatus = EAppTrackingStatus::NotDetermined;
-    }
-    else if (AppTrackingStatusStr == TEXT("1"))
-    {
-        AppTrackingStatus = EAppTrackingStatus::Restricted;
-    }
-    else if (AppTrackingStatusStr == TEXT("2"))
-    {
-        AppTrackingStatus = EAppTrackingStatus::Denied;
-    }
-    else // "3" is authorized
-    {
-        AppTrackingStatus = EAppTrackingStatus::Authorized;
-    }
-#endif
-}

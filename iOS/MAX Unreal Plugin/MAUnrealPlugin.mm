@@ -65,9 +65,6 @@
 static NSString *const SDK_TAG = @"AppLovinSdk";
 static NSString *const TAG = @"MAUnrealPlugin";
 
-static NSString *const ALSerializeKeyValueSeparator = [NSString stringWithFormat: @"%c", 28];
-static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFormat: @"%c", 29];
-
 #pragma mark - Initialization
 
 - (instancetype)initWithView:(UIView *)mainView eventCallback:(UnrealEventCallback)eventCallback
@@ -181,21 +178,20 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     }];
 }
 
-- (NSDictionary<NSString *, NSString *> *)initializationMessage
+- (NSDictionary<NSString *, id> *)initializationMessage
 {
-    NSMutableDictionary<NSString *, NSString *> *message = [NSMutableDictionary dictionaryWithCapacity: 7];
+    NSMutableDictionary<NSString *, id> *message = [NSMutableDictionary dictionaryWithCapacity: 6];
     
     if ( self.sdkConfiguration )
     {
-        message[@"appTrackingStatus"] = [@(self.sdkConfiguration.appTrackingTransparencyStatus) stringValue];
+        message[@"appTrackingStatus"] = @(self.sdkConfiguration.appTrackingTransparencyStatus);
         message[@"countryCode"] = self.sdkConfiguration.countryCode;
     }
     
-    // Use "true" string to represent boolean value of true
-    message[@"hasUserConsent"] = [ALPrivacySettings hasUserConsent] ? @"true" : @"false";
-    message[@"isAgeRestrictedUser"] = [ALPrivacySettings isAgeRestrictedUser] ? @"true" : @"false";
-    message[@"isDoNotSell"] = [ALPrivacySettings isDoNotSell] ? @"true" : @"false";
-    message[@"isTablet"] = [self isTablet] ? @"true" : @"false";
+    message[@"hasUserConsent"] = @([ALPrivacySettings hasUserConsent]);
+    message[@"isAgeRestrictedUser"] = @([ALPrivacySettings isAgeRestrictedUser]);
+    message[@"isDoNotSell"] = @([ALPrivacySettings isDoNotSell]);
+    message[@"isTablet"] = @([self isTablet]);
     
     return message;
 
@@ -541,7 +537,7 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     }
     
     NSMutableDictionary *parameters = [[self errorInfoForError: error] mutableCopy];
-    parameters[@"adUnitId"] = adUnitIdentifier;
+    parameters[@"adUnitIdentifier"] = adUnitIdentifier;
     
     [self sendUnrealEventWithName: name parameters: parameters];
 }
@@ -671,9 +667,8 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
     }
     
     NSMutableDictionary *parameters = [[self adInfoForAd: ad] mutableCopy];
-    parameters[@"rewardLabel"] = reward ? reward.label : @"";
-    NSInteger rewardAmountInt = reward ? reward.amount : 0;
-    parameters[@"rewardAmount"] = [@(rewardAmountInt) stringValue];
+    parameters[@"label"] = reward ? reward.label : @"";
+    parameters[@"amount"] = reward ? @(reward.amount) : @(0);
     
     [self sendUnrealEventWithName: @"OnRewardedAdReceivedRewardEvent" parameters: parameters];
 }
@@ -1158,43 +1153,32 @@ static NSString *const ALSerializeKeyValuePairSeparator = [NSString stringWithFo
 
 #pragma mark - Utility Methods
 
-- (NSDictionary<NSString *, NSString *> *)adInfoForAd:(MAAd *)ad
+- (NSDictionary<NSString *, id> *)adInfoForAd:(MAAd *)ad
 {
-    return @{@"adUnitId" : ad.adUnitIdentifier,
-             @"creativeId" : ad.creativeIdentifier ?: @"",
+    return @{@"adUnitIdentifier" : ad.adUnitIdentifier,
+             @"creativeIdentifier" : ad.creativeIdentifier ?: @"",
              @"networkName" : ad.networkName,
              @"placement" : ad.placement ?: @"",
-             @"revenue" : [@(ad.revenue) stringValue]};
+             @"revenue" : ad.revenue == 0 ? @(ad.revenue) : @(-1)};
 }
 
-- (NSDictionary<NSString *, NSString *> *)errorInfoForError:(MAError *)error
+- (NSDictionary<NSString *, id> *)errorInfoForError:(MAError *)error
 {
-    return @{@"code" : [@(error.code) stringValue],
+    return @{@"code" : @(error.code),
              @"message" : error.message ?: @"",
              @"waterfall" : error.waterfall.description ?: @""};
 }
 
-- (NSString *)serialize:(NSDictionary<NSString *, NSString *> *)dict
-{
-    NSMutableString *result = [[NSMutableString alloc] initWithCapacity: 64];
-    [dict enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop)
-     {
-        [result appendString: key];
-        [result appendString: ALSerializeKeyValueSeparator];
-        [result appendString: obj];
-        [result appendString: ALSerializeKeyValuePairSeparator];
-    }];
-    
-    return result;
-}
-
 #pragma mark - Unreal Bridge
 
+// NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so the keys must match with the corresponding UPROPERTY
 - (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
 {
-    NSString *serializedParameters = [self serialize: parameters];
     if ( self.eventCallback )
     {
+        NSData *data = [NSJSONSerialization dataWithJSONObject: parameters options: 0 error: nil];
+        NSString *serializedParameters = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+        
         self.eventCallback(name, serializedParameters);
     }
 }

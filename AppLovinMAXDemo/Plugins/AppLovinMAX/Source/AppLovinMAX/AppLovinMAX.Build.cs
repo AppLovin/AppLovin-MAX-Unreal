@@ -12,7 +12,7 @@ public class AppLovinMAX : ModuleRules
 		PublicIncludePaths.AddRange( new string[] {} );
 		PrivateIncludePaths.AddRange( new string[] { "AppLovinMAX/Private" } );
 		PrivateIncludePathModuleNames.AddRange( new string[] { "Settings" } );
-		PublicDependencyModuleNames.AddRange( new string[] { "Core" } );
+		PublicDependencyModuleNames.AddRange( new string[] { "Core", "Json", "JsonUtilities" } );
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
