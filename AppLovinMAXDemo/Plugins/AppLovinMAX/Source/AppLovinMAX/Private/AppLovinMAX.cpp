@@ -1,6 +1,7 @@
 // Copyright AppLovin Corporation. All Rights Reserved.
 
 #include "AppLovinMAX.h"
+#include "AppLovinMAXDelegate.h"
 #include "AppLovinMAXLogger.h"
 #include "AppLovinMAXUtils.h"
 #include "Interfaces/IPluginManager.h"
@@ -517,6 +518,7 @@ void ForwardEvent(const FString &Name, const FString &Body)
         FSdkConfiguration SdkConfiguration;
         FJsonObjectConverter::JsonObjectStringToUStruct<FSdkConfiguration>(Body, &SdkConfiguration, 0, 0);
         UAppLovinMAX::OnSdkInitializedDelegate.Broadcast(SdkConfiguration);
+        UAppLovinMAXDelegate::OnSdkInitialized(SdkConfiguration);
     }
     else // Ad Events
     {
