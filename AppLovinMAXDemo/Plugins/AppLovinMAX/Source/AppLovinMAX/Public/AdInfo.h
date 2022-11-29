@@ -5,25 +5,25 @@
 #include "CoreMinimal.h"
 #include "AdInfo.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct APPLOVINMAX_API FAdInfo
 {
     GENERATED_BODY()
 
     FString ToString() const;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     FString AdUnitIdentifier;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     FString NetworkName;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     FString CreativeIdentifier;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     FString Placement;
 
-    UPROPERTY()
-    double Revenue;
+    UPROPERTY(BlueprintReadWrite)
+    float Revenue; // TODO: Double not supported in UE4, currently cropping to float
 };

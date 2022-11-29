@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AdReward.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct APPLOVINMAX_API FAdReward
 {
     GENERATED_BODY()
@@ -13,9 +13,9 @@ struct APPLOVINMAX_API FAdReward
     FString ToString() const;
     bool IsValid() const;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     FString Label;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     int Amount;
 };

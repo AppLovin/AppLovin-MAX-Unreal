@@ -5,20 +5,20 @@
 #include "CoreMinimal.h"
 #include "AdError.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct APPLOVINMAX_API FAdError
 {
     GENERATED_BODY()
 
     /** The error code for the error. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     int Code;
 
     /** The error message for the error. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     FString Message;
 
     /** The underlying waterfall of ad responses. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     FString Waterfall;
 };

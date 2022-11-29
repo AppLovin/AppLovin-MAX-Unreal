@@ -24,26 +24,26 @@ struct APPLOVINMAX_API FSdkConfiguration
     GENERATED_BODY()
 
     /** Get the country code for this user. */
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadOnly)
     FString CountryCode;
 
     /** True if the user has provided consent for information sharing with AppLovin and other providers. */
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadOnly)
     bool HasUserConsent;
 
     /** True if the user is age restricted. */
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadOnly)
     bool IsAgeRestrictedUser;
 
     /** True if the user has opted out of the sale of their personal information. */
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadOnly)
     bool IsDoNotSell;
 
     /** True if the device is a tablet. */
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadOnly)
     bool IsTablet;
 
     /** iOS only. App tracking status values primarily used in conjunction with iOS 14's AppTrackingTransparency.framework. */
-    UPROPERTY(BlueprintReadWrite)
+    UPROPERTY(BlueprintReadOnly)
     EAppTrackingStatus AppTrackingStatus;
 };
