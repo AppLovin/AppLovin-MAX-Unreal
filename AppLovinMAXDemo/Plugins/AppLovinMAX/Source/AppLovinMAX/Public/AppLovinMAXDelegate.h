@@ -43,7 +43,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdFailedToDisplayDynamic
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdReceivedRewardDynamicDelegate, const FAdInfo &, AdInfo, const FAdReward &, Reward);
 
 /**
- * This class is used for binding and broadcasting to dynamic delegates, i.e., via blueprints. For C++ projects, one should prefer binding to the delegates available directly on UAppLovinMAX.
+ * This class is used for binding and broadcasting to dynamic delegates, i.e., via blueprints. For C++ projects, prefer binding to the delegates available directly on UAppLovinMAX.
  */
 UCLASS(ClassGroup = (AppLovinMAX), DisplayName = "AppLovin MAX Delegate", meta = (BlueprintSpawnableComponent))
 class APPLOVINMAX_API UAppLovinMAXDelegate : public UActorComponent
