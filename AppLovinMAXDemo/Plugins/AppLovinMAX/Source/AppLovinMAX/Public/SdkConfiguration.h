@@ -7,43 +7,43 @@
 
 // MARK: - Enums
 
-UENUM()
-enum class EAppTrackingStatus : int8 // iOS only
+UENUM(BlueprintType)
+enum class EAppTrackingStatus : uint8 // iOS only
 {
-    Unavailable = -1,
-    NotDetermined = 0,
-    Restricted = 1,
-    Denied = 2,
-    Authorized = 3
+    Unavailable,
+    NotDetermined,
+    Restricted,
+    Denied,
+    Authorized,
 };
 
 // MARK: - SdkConfiguration
-USTRUCT()
+USTRUCT(BlueprintType)
 struct APPLOVINMAX_API FSdkConfiguration
 {
     GENERATED_BODY()
 
     /** Get the country code for this user. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     FString CountryCode;
 
     /** True if the user has provided consent for information sharing with AppLovin and other providers. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     bool HasUserConsent;
 
     /** True if the user is age restricted. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     bool IsAgeRestrictedUser;
 
     /** True if the user has opted out of the sale of their personal information. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     bool IsDoNotSell;
 
     /** True if the device is a tablet. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     bool IsTablet;
 
     /** iOS only. App tracking status values primarily used in conjunction with iOS 14's AppTrackingTransparency.framework. */
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     EAppTrackingStatus AppTrackingStatus;
 };

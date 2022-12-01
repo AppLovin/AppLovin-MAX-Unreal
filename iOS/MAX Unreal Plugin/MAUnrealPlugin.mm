@@ -184,7 +184,9 @@ static NSString *const TAG = @"MAUnrealPlugin";
     
     if ( self.sdkConfiguration )
     {
-        message[@"appTrackingStatus"] = @(self.sdkConfiguration.appTrackingTransparencyStatus);
+        // Unreal blueprints only support uint8 enums. Since ALAppTrackingTransparencyStatusUnavailable = -1,
+        // increment app tracking status values by 1 to make them all unsigned
+        message[@"appTrackingStatus"] = @(self.sdkConfiguration.appTrackingTransparencyStatus + 1);
         message[@"countryCode"] = self.sdkConfiguration.countryCode;
     }
     
