@@ -77,13 +77,13 @@ void UAppLovinMAXDelegate::BroadcastAdEvent(const FString &Name, const FAdInfo &
                 {
                     Itr->OnInterstitialLoadedDynamicDelegate.Broadcast(AdInfo);
                 }
-                else if (Name == TEXT("OnInterstitialHiddenEvent"))
-                {
-                    Itr->OnInterstitialHiddenDynamicDelegate.Broadcast(AdInfo);
-                }
                 else if (Name == TEXT("OnInterstitialDisplayedEvent"))
                 {
                     Itr->OnInterstitialDisplayedDynamicDelegate.Broadcast(AdInfo);
+                }
+                else if (Name == TEXT("OnInterstitialHiddenEvent"))
+                {
+                    Itr->OnInterstitialHiddenDynamicDelegate.Broadcast(AdInfo);
                 }
                 else if (Name == TEXT("OnInterstitialClickedEvent"))
                 {

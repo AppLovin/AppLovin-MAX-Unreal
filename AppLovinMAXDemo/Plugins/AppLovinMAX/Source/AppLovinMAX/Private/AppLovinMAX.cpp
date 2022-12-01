@@ -497,18 +497,18 @@ UAppLovinMAX::FOnMRecAdCollapsedDelegate UAppLovinMAX::OnMRecAdCollapsedDelegate
 UAppLovinMAX::FOnMRecAdRevenuePaidDelegate UAppLovinMAX::OnMRecAdRevenuePaidDelegate;
 UAppLovinMAX::FOnInterstitialLoadedDelegate UAppLovinMAX::OnInterstitialLoadedDelegate;
 UAppLovinMAX::FOnInterstitialLoadFailedDelegate UAppLovinMAX::OnInterstitialLoadFailedDelegate;
-UAppLovinMAX::FOnInterstitialHiddenDelegate UAppLovinMAX::OnInterstitialHiddenDelegate;
 UAppLovinMAX::FOnInterstitialDisplayedDelegate UAppLovinMAX::OnInterstitialDisplayedDelegate;
 UAppLovinMAX::FOnInterstitialAdFailedToDisplayDelegate UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate;
+UAppLovinMAX::FOnInterstitialHiddenDelegate UAppLovinMAX::OnInterstitialHiddenDelegate;
 UAppLovinMAX::FOnInterstitialClickedDelegate UAppLovinMAX::OnInterstitialClickedDelegate;
 UAppLovinMAX::FOnInterstitialAdRevenuePaidDelegate UAppLovinMAX::OnInterstitialAdRevenuePaidDelegate;
 UAppLovinMAX::FOnRewardedAdLoadedDelegate UAppLovinMAX::OnRewardedAdLoadedDelegate;
 UAppLovinMAX::FOnRewardedAdLoadFailedDelegate UAppLovinMAX::OnRewardedAdLoadFailedDelegate;
 UAppLovinMAX::FOnRewardedAdDisplayedDelegate UAppLovinMAX::OnRewardedAdDisplayedDelegate;
+UAppLovinMAX::FOnRewardedAdFailedToDisplayDelegate UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate;
 UAppLovinMAX::FOnRewardedAdHiddenDelegate UAppLovinMAX::OnRewardedAdHiddenDelegate;
 UAppLovinMAX::FOnRewardedAdClickedDelegate UAppLovinMAX::OnRewardedAdClickedDelegate;
 UAppLovinMAX::FOnRewardedAdRevenuePaidDelegate UAppLovinMAX::OnRewardedAdRevenuePaidDelegate;
-UAppLovinMAX::FOnRewardedAdFailedToDisplayDelegate UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate;
 UAppLovinMAX::FOnRewardedAdReceivedRewardDelegate UAppLovinMAX::OnRewardedAdReceivedRewardDelegate;
 
 void ForwardEvent(const FString &Name, const FString &Body)
@@ -598,11 +598,6 @@ void ForwardEvent(const FString &Name, const FString &Body)
             UAppLovinMAX::OnInterstitialLoadFailedDelegate.Broadcast(AdInfo, AdError);
             UAppLovinMAXDelegate::BroadcastAdErrorEvent(Name, AdInfo, AdError);
         }
-        else if (Name == TEXT("OnInterstitialHiddenEvent"))
-        {
-            UAppLovinMAX::OnInterstitialHiddenDelegate.Broadcast(AdInfo);
-            UAppLovinMAXDelegate::BroadcastAdEvent(Name, AdInfo);
-        }
         else if (Name == TEXT("OnInterstitialDisplayedEvent"))
         {
             UAppLovinMAX::OnInterstitialDisplayedDelegate.Broadcast(AdInfo);
@@ -612,6 +607,11 @@ void ForwardEvent(const FString &Name, const FString &Body)
         {
             UAppLovinMAX::OnInterstitialAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
             UAppLovinMAXDelegate::BroadcastAdErrorEvent(Name, AdInfo, AdError);
+        }
+        else if (Name == TEXT("OnInterstitialHiddenEvent"))
+        {
+            UAppLovinMAX::OnInterstitialHiddenDelegate.Broadcast(AdInfo);
+            UAppLovinMAXDelegate::BroadcastAdEvent(Name, AdInfo);
         }
         else if (Name == TEXT("OnInterstitialClickedEvent"))
         {
@@ -638,6 +638,11 @@ void ForwardEvent(const FString &Name, const FString &Body)
             UAppLovinMAX::OnRewardedAdDisplayedDelegate.Broadcast(AdInfo);
             UAppLovinMAXDelegate::BroadcastAdEvent(Name, AdInfo);
         }
+        else if (Name == TEXT("OnRewardedAdFailedToDisplayEvent"))
+        {
+            UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
+            UAppLovinMAXDelegate::BroadcastAdErrorEvent(Name, AdInfo, AdError);
+        }
         else if (Name == TEXT("OnRewardedAdHiddenEvent"))
         {
             UAppLovinMAX::OnRewardedAdHiddenDelegate.Broadcast(AdInfo);
@@ -652,11 +657,6 @@ void ForwardEvent(const FString &Name, const FString &Body)
         {
             UAppLovinMAX::OnRewardedAdRevenuePaidDelegate.Broadcast(AdInfo);
             UAppLovinMAXDelegate::BroadcastAdEvent(Name, AdInfo);
-        }
-        else if (Name == TEXT("OnRewardedAdFailedToDisplayEvent"))
-        {
-            UAppLovinMAX::OnRewardedAdFailedToDisplayDelegate.Broadcast(AdInfo, AdError);
-            UAppLovinMAXDelegate::BroadcastAdErrorEvent(Name, AdInfo, AdError);
         }
         else if (Name == TEXT("OnRewardedAdReceivedRewardEvent"))
         {

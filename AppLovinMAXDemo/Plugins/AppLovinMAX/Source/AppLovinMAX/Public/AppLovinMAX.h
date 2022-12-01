@@ -410,19 +410,19 @@ public:
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialLoadedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialHiddenDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialDisplayedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialHiddenDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialClickedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdLoadedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdDisplayedDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdHiddenDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdClickedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdReceivedRewardDelegate, const FAdInfo & /*AdInfo*/, const FAdReward & /*Reward*/);
 
     static FOnSdkInitializedDelegate OnSdkInitializedDelegate;
@@ -443,19 +443,19 @@ public:
 
     static FOnInterstitialLoadedDelegate OnInterstitialLoadedDelegate;
     static FOnInterstitialLoadFailedDelegate OnInterstitialLoadFailedDelegate;
-    static FOnInterstitialHiddenDelegate OnInterstitialHiddenDelegate;
     static FOnInterstitialDisplayedDelegate OnInterstitialDisplayedDelegate;
     static FOnInterstitialAdFailedToDisplayDelegate OnInterstitialAdFailedToDisplayDelegate;
+    static FOnInterstitialHiddenDelegate OnInterstitialHiddenDelegate;
     static FOnInterstitialClickedDelegate OnInterstitialClickedDelegate;
     static FOnInterstitialAdRevenuePaidDelegate OnInterstitialAdRevenuePaidDelegate;
 
     static FOnRewardedAdLoadedDelegate OnRewardedAdLoadedDelegate;
     static FOnRewardedAdLoadFailedDelegate OnRewardedAdLoadFailedDelegate;
     static FOnRewardedAdDisplayedDelegate OnRewardedAdDisplayedDelegate;
+    static FOnRewardedAdFailedToDisplayDelegate OnRewardedAdFailedToDisplayDelegate;
     static FOnRewardedAdHiddenDelegate OnRewardedAdHiddenDelegate;
     static FOnRewardedAdClickedDelegate OnRewardedAdClickedDelegate;
     static FOnRewardedAdRevenuePaidDelegate OnRewardedAdRevenuePaidDelegate;
-    static FOnRewardedAdFailedToDisplayDelegate OnRewardedAdFailedToDisplayDelegate;
     static FOnRewardedAdReceivedRewardDelegate OnRewardedAdReceivedRewardDelegate;
 
 protected:
