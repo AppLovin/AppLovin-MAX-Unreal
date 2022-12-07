@@ -17,5 +17,5 @@ struct APPLOVINMAX_API FAdReward
     FString Label;
 
     UPROPERTY(BlueprintReadOnly)
-    int Amount;
+    int Amount = 0;
 };

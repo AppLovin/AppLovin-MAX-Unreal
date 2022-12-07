@@ -12,7 +12,7 @@ struct APPLOVINMAX_API FAdError
 
     /** The error code for the error. */
     UPROPERTY(BlueprintReadOnly)
-    int Code;
+    int Code = 0;
 
     /** The error message for the error. */
     UPROPERTY(BlueprintReadOnly)
