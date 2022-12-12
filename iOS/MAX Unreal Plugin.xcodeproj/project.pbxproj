@@ -353,6 +353,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
+				OTHER_CFLAGS = "-fno-objc-msgsend-selector-stubs";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -387,6 +388,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
+				OTHER_CFLAGS = "-fno-objc-msgsend-selector-stubs";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
