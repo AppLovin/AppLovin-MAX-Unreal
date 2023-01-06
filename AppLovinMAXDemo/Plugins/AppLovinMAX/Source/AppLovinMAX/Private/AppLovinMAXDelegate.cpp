@@ -73,21 +73,21 @@ void UAppLovinMAXDelegate::BroadcastAdEvent(const FString &Name, const FAdInfo &
                 {
                     Itr->OnMRecAdRevenuePaidDynamicDelegate.Broadcast(AdInfo);
                 }
-                else if (Name == TEXT("OnInterstitialLoadedEvent"))
+                else if (Name == TEXT("OnInterstitialAdLoadedEvent"))
                 {
-                    Itr->OnInterstitialLoadedDynamicDelegate.Broadcast(AdInfo);
+                    Itr->OnInterstitialAdLoadedDynamicDelegate.Broadcast(AdInfo);
                 }
-                else if (Name == TEXT("OnInterstitialDisplayedEvent"))
+                else if (Name == TEXT("OnInterstitialAdDisplayedEvent"))
                 {
-                    Itr->OnInterstitialDisplayedDynamicDelegate.Broadcast(AdInfo);
+                    Itr->OnInterstitialAdDisplayedDynamicDelegate.Broadcast(AdInfo);
                 }
-                else if (Name == TEXT("OnInterstitialHiddenEvent"))
+                else if (Name == TEXT("OnInterstitialAdHiddenEvent"))
                 {
-                    Itr->OnInterstitialHiddenDynamicDelegate.Broadcast(AdInfo);
+                    Itr->OnInterstitialAdHiddenDynamicDelegate.Broadcast(AdInfo);
                 }
-                else if (Name == TEXT("OnInterstitialClickedEvent"))
+                else if (Name == TEXT("OnInterstitialAdClickedEvent"))
                 {
-                    Itr->OnInterstitialClickedDynamicDelegate.Broadcast(AdInfo);
+                    Itr->OnInterstitialAdClickedDynamicDelegate.Broadcast(AdInfo);
                 }
                 else if (Name == TEXT("OnInterstitialAdRevenuePaidEvent"))
                 {
@@ -134,21 +134,21 @@ void UAppLovinMAXDelegate::BroadcastAdErrorEvent(const FString &Name, const FAdI
                 {
                     Itr->OnMRecAdLoadFailedDynamicDelegate.Broadcast(AdInfo, AdError);
                 }
-                else if (Name == TEXT("OnInterstitialLoadFailedEvent"))
+                else if (Name == TEXT("OnInterstitialAdLoadFailedEvent"))
                 {
-                    Itr->OnInterstitialLoadFailedDynamicDelegate.Broadcast(AdInfo, AdError);
+                    Itr->OnInterstitialAdLoadFailedDynamicDelegate.Broadcast(AdInfo, AdError);
                 }
-                else if (Name == TEXT("OnInterstitialAdFailedToDisplayEvent"))
+                else if (Name == TEXT("OnInterstitialAdDisplayFailedEvent"))
                 {
-                    Itr->OnInterstitialAdFailedToDisplayDynamicDelegate.Broadcast(AdInfo, AdError);
+                    Itr->OnInterstitialAdDisplayFailedDynamicDelegate.Broadcast(AdInfo, AdError);
                 }
                 else if (Name == TEXT("OnRewardedAdLoadFailedEvent"))
                 {
                     Itr->OnRewardedAdLoadFailedDynamicDelegate.Broadcast(AdInfo, AdError);
                 }
-                else if (Name == TEXT("OnRewardedAdFailedToDisplayEvent"))
+                else if (Name == TEXT("OnRewardedAdDisplayFailedEvent"))
                 {
-                    Itr->OnRewardedAdFailedToDisplayDynamicDelegate.Broadcast(AdInfo, AdError);
+                    Itr->OnRewardedAdDisplayFailedDynamicDelegate.Broadcast(AdInfo, AdError);
                 }
             }
         }
