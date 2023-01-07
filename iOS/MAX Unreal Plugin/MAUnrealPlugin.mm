@@ -496,7 +496,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     else if ( MAAdFormat.interstitial == adFormat )
     {
-        name = @"OnInterstitialLoadedEvent";
+        name = @"OnInterstitialAdLoadedEvent";
     }
     else if ( MAAdFormat.rewarded == adFormat )
     {
@@ -526,7 +526,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     else if ( self.interstitials[adUnitIdentifier] )
     {
-        name = @"OnInterstitialLoadFailedEvent";
+        name = @"OnInterstitialAdLoadFailedEvent";
     }
     else if ( self.rewardedAds[adUnitIdentifier] )
     {
@@ -558,7 +558,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     else if ( MAAdFormat.interstitial == adFormat )
     {
-        name = @"OnInterstitialClickedEvent";
+        name = @"OnInterstitialAdClickedEvent";
     }
     else if ( MAAdFormat.rewarded == adFormat )
     {
@@ -582,7 +582,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     NSString *name;
     if ( MAAdFormat.interstitial == adFormat )
     {
-        name = @"OnInterstitialDisplayedEvent";
+        name = @"OnInterstitialAdDisplayedEvent";
     }
     else // REWARDED
     {
@@ -601,11 +601,11 @@ static NSString *const TAG = @"MAUnrealPlugin";
     NSString *name;
     if ( MAAdFormat.interstitial == adFormat )
     {
-        name = @"OnInterstitialAdFailedToDisplayEvent";
+        name = @"OnInterstitialAdDisplayFailedEvent";
     }
     else // REWARDED
     {
-        name = @"OnRewardedAdFailedToDisplayEvent";
+        name = @"OnRewardedAdDisplayFailedEvent";
     }
     
     NSMutableDictionary *parameters = [[self adInfoForAd: ad] mutableCopy];
@@ -623,7 +623,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     NSString *name;
     if ( MAAdFormat.interstitial == adFormat )
     {
-        name = @"OnInterstitialHiddenEvent";
+        name = @"OnInterstitialAdHiddenEvent";
     }
     else // REWARDED
     {
