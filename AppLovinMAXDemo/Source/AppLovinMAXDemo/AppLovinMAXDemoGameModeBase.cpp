@@ -11,7 +11,6 @@ AAppLovinMAXDemoGameModeBase::AAppLovinMAXDemoGameModeBase(const FObjectInitiali
     UAppLovinMAX::OnSdkInitializedDelegate.AddLambda([this](const FSdkConfiguration& SdkConfiguration)
     {
         DEMO_LOG("AppLovin SDK Initialized");
-        AttachCallbacks();
     });
 
     UAppLovinMAX::SetVerboseLoggingEnabled(true);
@@ -20,34 +19,6 @@ AAppLovinMAXDemoGameModeBase::AAppLovinMAXDemoGameModeBase(const FObjectInitiali
 
 void AAppLovinMAXDemoGameModeBase::AttachCallbacks()
 {
-    // Interstitials
-    
-    UAppLovinMAX::OnInterstitialAdLoadedDelegate.AddLambda([](const FAdInfo &AdInfo)
-    {
-        DEMO_LOG("Interstitial loaded");
-        DEMO_LOG("%s", *AdInfo.ToString());
-    });
-
-    UAppLovinMAX::OnInterstitialAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
-    {
-        DEMO_LOG("Interstitial failed to load with error: %s", *AdError.Message);
-    });
-
-    UAppLovinMAX::OnInterstitialAdDisplayFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
-    {
-        DEMO_LOG("Interstitial failed to display with error: %s", *AdError.Message);
-    });
-
-    UAppLovinMAX::OnInterstitialAdClickedDelegate.AddLambda([](const FAdInfo &AdInfo)
-    {
-        DEMO_LOG("Interstitial clicked");
-    });
-
-    UAppLovinMAX::OnInterstitialAdHiddenDelegate.AddLambda([](const FAdInfo &AdInfo)
-    {
-        DEMO_LOG("Interstitial hidden");
-    });
-
     // Rewarded Ads
 
     UAppLovinMAX::OnRewardedAdLoadedDelegate.AddLambda([](const FAdInfo &AdInfo)
