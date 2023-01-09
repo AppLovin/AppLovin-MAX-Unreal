@@ -527,7 +527,7 @@ public class MaxUnrealPlugin
         }
         else if ( MaxAdFormat.INTERSTITIAL == adFormat )
         {
-            name = "OnInterstitialLoadedEvent";
+            name = "OnInterstitialAdLoadedEvent";
         }
         else if ( MaxAdFormat.REWARDED == adFormat )
         {
@@ -558,7 +558,7 @@ public class MaxUnrealPlugin
         }
         else if ( mInterstitials.containsKey( adUnitId ) )
         {
-            name = "OnInterstitialLoadFailedEvent";
+            name = "OnInterstitialAdLoadFailedEvent";
         }
         else if ( mRewardedAds.containsKey( adUnitId ) )
         {
@@ -591,7 +591,7 @@ public class MaxUnrealPlugin
         }
         else if ( MaxAdFormat.INTERSTITIAL == adFormat )
         {
-            name = "OnInterstitialClickedEvent";
+            name = "OnInterstitialAdClickedEvent";
         }
         else if ( MaxAdFormat.REWARDED == adFormat )
         {
@@ -616,7 +616,7 @@ public class MaxUnrealPlugin
         final String name;
         if ( MaxAdFormat.INTERSTITIAL == adFormat )
         {
-            name = "OnInterstitialDisplayedEvent";
+            name = "OnInterstitialAdDisplayedEvent";
         }
         else // REWARDED
         {
@@ -636,11 +636,11 @@ public class MaxUnrealPlugin
         final String name;
         if ( MaxAdFormat.INTERSTITIAL == adFormat )
         {
-            name = "OnInterstitialAdFailedToDisplayEvent";
+            name = "OnInterstitialAdDisplayFailedEvent";
         }
         else // REWARDED
         {
-            name = "OnRewardedAdFailedToDisplayEvent";
+            name = "OnRewardedAdDisplayFailedEvent";
         }
 
         JSONObject params = getAdInfo( ad );
@@ -659,7 +659,7 @@ public class MaxUnrealPlugin
         String name;
         if ( MaxAdFormat.INTERSTITIAL == adFormat )
         {
-            name = "OnInterstitialHiddenEvent";
+            name = "OnInterstitialAdHiddenEvent";
         }
         else // REWARDED
         {
@@ -1050,7 +1050,6 @@ public class MaxUnrealPlugin
         return retrieveAdView( adUnitId, adFormat, null );
     }
 
-    @SuppressWarnings("RedundantCast")
     public MaxAdView retrieveAdView(String adUnitId, MaxAdFormat adFormat, String adViewPosition)
     {
         MaxAdView result = mAdViews.get( adUnitId );

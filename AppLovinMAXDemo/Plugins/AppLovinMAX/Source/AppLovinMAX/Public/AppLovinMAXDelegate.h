@@ -25,18 +25,18 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMRecAdExpandedDynamicDelegate, co
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMRecAdCollapsedDynamicDelegate, const FAdInfo &, AdInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMRecAdRevenuePaidDynamicDelegate, const FAdInfo &, AdInfo);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialLoadedDynamicDelegate, const FAdInfo &, AdInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInterstitialLoadFailedDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialDisplayedDynamicDelegate, const FAdInfo &, AdInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdFailedToDisplayDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialHiddenDynamicDelegate, const FAdInfo &, AdInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialClickedDynamicDelegate, const FAdInfo &, AdInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdLoadedDynamicDelegate, const FAdInfo &, AdInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdLoadFailedDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdDisplayedDynamicDelegate, const FAdInfo &, AdInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdDisplayFailedDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdHiddenDynamicDelegate, const FAdInfo &, AdInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdClickedDynamicDelegate, const FAdInfo &, AdInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdRevenuePaidDynamicDelegate, const FAdInfo &, AdInfo);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRewardedAdLoadedDynamicDelegate, const FAdInfo &, AdInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdLoadFailedDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRewardedAdDisplayedDynamicDelegate, const FAdInfo &, AdInfo);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdFailedToDisplayDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdDisplayFailedDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRewardedAdHiddenDynamicDelegate, const FAdInfo &, AdInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRewardedAdClickedDynamicDelegate, const FAdInfo &, AdInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRewardedAdRevenuePaidDynamicDelegate, const FAdInfo &, AdInfo);
@@ -104,22 +104,22 @@ public:
     // MARK: - Interstitials
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
-    FOnInterstitialLoadedDynamicDelegate OnInterstitialLoadedDynamicDelegate;
+    FOnInterstitialAdLoadedDynamicDelegate OnInterstitialAdLoadedDynamicDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
-    FOnInterstitialLoadFailedDynamicDelegate OnInterstitialLoadFailedDynamicDelegate;
+    FOnInterstitialAdLoadFailedDynamicDelegate OnInterstitialAdLoadFailedDynamicDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
-    FOnInterstitialDisplayedDynamicDelegate OnInterstitialDisplayedDynamicDelegate;
+    FOnInterstitialAdDisplayedDynamicDelegate OnInterstitialAdDisplayedDynamicDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
-    FOnInterstitialAdFailedToDisplayDynamicDelegate OnInterstitialAdFailedToDisplayDynamicDelegate;
+    FOnInterstitialAdDisplayFailedDynamicDelegate OnInterstitialAdDisplayFailedDynamicDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
-    FOnInterstitialHiddenDynamicDelegate OnInterstitialHiddenDynamicDelegate;
+    FOnInterstitialAdHiddenDynamicDelegate OnInterstitialAdHiddenDynamicDelegate;
     
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
-    FOnInterstitialClickedDynamicDelegate OnInterstitialClickedDynamicDelegate;
+    FOnInterstitialAdClickedDynamicDelegate OnInterstitialAdClickedDynamicDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
     FOnInterstitialAdRevenuePaidDynamicDelegate OnInterstitialAdRevenuePaidDynamicDelegate;
@@ -136,7 +136,7 @@ public:
     FOnRewardedAdDisplayedDynamicDelegate OnRewardedAdDisplayedDynamicDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
-    FOnRewardedAdFailedToDisplayDynamicDelegate OnRewardedAdFailedToDisplayDynamicDelegate;
+    FOnRewardedAdDisplayFailedDynamicDelegate OnRewardedAdDisplayFailedDynamicDelegate;
 
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
     FOnRewardedAdHiddenDynamicDelegate OnRewardedAdHiddenDynamicDelegate;

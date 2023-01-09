@@ -408,18 +408,18 @@ public:
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnMRecAdCollapsedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnMRecAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
 
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialLoadedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialDisplayedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialHiddenDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialClickedDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdLoadedDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdDisplayedDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterstitialAdDisplayFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdHiddenDelegate, const FAdInfo & /*AdInfo*/);
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdClickedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnInterstitialAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdLoadedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdDisplayedDelegate, const FAdInfo & /*AdInfo*/);
-    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdFailedToDisplayDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
+    DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdDisplayFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdHiddenDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdClickedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnRewardedAdRevenuePaidDelegate, const FAdInfo & /*AdInfo*/);
@@ -441,18 +441,18 @@ public:
     static FOnMRecAdCollapsedDelegate OnMRecAdCollapsedDelegate;
     static FOnMRecAdRevenuePaidDelegate OnMRecAdRevenuePaidDelegate;
 
-    static FOnInterstitialLoadedDelegate OnInterstitialLoadedDelegate;
-    static FOnInterstitialLoadFailedDelegate OnInterstitialLoadFailedDelegate;
-    static FOnInterstitialDisplayedDelegate OnInterstitialDisplayedDelegate;
-    static FOnInterstitialAdFailedToDisplayDelegate OnInterstitialAdFailedToDisplayDelegate;
-    static FOnInterstitialHiddenDelegate OnInterstitialHiddenDelegate;
-    static FOnInterstitialClickedDelegate OnInterstitialClickedDelegate;
+    static FOnInterstitialAdLoadedDelegate OnInterstitialAdLoadedDelegate;
+    static FOnInterstitialAdLoadFailedDelegate OnInterstitialAdLoadFailedDelegate;
+    static FOnInterstitialAdDisplayedDelegate OnInterstitialAdDisplayedDelegate;
+    static FOnInterstitialAdDisplayFailedDelegate OnInterstitialAdDisplayFailedDelegate;
+    static FOnInterstitialAdHiddenDelegate OnInterstitialAdHiddenDelegate;
+    static FOnInterstitialAdClickedDelegate OnInterstitialAdClickedDelegate;
     static FOnInterstitialAdRevenuePaidDelegate OnInterstitialAdRevenuePaidDelegate;
 
     static FOnRewardedAdLoadedDelegate OnRewardedAdLoadedDelegate;
     static FOnRewardedAdLoadFailedDelegate OnRewardedAdLoadFailedDelegate;
     static FOnRewardedAdDisplayedDelegate OnRewardedAdDisplayedDelegate;
-    static FOnRewardedAdFailedToDisplayDelegate OnRewardedAdFailedToDisplayDelegate;
+    static FOnRewardedAdDisplayFailedDelegate OnRewardedAdDisplayFailedDelegate;
     static FOnRewardedAdHiddenDelegate OnRewardedAdHiddenDelegate;
     static FOnRewardedAdClickedDelegate OnRewardedAdClickedDelegate;
     static FOnRewardedAdRevenuePaidDelegate OnRewardedAdRevenuePaidDelegate;
