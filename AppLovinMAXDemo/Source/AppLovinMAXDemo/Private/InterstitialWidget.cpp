@@ -12,37 +12,37 @@ void UInterstitialWidget::NativeConstruct()
 
     UAppLovinMAX::OnInterstitialAdLoadedDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Interstitial ad loaded: %s", *AdInfo.ToString());
+        DEMO_LOG("Interstitial loaded: %s", *AdInfo.ToString());
     });
 
     UAppLovinMAX::OnInterstitialAdLoadFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("Interstitial ad failed to load with error: %s", *AdError.Message);
+        DEMO_LOG("Interstitial failed to load with error: %s", *AdError.Message);
     });
 
     UAppLovinMAX::OnInterstitialAdDisplayedDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Interstitial ad displayed");
+        DEMO_LOG("Interstitial displayed");
     });
 
     UAppLovinMAX::OnInterstitialAdDisplayFailedDelegate.AddLambda([](const FAdInfo &AdInfo, const FAdError &AdError)
     {
-        DEMO_LOG("Interstitial ad failed to display with error: %s", *AdError.Message);
+        DEMO_LOG("Interstitial failed to display with error: %s", *AdError.Message);
     });
 
     UAppLovinMAX::OnInterstitialAdClickedDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Interstitial ad clicked");
+        DEMO_LOG("Interstitial clicked");
     });
 
     UAppLovinMAX::OnInterstitialAdHiddenDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Interstitial ad hidden");
+        DEMO_LOG("Interstitial hidden");
     });
 
     UAppLovinMAX::OnInterstitialAdRevenuePaidDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Interstitial ad revenue paid");
+        DEMO_LOG("Interstitial revenue paid");
     });
 }
 

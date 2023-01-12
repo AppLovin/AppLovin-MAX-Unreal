@@ -23,4 +23,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="MREC")
     void HideMRecButtonClicked();
+
+protected:
+	virtual void NativeConstruct() override;
 };
