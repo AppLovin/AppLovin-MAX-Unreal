@@ -23,4 +23,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Banner")
     void HideBannerButtonClicked();
+
+protected:
+	virtual void NativeConstruct() override;
 };

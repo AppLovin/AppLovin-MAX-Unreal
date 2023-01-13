@@ -20,4 +20,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Interstitial")
     void ShowInterstitialButtonClicked();
+
+protected:
+	virtual void NativeConstruct() override;
 };

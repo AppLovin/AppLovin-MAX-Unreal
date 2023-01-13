@@ -20,4 +20,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Rewarded")
     void ShowRewardedAdButtonClicked();
+
+protected:
+	virtual void NativeConstruct() override;
 };
