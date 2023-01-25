@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 1010200,
-	"VersionName": "1.1.2",
+	"Version": 2000000,
+	"VersionName": "2.0.0",
 	"FriendlyName": "AppLovin MAX",
 	"Description": "AppLovin MAX Unreal Engine Plugin for Android and iOS",
 	"Category": "Advertising",
