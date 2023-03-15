@@ -1,0 +1,5 @@
+# Xcode user settings
+xcuserdata/
+
+# macOS generated files
+.DS_Store
