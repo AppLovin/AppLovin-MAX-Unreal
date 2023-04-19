@@ -14,6 +14,7 @@ from pathlib import Path
 from zipfile import ZipFile
 
 build_rules = []
+all_dependencies = set()
 
 
 def parse_podfile():
@@ -46,7 +47,10 @@ def create_embedded_framework(spec):
     url = spec["source"]["http"]
     version = spec["version"]
 
-    print(f"{name} ({version})")
+    print(f"  {name} ({version})")
+
+    # Add all the dependencies (recursively) that will need to be manually installed by developer
+    add_dependencies(spec["dependencies"])
 
     # Download and save adapter
     zip_path = Path(f"{name}.zip")
@@ -82,19 +86,39 @@ PublicAdditionalFrameworks.Add(
     build_rules.append(rule)
 
 
+def add_dependencies(dependencies):
+    for dependency, value in dependencies.items():
+        if dependency != "AppLovinSDK":
+            all_dependencies.add(f"  {dependency} {value}")
+
+            try:
+                process = subprocess.run(
+                    ["pod", "spec", "cat", dependency], capture_output=True)
+                spec = json.loads(process.stdout.decode().strip())
+                if "dependencies" in spec:
+                    add_dependencies(spec["dependencies"])
+            except:
+                pass
+
+
 def main():
     print("This script only installs AppLovin adapters and does not retrieve the third-party SDKs.\nPlease refer to the README instructions to complete your integration.\n")
 
     print("> Updating CocoaPods repos... (this may take a while)")
     subprocess.run(["pod", "--silent", "repo", "update"])
 
-    print("> Installing adapters...")
+    print("> Installing adapters...\n")
     pods = parse_podfile()
     install_pods(pods)
 
     print(f"\n> Installed {len(build_rules)} adapter(s)")
-    print("> Copy the iOS build rules below into AppLovinMAX.Build.cs. You will also need to add build rules for the third-party SDKs later.")
+    print("> Copy the iOS build rules below into AppLovinMAX.Build.cs.")
     print("\n".join(build_rules))
+
+    print("\n---------\n\n> Download the following third-party SDKs and dependencies.\n")
+    print("\n".join(sorted(all_dependencies)))
+    print("\n> Create an embedded framework zip file for each framework and include it in the IOS directory alongside the adapters.")
+    print("> Add build rules for the additional frameworks in AppLovinMAX.Build.cs similar to the generated code above.")
 
 
 if __name__ == "__main__":
