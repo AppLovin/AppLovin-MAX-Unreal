@@ -63,25 +63,20 @@ def create_embedded_framework(spec):
     # Delete zip file
     zip_path.unlink()
 
-    # Rename extracted directory and move to parent directory
-    extract_path = Path(f"{name}-{version}")
-    embedded_path = Path(f"../{name}.embeddedframework")
-    embedded_zip_path = Path(f"../{name}.embeddedframework.zip")
-    extract_path.rename(embedded_path)
+    # Copy static library from extracted directory into parent directory
+    adapter_dir = Path(f"{name}-{version}")
+    lib_dir = adapter_dir / f"{name}.xcframework" / "ios-arm64_armv7"
 
-    # Create embeddedframework.zip
-    # NOTE: shutil.make_archive creates a ZIP file that doesn't work with Unreal for some reason
-    subprocess.run(["zip", "-rq", embedded_zip_path, embedded_path])
-    shutil.rmtree(embedded_path)
+    lib_path = next(lib_dir.glob("*.a"))
+    lib_name = lib_path.name
+    lib_path.rename(Path(f"../{lib_name}"))
+
+    # Delete original adapter directory
+    shutil.rmtree(adapter_dir)
 
     # Generate build settings
-    rule = f"""
-PublicAdditionalFrameworks.Add(
-    new Framework(
-        "{name}",
-        Path.Combine( AppLovinIOSPath, "{name}.embeddedframework.zip" )
-    )
-);"""
+    # TODO: Specify any additional frameworks that need to be linked?
+    rule = f'PublicAdditionalLibraries.Add( Path.Combine( AppLovinIOSPath, "{lib_name}" ) );'
 
     build_rules.append(rule)
 
@@ -112,13 +107,19 @@ def main():
     install_pods(pods)
 
     print(f"\n> Installed {len(build_rules)} adapter(s)")
-    print("> Copy the iOS build rules below into AppLovinMAX.Build.cs.")
+    print("> Copy the following iOS build rules into AppLovinMAX.Build.cs:\n")
     print("\n".join(build_rules))
 
-    print("\n---------\n\n> Download the following third-party SDKs and dependencies.\n")
+    print("\n> Download the following third-party SDKs and dependencies manually:\n")
     print("\n".join(sorted(all_dependencies)))
-    print("\n> Create an embedded framework zip file for each framework and include it in the IOS directory alongside the adapters.")
-    print("> Add build rules for the additional frameworks in AppLovinMAX.Build.cs similar to the generated code above.")
+    print("\n> Create an embedded framework ZIP file for each framework and include it in the IOS directory alongside the adapters.")
+    print("""> Add build rules for each of the additional frameworks in AppLovinMAX.Build.cs with the following format:\n
+PublicAdditionalFrameworks.Add(
+	new Framework(
+		"{FRAMEWORK_NAME}",
+		Path.Combine( AppLovinIOSPath, "{FRAMEWORK_NAME}.embeddedframework.zip" )
+	);
+);""")
 
 
 if __name__ == "__main__":
