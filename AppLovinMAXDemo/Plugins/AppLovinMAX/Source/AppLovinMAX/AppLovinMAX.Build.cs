@@ -50,6 +50,7 @@ public class AppLovinMAX : ModuleRules
 					)
 				);
 
+				// NOTE: Include additional framework build rules for adapters here
 				PublicFrameworks.AddRange(
 					new string[]
 					{
