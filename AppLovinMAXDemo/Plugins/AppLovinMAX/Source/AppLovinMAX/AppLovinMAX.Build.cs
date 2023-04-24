@@ -50,14 +50,18 @@ public class AppLovinMAX : ModuleRules
 					)
 				);
 
-				// NOTE: Include additional framework build rules for adapters here
+				// NOTE: For integrating adapters, run install_adapters.py and update the build rules
+				// below based on the script instructions
+
+				// #1: [Adapters] Add build rules for adapters and additional framework dependencies here
+				// #2: [Adapters] Add system frameworks needed by third-party SDKs
 				PublicFrameworks.AddRange(
 					new string[]
 					{
+						"AVFoundation",
 						"AdSupport",
 						"AppTrackingTransparency",
 						"AudioToolbox",
-						"AVFoundation",
 						"CFNetwork",
 						"CoreGraphics",
 						"CoreMedia",
@@ -78,6 +82,7 @@ public class AppLovinMAX : ModuleRules
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 
+				// #3: [Adapters] Add additional libraries needed by third-party SDKs
 				AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 			}
 			else
