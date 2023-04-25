@@ -62,6 +62,7 @@ public class AppLovinMAX : ModuleRules
 				// below based on the script instructions
 
 				// #1: [Adapters] Add build rules for adapters and additional framework dependencies here
+
 				// #2: [Adapters] Add system frameworks needed by third-party SDKs
 				PublicFrameworks.AddRange(
 					new string[]
