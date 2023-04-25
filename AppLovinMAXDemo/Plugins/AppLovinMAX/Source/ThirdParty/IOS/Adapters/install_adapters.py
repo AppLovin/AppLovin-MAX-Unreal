@@ -6,6 +6,7 @@
 #
 
 import json
+import re
 import shutil
 import subprocess
 
@@ -14,6 +15,8 @@ from pathlib import Path
 from zipfile import ZipFile
 
 build_rules = []
+swift_frameworks = []
+all_libraries = set()
 all_dependencies = set()
 all_frameworks = set([
     "AdSupport",
@@ -33,7 +36,6 @@ all_frameworks = set([
     "UIKit",
     "WebKit"
 ])
-all_libraries = set()
 
 
 def parse_podfile():
@@ -99,34 +101,39 @@ def create_embedded_framework(spec):
 
 
 def add_dependencies(dependencies):
-    for dependency, value in dependencies.items():
-        if dependency != "AppLovinSDK":
-            try:
-                process = subprocess.run(
-                    ["pod", "spec", "cat", dependency], capture_output=True)
-                spec = json.loads(process.stdout.decode().strip())
+    for dependency, version in dependencies.items():
+        if dependency == "AppLovinSDK":
+            continue
 
-                # TODO: Don't include (or link to podspec directly)
-                download_url = spec["source"]["http"]
-                all_dependencies.add(
-                    f"  {dependency} {value}")
+        # Extract precise version string
+        version = version[0]
+        exact_version = re.search('(\d+(\.\d+)*)', version).group(0)
 
-                if "dependencies" in spec:
-                    add_dependencies(spec["dependencies"])
+        try:
+            process = subprocess.run(
+                ["pod", "spec", "cat", dependency, f"--version={exact_version}"], capture_output=True)
+            spec = json.loads(process.stdout.decode().strip())
 
-                # Add frameworks that will need to be linked
-                if "frameworks" in spec:
-                    all_frameworks.update(set(spec["frameworks"]))
-                if "weak_frameworks" in spec:
-                    all_frameworks.update(set(spec["weak_frameworks"]))
+            download_url = spec["source"]["http"]
+            all_dependencies.add(
+                f"  {dependency} {version} -> {download_url}")
 
-                # TODO: Format
-                if "libraries" in spec:
-                    if "xml2" in spec["libraries"]:
-                        all_libraries.update(
-                            'PublicSystemLibraries.Add("xml2")')
-            except:
-                pass
+            if "dependencies" in spec:
+                add_dependencies(spec["dependencies"])
+
+            # Add frameworks that will need to be linked
+            if "frameworks" in spec:
+                all_frameworks.update(set(spec["frameworks"]))
+            if "weak_frameworks" in spec:
+                all_frameworks.update(set(spec["weak_frameworks"]))
+            if "libraries" in spec:
+                if "xml2" in spec["libraries"]:
+                    all_libraries.add('PublicSystemLibraries.Add("xml2");')
+
+            if "swift_version" in spec or "swift_versions" in spec:
+                swift_frameworks.append(dependency)
+        except:
+            pass
 
 
 def main():
@@ -139,24 +146,35 @@ def main():
     pods = parse_podfile()
     install_pods(pods)
 
-    print(f"\n> Installed {len(build_rules)} adapter(s)")
-    print("> Copy the following iOS build rules into AppLovinMAX.Build.cs:\n")
+    print(f"\n> Installed {len(build_rules)} adapter(s)\n")
+
+    print("==========================================================")
+    print("  Follow these instructions to complete your integration  ")
+    print("==========================================================")
+
+    print("\n1. Copy the following iOS build rules into AppLovinMAX.Build.cs:\n")
     print("\n".join(build_rules))
 
-    print("> Replace the existing PublicFrameworks with the following in AppLovinMAX.Build.cs:\n")
+    print("\n2. Replace the existing PublicFrameworks with the following in AppLovinMAX.Build.cs:\n")
     formatted_frameworks = ',\n'.join(
         sorted(map(lambda f: f"\t\t\"{f}\"", all_frameworks)))
     print("PublicFrameworks.AddRange(\n\tnew string[]\n\t{{\n{0}\n\t}}\n);".format(
         formatted_frameworks))
 
-    # TODO: Format libraries
+    print("\n3. Add build rules to include the following libraries in AppLovinMAX.Build.cs:\n")
     if len(all_libraries) > 0:
-        print(sorted(all_libraries))
+        print("\n".join(sorted(all_libraries)))
 
-    print("\n> Download the following third-party SDKs and dependencies manually (refer to podspec or docs):\n")
+    print("\n4. Add copy rules for linking Swift frameworks to AppLovinMAX_UPL_IOS.xml under the <init> tag:\n")
+
+    for framework in swift_frameworks:
+        print(
+            f'<copyDir src="$S(EngineDir)/Intermediate/UnzippedFrameworks/{framework}/{framework}.embeddedframework/{framework}.framework" dst="$S(BuildDir)/Frameworks/{framework}.framework"/>')
+
+    print("\n5. Download the following third-party SDKs and dependencies manually:\n")
     print("\n".join(sorted(all_dependencies)))
-    print("\n> Create an embedded framework ZIP file for each framework and include it in the IOS directory alongside the adapters.")
-    print("""> Add build rules for each of the additional frameworks in AppLovinMAX.Build.cs with the following format:\n
+    print("\n6. Create an embedded framework ZIP file for each framework and include it in the IOS directory alongside the adapters.")
+    print("""7. Add build rules for the additional frameworks in AppLovinMAX.Build.cs with the following format:\n
 PublicAdditionalFrameworks.Add(
 	new Framework(
 		"{FRAMEWORK_NAME}",
