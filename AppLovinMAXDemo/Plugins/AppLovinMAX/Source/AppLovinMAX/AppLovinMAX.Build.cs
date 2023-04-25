@@ -39,7 +39,6 @@ public class AppLovinMAX : ModuleRules
 				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos");
 				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/iphoneos");
 				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.5/iphoneos");
-
 				
 				// Add the AppLovin SDK framework
 				PublicAdditionalFrameworks.Add(
