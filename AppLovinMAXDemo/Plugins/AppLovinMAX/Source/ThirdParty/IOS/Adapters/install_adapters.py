@@ -100,40 +100,89 @@ def create_embedded_framework(spec):
     build_rules.append(rule)
 
 
+def get_podspec(dependency, version=""):
+    # Ignore subspec to correctly retrieve podspec
+    main_dependency = dependency.split("/")[0]
+
+    pod_command = ["pod", "spec", "cat", "--regex", main_dependency]
+
+    # Extract exact version requirement if exists
+    exact_version = re.search('^=\s?(\d+(\.\d+)*)', version)
+    if exact_version:
+        pod_command.append(f"--version={exact_version.group(1)}")
+
+    try:
+        process = subprocess.run(pod_command, capture_output=True)
+        return json.loads(process.stdout.decode().strip())
+    except Exception as ex:
+        print(
+            f"  Error retrieving podspec for '{dependency}'")
+        return None
+
+
+def add_frameworks(spec):
+    if not spec:
+        return
+
+    if "frameworks" in spec:
+        frameworks = spec["frameworks"]
+        if isinstance(frameworks, str):
+            all_frameworks.add(frameworks)
+        else:
+            all_frameworks.update(frameworks)
+    if "weak_frameworks" in spec:
+        weak_frameworks = spec["weak_frameworks"]
+        if isinstance(weak_frameworks, str):
+            all_frameworks.add(weak_frameworks)
+        else:
+            all_frameworks.update(weak_frameworks)
+    if "libraries" in spec:
+        libraries = set(spec["libraries"])
+
+        if "c++" in libraries:
+            libraries.remove("c++")  # Already used by Unreal?
+        if "c++abi" in libraries:
+            libraries.remove("c++abi")  # Already used by Unreal?
+        if "z" in libraries:
+            libraries.remove("z")  # Already used by AppLovin SDK
+
+        for lib in libraries:
+            all_libraries.add(
+                f'PublicSystemLibraries.Add("{lib}");')
+
+
 def add_dependencies(dependencies):
     for dependency, version in dependencies.items():
         if dependency == "AppLovinSDK":
             continue
 
-        # Extract precise version string
-        version = version[0]
-        exact_version = re.search('(\d+(\.\d+)*)', version).group(0)
+        spec = get_podspec(dependency, version[0])
+        if not spec:
+            continue
 
-        try:
-            process = subprocess.run(
-                ["pod", "spec", "cat", dependency, f"--version={exact_version}"], capture_output=True)
-            spec = json.loads(process.stdout.decode().strip())
+        # Add sub-dependencies
+        if "dependencies" in spec:
+            add_dependencies(spec["dependencies"])
 
-            download_url = spec["source"]["http"]
-            all_dependencies.add(
-                f"  {dependency} {version} -> {download_url}")
+        # Get download URL
+        source = spec["source"]
+        if "http" in source:
+            download_url = source["http"]
+        elif "git" in source:
+            download_url = source["git"]
+        else:
+            print("  Unable to parse download link for {dependency}")
+            continue
 
-            if "dependencies" in spec:
-                add_dependencies(spec["dependencies"])
+        all_dependencies.add(
+            f"  {dependency} {version} -> {download_url}")
 
-            # Add frameworks that will need to be linked
-            if "frameworks" in spec:
-                all_frameworks.update(set(spec["frameworks"]))
-            if "weak_frameworks" in spec:
-                all_frameworks.update(set(spec["weak_frameworks"]))
-            if "libraries" in spec:
-                if "xml2" in spec["libraries"]:
-                    all_libraries.add('PublicSystemLibraries.Add("xml2");')
+        # Add frameworks to be linked
+        add_frameworks(spec)
 
-            if "swift_version" in spec or "swift_versions" in spec:
-                swift_frameworks.append(dependency)
-        except:
-            pass
+        # Check if dependency uses Swift
+        if "swift_version" in spec or "swift_versions" in spec:
+            swift_frameworks.append(dependency)
 
 
 def main():
@@ -161,7 +210,7 @@ def main():
     print("PublicFrameworks.AddRange(\n\tnew string[]\n\t{{\n{0}\n\t}}\n);".format(
         formatted_frameworks))
 
-    print("\n3. Add build rules to include the following libraries in AppLovinMAX.Build.cs:\n")
+    print("\n3. Add build rules to include the following libraries in AppLovinMAX.Build.cs. If the library cannot be found, the actual name may need to be modified to match the expected system name:\n")
     if len(all_libraries) > 0:
         print("\n".join(sorted(all_libraries)))
 
