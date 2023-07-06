@@ -16,8 +16,9 @@ from zipfile import ZipFile
 
 build_rules = []
 swift_frameworks = []
+parsed_specs = set()
 all_libraries = set()
-all_dependencies = set()
+all_dependencies = {}
 all_frameworks = set([
     "AdSupport",
     "AppTrackingTransparency",
@@ -150,6 +151,12 @@ def add_dependencies(dependencies):
         if dependency == "AppLovinSDK":
             continue
 
+        if dependency in parsed_specs:
+            continue
+
+        # Avoid parsing previously seen specs, particulary when diving into subspecs
+        parsed_specs.add(dependency)
+
         # Ignore subspec to correctly retrieve podspec
         if "/" in dependency:
             main, subspec = dependency.split("/")
@@ -174,8 +181,8 @@ def add_dependencies(dependencies):
             print("  Unable to parse download link for {dependency}")
             continue
 
-        all_dependencies.add(
-            f"  {dependency} {version} -> {download_url}")
+        if not main in all_dependencies:
+            all_dependencies[main] = f"  {main} {version} -> {download_url}"
 
         # Add frameworks to be linked
         add_frameworks(spec)
@@ -193,6 +200,7 @@ def add_dependencies(dependencies):
             for s in spec["subspecs"]:
                 if subspec == s["name"] and "dependencies" in s:
                     add_dependencies(s["dependencies"])
+                    break
 
 
 def main():
@@ -240,7 +248,7 @@ def main():
     print(
         f"\n{counter}. Download the following third-party SDKs and dependencies manually:\n")
     counter += 1
-    print("\n".join(sorted(all_dependencies)))
+    print("\n".join(sorted(all_dependencies.values())))
 
     print(f"\n{counter}. Create an embedded framework ZIP file for each framework and include it in the IOS directory alongside the adapters.")
     counter += 1
