@@ -246,7 +246,7 @@ def main():
         counter += 1
 
     print(
-        f"\n{counter}. Download the following third-party SDKs and dependencies manually:\n")
+        f"\n{counter}. Download the correct versions for the following third-party SDKs and dependencies manually:\n")
     counter += 1
     print("\n".join(sorted(all_dependencies.values())))
 
