@@ -32,6 +32,13 @@ public class AppLovinMAX : ModuleRules
 			if ( File.Exists( AppLovinSDKPath ) && File.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
+
+				// Add support for linking with Swift frameworks
+				string IOSSdkRoot = Utils.RunLocalProcessAndReturnStdOut("/usr/bin/xcrun", "--sdk iphoneos --show-sdk-path");
+				PublicSystemLibraryPaths.Add(IOSSdkRoot + "/usr/lib/swift");
+				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos");
+				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/iphoneos");
+				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.5/iphoneos");
 				
 				// Add the AppLovin SDK framework
 				PublicAdditionalFrameworks.Add(
@@ -50,13 +57,19 @@ public class AppLovinMAX : ModuleRules
 					)
 				);
 
+				// NOTE: For integrating adapters, run install_adapters.py and update the build rules
+				// below based on the script instructions
+
+				// #1: [Adapters] Add build rules for adapters and additional framework dependencies here
+
+				// #2: [Adapters] Add system frameworks needed by third-party SDKs
 				PublicFrameworks.AddRange(
 					new string[]
 					{
+						"AVFoundation",
 						"AdSupport",
 						"AppTrackingTransparency",
 						"AudioToolbox",
-						"AVFoundation",
 						"CFNetwork",
 						"CoreGraphics",
 						"CoreMedia",
@@ -77,6 +90,7 @@ public class AppLovinMAX : ModuleRules
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 
+				// #3: [Adapters] Add additional libraries needed by third-party SDKs
 				AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 			}
 			else
