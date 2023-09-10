@@ -13,6 +13,6 @@ public class AppLovinMAXDemoTarget : TargetRules
 
 		// Add compiler argument to support building on macOS with Xcode 13.3+
 		// bOverrideBuildEnvironment = true;
-		// AdditionalCompilerArguments = "-Wno-unused-but-set-variable";
+		// AdditionalCompilerArguments = "-Wno-unused-but-set-variable -Wno-deprecated-builtins -Wno-bitwise-instead-of-logical -Wno-single-bit-bitfield-constant-conversion";
 	}
 }

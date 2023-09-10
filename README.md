@@ -21,7 +21,7 @@ To get started with the demo app, follow the instructions below:
     ```cpp
         // Add compiler argument to support building on macOS with Xcode 13.3+
         bOverrideBuildEnvironment = true;
-        AdditionalCompilerArguments = "-Wno-unused-but-set-variable";
+        AdditionalCompilerArguments = "-Wno-unused-but-set-variable -Wno-deprecated-builtins -Wno-bitwise-instead-of-logical -Wno-single-bit-bitfield-constant-conversion";
     ```
 
 2. Under **Edit > Project Settings > Platforms**, modify the settings for your desired mobile platform(s):
