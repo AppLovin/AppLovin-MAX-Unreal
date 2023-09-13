@@ -48,7 +48,7 @@
   <AARImports>
     <if condition="bEnabled">
       <true>
-        <insertValue value="com.applovin,applovin-sdk,11.5.5@aar" />
+        <insertValue value="com.applovin,applovin-sdk,11.11.3@aar" />
         <insertNewline/>
         <insertValue value="repository $S(PluginDir)/../ThirdParty/Android/repository" />
         <insertNewline/>
