@@ -15,7 +15,7 @@ public class AppLovinMAXDemoEditorTarget : TargetRules
 		if ( Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Mac )
 		{
 			bOverrideBuildEnvironment = true;
-			AdditionalCompilerArguments = "-Wno-unknown-warning-option -Wno-unused-but-set-variable -Wno-deprecated-builtins -Wno-bitwise-instead-of-logical -Wno-single-bit-bitfield-constant-conversion";
-		}		
+			AdditionalCompilerArguments = "-Wno-unused-but-set-variable -Wno-bitwise-instead-of-logical";
+		}
 	}
 }
