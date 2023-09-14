@@ -8,23 +8,37 @@ Please check out our [documentation](https://dash.applovin.com/documentation/med
 
 ## Demo App
 
-The `AppLovinMAXDemo_4.27/` and `AppLovinMAXDemo_5.2` directories contain demo apps for UE4 and UE5 respectively. The Unreal plugin is contained in `AppLovinMAX/`.
+The Unreal plugin is contained in `AppLovinMAX/`. The `AppLovinMAXDemo_4.27/` and `AppLovinMAXDemo_5.2/` directories contain demo apps for UE4 and UE5 respectively.
 
 ### Getting Started
 
 To get started with the demo app, follow the instructions below:
 
-1. Clone this repository. Copy the `AppLovinMAX/` plugin directory into the `AppLovinMAXDemo_X.X/Plugins/` directory of the demo project compatible with your version of Unreal Engine.
+1. Clone this repository. Move the `AppLovinMAX/` plugin directory into the `AppLovinMAXDemo_X.X/Plugins/` directory of the demo project compatible with your version of Unreal Engine.
+
+    Your directory structure should appear as follows:
+
+    ```
+    AppLovinMAXDemo_X.X/
+    ├─ Config/
+    ├─ Content/
+    ├─ Plugins/
+    │  ├─ AppLovinMAX/
+    │  │  ├─ AppLovinMAX.uplugin
+    │  │  │  ...
+    ├─ Source/
+    │  ...
+    ```
 
 2. Open the demo project in Unreal Engine.
 
-    *If you're building on macOS with Xcode 13.3+, uncomment the following lines in `AppLovinMAXDemo.Target.cs` and `AppLovinMAXDemoEditor.Target.cs` to compile the project:*
+    *If you're building on macOS with Xcode 13.3+, uncomment the following lines in `Source/AppLovinMAXDemo.Target.cs` and `Source/AppLovinMAXDemoEditor.Target.cs` to compile the project:*
 
     ```cpp
     if ( Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Mac )
     {
         bOverrideBuildEnvironment = true;
-        AdditionalCompilerArguments = "-Wno-unknown-warning-option -Wno-unused-but-set-variable -Wno-deprecated-builtins -Wno-bitwise-instead-of-logical -Wno-single-bit-bitfield-constant-conversion";
+        AdditionalCompilerArguments = ...;
     }
     ```
 
