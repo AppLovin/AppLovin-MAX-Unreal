@@ -8,7 +8,7 @@ Please check out our [documentation](https://dash.applovin.com/documentation/med
 
 ## Demo App
 
-The `/AppLovinMAXDemo` directory contains the demo app. The Unreal plugin is contained in `/AppLovinMAXDemo/Plugins/AppLovinMAX`.
+The `AppLovinMAXDemo_4.27/` and `AppLovinMAXDemo_5.2` directories contain demo apps for UE4 and UE5 respectively. The Unreal plugin is contained in `AppLovinMAX/`.
 
 ### Getting Started
 
@@ -18,7 +18,7 @@ To get started with the demo app, follow the instructions below:
 
 2. Open the demo project in Unreal Engine.
 
-    *If you're building on macOS with Xcode 13.3+,  uncomment the following  lines for in `AppLovinMAXDemo.Target.cs` and `AppLovinMAXDemoEditor.Target.cs` to compile the project:*
+    *If you're building on macOS with Xcode 13.3+, uncomment the following lines in `AppLovinMAXDemo.Target.cs` and `AppLovinMAXDemoEditor.Target.cs` to compile the project:*
 
     ```cpp
     if ( Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Mac )
