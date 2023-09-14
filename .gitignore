@@ -3,3 +3,12 @@ xcuserdata/
 
 # macOS generated files
 .DS_Store
+
+# Unreal generated files
+Binaries/
+Build/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+
