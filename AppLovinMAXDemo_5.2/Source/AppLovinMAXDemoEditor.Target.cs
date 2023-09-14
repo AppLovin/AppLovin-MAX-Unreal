@@ -26,6 +26,6 @@ public class AppLovinMAXDemoEditorTarget : TargetRules
 		// {
 			// bOverrideBuildEnvironment = true;
 			// AdditionalCompilerArguments = "-Wno-unknown-warning-option -Wno-unused-but-set-variable -Wno-deprecated-builtins -Wno-bitwise-instead-of-logical -Wno-single-bit-bitfield-constant-conversion";
-		// }		
+		// }
 	}
 }

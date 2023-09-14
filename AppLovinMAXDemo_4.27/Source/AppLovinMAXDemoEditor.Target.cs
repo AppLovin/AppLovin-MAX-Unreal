@@ -12,10 +12,10 @@ public class AppLovinMAXDemoEditorTarget : TargetRules
 		ExtraModuleNames.AddRange( new string[] { "AppLovinMAXDemo" } );
 
 		// Add compiler arguments to support building on macOS with Xcode 13.3+
-		if ( Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Mac )
-		{
-			bOverrideBuildEnvironment = true;
-			AdditionalCompilerArguments = "-Wno-unused-but-set-variable -Wno-bitwise-instead-of-logical";
-		}
+		// if ( Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Mac )
+		// {
+			// bOverrideBuildEnvironment = true;
+			// AdditionalCompilerArguments = "-Wno-unused-but-set-variable -Wno-bitwise-instead-of-logical";
+		// }
 	}
 }
