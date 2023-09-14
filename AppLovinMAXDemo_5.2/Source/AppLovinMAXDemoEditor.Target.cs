@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AppLovinMAXDemoEditorTarget : TargetRules
 {
-	public AppLovinMAXDemoEditorTarget( TargetInfo Target) : base(Target)
+	public AppLovinMAXDemoEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 	

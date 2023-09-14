@@ -25,7 +25,7 @@ public class AppLovinMAXDemoTarget : TargetRules
 		// if ( Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Mac )
 		// {
 			// bOverrideBuildEnvironment = true;
-			// AdditionalCompilerArguments = "-Wno-unused-but-set-variable -Wno-deprecated-builtins -Wno-bitwise-instead-of-logical -Wno-single-bit-bitfield-constant-conversion";
+			// AdditionalCompilerArguments = "-Wno-unknown-warning-option -Wno-unused-but-set-variable -Wno-deprecated-builtins -Wno-bitwise-instead-of-logical -Wno-single-bit-bitfield-constant-conversion";
 		// }		
 	}
 }
