@@ -54,6 +54,8 @@
         <insertNewline/>
         <insertValue value="com.applovin,applovin-max-unreal-plugin,release" />
         <insertNewline/>
+        <insertValue value="com.google.android.gms,play-services-ads-identifier,16.0.0" />
+        <insertNewline/>
       </true>
     </if>
   </AARImports>
