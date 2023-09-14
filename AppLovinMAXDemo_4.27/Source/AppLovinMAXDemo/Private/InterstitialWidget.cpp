@@ -8,7 +8,7 @@
 
 void UInterstitialWidget::NativeConstruct()
 {
-	Super::NativeConstruct();
+    Super::NativeConstruct();
 
     UAppLovinMAX::OnInterstitialAdLoadedDelegate.AddLambda([](const FAdInfo &AdInfo)
     {

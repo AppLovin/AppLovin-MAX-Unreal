@@ -25,5 +25,5 @@ public:
     void HideBannerButtonClicked();
 
 protected:
-	virtual void NativeConstruct() override;
+    virtual void NativeConstruct() override;
 };

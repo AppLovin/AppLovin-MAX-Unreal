@@ -9,7 +9,7 @@
 
 void URewardedWidget::NativeConstruct()
 {
-	Super::NativeConstruct();
+    Super::NativeConstruct();
 
     UAppLovinMAX::OnRewardedAdLoadedDelegate.AddLambda([](const FAdInfo &AdInfo)
     {

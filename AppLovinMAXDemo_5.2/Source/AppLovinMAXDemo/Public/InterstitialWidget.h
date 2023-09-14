@@ -22,5 +22,5 @@ public:
     void ShowInterstitialButtonClicked();
 
 protected:
-	virtual void NativeConstruct() override;
+    virtual void NativeConstruct() override;
 };
