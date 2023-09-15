@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--AppLovin plugin additions-->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- init section is always evaluated once per architecture -->
+  <init>
+    <log text="AppLovin Android SDK init"/>
+
+    <!-- check if using Gradle -->
+    <setBoolFromProperty result="bGradle" ini="Engine" section="/Script/AndroidRuntimeSettings.AndroidRuntimeSettings" property="bEnableGradle" default="false"/>
+    <if condition="bGradle">
+      <false>
+        <log text="AppLovin Android SDK requires Gradle"/>
+      </false>
+    </if>
+
+    <!-- get packaging for Applovin from ini and reset it if architecture not supported -->
+    <setBoolFromProperty result="bEnabled" ini="Engine" section="AppLovin" property="bEnabled" default="true"/>
+    <setStringFromProperty result="ClientId" ini="Engine" section="AppLovin" property="ClientId" default="0"/>
+
+    <dumpvars/>
+  </init>
+
+  <!-- optional updates applied to AndroidManifest.xml -->
+  <androidManifestUpdates>
+    <if condition="bEnabled">
+      <true>
+        <addPermission android:name="android.permission.INTERNET" />
+        <addPermission android:name="android.permission.ACCESS_NETWORK_STATE" />
+      </true>
+    </if>
+  </androidManifestUpdates>
+
+  <!-- optional additions to proguard -->
+  <proguardAdditions>
+    <if condition="bEnabled">
+      <true>
+        <insert>
+          # UE4
+          -keep public class com.epicgames.ue4.GameActivity$MaxUnrealPluginListener { *; }
+          # UE5
+          -keep public class com.epicgames.unreal.GameActivity$MaxUnrealPluginListener { *; }
+        </insert>
+      </true>
+    </if>
+  </proguardAdditions>
+
+  <!-- optional AAR imports additions -->
+  <AARImports>
+    <if condition="bEnabled">
+      <true>
+        <insertValue value="com.applovin,applovin-sdk,11.11.3" />
+        <insertNewline/>
+        <insertValue value="repository $S(PluginDir)/../ThirdParty/Android/repository" />
+        <insertNewline/>
+        <insertValue value="com.applovin,applovin-max-unreal-plugin,release" />
+        <insertNewline/>
+      </true>
+    </if>
+  </AARImports>
+
+  <!-- optional base build.gradle additions -->
+  <baseBuildGradleAdditions>
+  </baseBuildGradleAdditions>
+
+  <!-- optional base build.gradle buildscript additions -->
+  <buildscriptGradleAdditions>  </buildscriptGradleAdditions>
+
+  <!-- optional app build.gradle additions -->
+  <buildGradleAdditions>
+    <if condition="bEnabled">
+      <true>
+        <insert>
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_1_8
+                  targetCompatibility = JavaVersion.VERSION_1_8
+              }
+          }
+
+          allprojects {
+            repositories {
+              // You may add any additional repositories for other ad networks here
+            }
+          }
+
+          // Prefer newer versions of Play Services, particularly for below UE 5.2
+          dependencies {
+            implementation("com.google.android.gms:play-services-auth").version {
+              strictly("[16,19[")
+              prefer("16.0.1")
+            }
+            implementation("com.google.android.gms:play-services-games").version {
+              strictly("[17,19[")
+              prefer("17.0.0")
+            }
+            implementation("com.google.android.gms:play-services-nearby").version {
+              strictly("[16,19[")
+              prefer("16.0.0")
+            }
+            implementation("com.google.android.gms:play-services-plus").version {
+              strictly("[16,18[")
+              prefer("16.0.0")
+            }
+          }
+        </insert>
+      </true>
+    </if>
+  </buildGradleAdditions>
+
+  <!-- optional additions to generated build.xml before ${sdk.dir}/tools/ant/build.xml import -->
+  <buildXmlPropertyAdditions> </buildXmlPropertyAdditions>
+  <!-- optional files or directories to copy or delete from Intermediate/Android/APK before ndk-build -->
+  <prebuildCopies> </prebuildCopies>
+
+  <!--optional files or directories to copy or delete from Intermediate/Android/APK before Gradle -->
+  <gradleCopies> </gradleCopies>
+
+  <!--optional properties to add to gradle.properties -->
+  <gradleProperties>
+    <if condition="bEnabled">
+      <true>
+        <insert>
+          android.useAndroidX=true
+        </insert>
+      </true>
+    </if>
+  </gradleProperties>
+
+  <!--optional parameters to add to Gradle commandline (prefix with a space or will run into previous parameter(s)) -->
+  <gradleParameters> </gradleParameters>
+
+  <!--optional minimum SDK API level required -->
+  <minimumSDKAPI> </minimumSDKAPI>
+
+  <!--optional additions to the GameActivity imports in GameActivity.java -->
+  <gameActivityImportAdditions>
+    <if condition="bEnabled">
+      <true>
+        <insert>
+          import com.applovin.unreal.MaxUnrealPlugin;
+        </insert>
+      </true>
+    </if>
+  </gameActivityImportAdditions>
+
+  <!--optional additions to the GameActivity after imports in GameActivity.java -->
+  <gameActivityPostImportAdditions> </gameActivityPostImportAdditions>
+  <!--optional additions to the GameActivity class implements in GameActivity.java (end each line with a comma) -->
+  <gameActivityImplementsAdditions> </gameActivityImplementsAdditions>
+
+  <!--optional additions to the GameActivity class body in GameActivity.java -->
+  <gameActivityClassAdditions>
+    <if condition="bEnabled">
+      <true>
+        <insert>
+        // Begin AppLovin gameActivityClassAdditions
+        public static class MaxUnrealPluginListener implements MaxUnrealPlugin.EventListener
+        {
+          public native void forwardEvent(String name, String params);
+
+          public MaxUnrealPluginListener() {}
+
+          @Override
+          public void onReceivedEvent(String name, String params)
+          {
+            forwardEvent(name, params);
+          }
+        }
+        // End AppLovin gameActivityClassAdditions
+        </insert>
+      </true>
+    </if>
+  </gameActivityClassAdditions>
+
+  <!--optional additions to GameActivity onCreate metadata reading in GameActivity.java -->
+  <gameActivityReadMetadata> </gameActivityReadMetadata>
+  <!--optional additions to GameActivity onCreate in GameActivity.java -->
+  <gameActivityOnCreateAdditions> </gameActivityOnCreateAdditions>
+  <!--optional additions to GameActivity onDestroy in GameActivity.java -->
+  <gameActivityOnDestroyAdditions> </gameActivityOnDestroyAdditions>
+  <!--optional additions to GameActivity onStart in GameActivity.java -->
+  <gameActivityOnStartAdditions> </gameActivityOnStartAdditions>
+  <!--optional additions to GameActivity onStop in GameActivity.java -->
+  <gameActivityOnStopAdditions> </gameActivityOnStopAdditions>
+  <!--optional additions to GameActivity onPause in GameActivity.java -->
+  <gameActivityOnPauseAdditions> </gameActivityOnPauseAdditions>
+  <!--optional additions to GameActivity onResume in GameActivity.java -->
+  <gameActivityOnResumeAdditions>    </gameActivityOnResumeAdditions>
+  <!--optional additions to GameActivity onNewIntent in GameActivity.java -->
+  <gameActivityOnNewIntentAdditions> </gameActivityOnNewIntentAdditions>
+  <!--optional additions to GameActivity onActivityResult in GameActivity.java -->
+  <gameActivityOnActivityResultAdditions>    </gameActivityOnActivityResultAdditions>
+  <!--optional libraries to load in GameActivity.java before libUE4.so -->
+  <soLoadLibrary>    </soLoadLibrary>
+</root>
