@@ -8,7 +8,7 @@ Please check out our [documentation](https://dash.applovin.com/documentation/med
 
 ## Demo App
 
-The Unreal plugin is contained in `AppLovinMAX/`. The `AppLovinMAXDemo_4.27/` and `AppLovinMAXDemo_5.2/` directories contain demo apps for UE4 and UE5 respectively.
+The plugin is contained in `AppLovinMAX/`. The `AppLovinMAXDemo_4.27/` and `AppLovinMAXDemo_5.2/` directories contain demo apps for UE4 and UE5 respectively.
 
 ### Getting Started
 
