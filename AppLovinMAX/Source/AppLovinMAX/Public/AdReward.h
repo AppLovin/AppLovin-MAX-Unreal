@@ -13,9 +13,9 @@ struct APPLOVINMAX_API FAdReward
     FString ToString() const;
     bool IsValid() const;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     FString Label;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     int Amount = 0;
 };

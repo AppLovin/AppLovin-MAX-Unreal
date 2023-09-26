@@ -1,6 +1,11 @@
 // Copyright AppLovin Corporation. All Rights Reserved.
 
 #include "AppLovinMAXDelegate.h"
+#include "Async/Async.h"
+#include "Async/TaskGraphInterfaces.h"
+#include "Engine/World.h"
+#include "UObject/UObjectIterator.h"
+#include "UObject/WeakObjectPtrTemplates.h"
 
 bool IsValidDelegate(UAppLovinMAXDelegate *Delegate)
 {
