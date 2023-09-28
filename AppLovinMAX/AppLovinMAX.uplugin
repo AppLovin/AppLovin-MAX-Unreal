@@ -2,6 +2,7 @@
 	"FileVersion": 3,
 	"Version": 2000100,
 	"VersionName": "2.0.1",
+	"EngineVersion": 4,
 	"FriendlyName": "AppLovin MAX",
 	"Description": "AppLovin MAX Unreal Engine Plugin for Android and iOS",
 	"Category": "Advertising",
@@ -18,7 +19,11 @@
 		{
 			"Name": "AppLovinMAX",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"IOS",
+				"Android"
+			]
 		}
 	]
 }
