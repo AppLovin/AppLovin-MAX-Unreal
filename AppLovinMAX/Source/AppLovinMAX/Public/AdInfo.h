@@ -12,18 +12,18 @@ struct APPLOVINMAX_API FAdInfo
 
     FString ToString() const;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     FString AdUnitIdentifier;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     FString NetworkName;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     FString CreativeIdentifier;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     FString Placement;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     float Revenue = 0; // NOTE: doubles are not supported by UE4 blueprints, so cropping to float
 };

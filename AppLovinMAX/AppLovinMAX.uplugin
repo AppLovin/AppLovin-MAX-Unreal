@@ -18,7 +18,11 @@
 		{
 			"Name": "AppLovinMAX",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"IOS",
+				"Android"
+			]
 		}
 	]
 }

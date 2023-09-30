@@ -6,6 +6,7 @@
 #include "AdError.h"
 #include "AdInfo.h"
 #include "AdReward.h"
+#include "Components/ActorComponent.h"
 #include "SdkConfiguration.h"
 #include "AppLovinMAXDelegate.generated.h"
 
