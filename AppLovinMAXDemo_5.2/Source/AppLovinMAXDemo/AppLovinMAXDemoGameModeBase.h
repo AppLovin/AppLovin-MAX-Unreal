@@ -18,5 +18,4 @@ class APPLOVINMAXDEMO_API AAppLovinMAXDemoGameModeBase : public AGameModeBase
 
 public:
 	AAppLovinMAXDemoGameModeBase(const FObjectInitializer& ObjectInitializer);
-	void AttachCallbacks();
 };
