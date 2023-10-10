@@ -60,8 +60,11 @@ def install_pods(pods):
     for pod in pods:
         process = subprocess.run(
             ["pod", "spec", "cat", pod], capture_output=True)
-        spec = json.loads(process.stdout.decode().strip())
-        create_embedded_framework(spec)
+        try:
+            spec = json.loads(process.stdout.decode().strip())
+            create_embedded_framework(spec)
+        except:
+            print(f"  Failed to parse podspec for {pod}")
 
 
 def create_embedded_framework(spec):
@@ -258,7 +261,8 @@ PublicAdditionalFrameworks.Add(
 	new Framework(
 		"{{FRAMEWORK_NAME}}",
 		Path.Combine( AppLovinIOSPath, "{{FRAMEWORK_NAME}}.embeddedframework.zip" )
-	);
+		"Resources/{{RESOURCE_BUNDLE_NAME}}.bundle" // NOTE: Only add this if framework has a resource bundle
+	)
 );""")
 
 
