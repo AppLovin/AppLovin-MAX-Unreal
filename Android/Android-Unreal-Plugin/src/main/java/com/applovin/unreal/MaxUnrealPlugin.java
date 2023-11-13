@@ -864,7 +864,7 @@ public class MaxUnrealPlugin
                 final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
                 if ( adView == null )
                 {
-                    e( adFormat.getLabel() + " does not exist for ad unit id " + adUnitId );
+                    e( adFormat.getLabel() + " does not exist for ad unit id \"" + adUnitId + "\"" );
 
                     // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
                     mAdUnitIdsToShowAfterCreate.add( adUnitId );
