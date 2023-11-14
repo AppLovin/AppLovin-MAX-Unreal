@@ -805,7 +805,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         if ( !view )
         {
-            [self log: @"%@ does not exist for ad unit identifier %@.", adFormat, adUnitIdentifier];
+            [self log: @"%@ does not exist for ad unit identifier \"%@\".", adFormat, adUnitIdentifier];
             
             // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
             [self.adUnitIdentifiersToShowAfterCreate addObject: adUnitIdentifier];
