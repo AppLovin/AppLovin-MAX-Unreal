@@ -18,7 +18,6 @@ android {
 
     defaultConfig {
         minSdkVersion(libraryVersions["minSdk"] as Int)
-        targetSdkVersion(libraryVersions["targetSdk"] as Int)
         versionCode = libraryVersionCode
         versionName = libraryVersionName
 
