@@ -1,0 +1,6 @@
+framework module MAX_Unreal_Plugin {
+  umbrella header "MAX_Unreal_Plugin.h"
+  export *
+
+  module * { export * }
+}

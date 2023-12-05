@@ -27,25 +27,22 @@ public class AppLovinMAX : ModuleRules
 		if ( Target.Platform == UnrealTargetPlatform.IOS )
 		{
 			string AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
-			string AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovinSDK.embeddedframework.zip" );
-			string AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "MAX_Unreal_Plugin.embeddedframework.zip" );
-			if ( File.Exists( AppLovinSDKPath ) && File.Exists( AppLovinPluginPath ) )
+			string AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovinSDK.xcframework" );
+			string AppLovinResourcesPath = Path.Combine( AppLovinIOSPath, "AppLovinSDKResources.bundle" );
+			string AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "MAX_Unreal_Plugin.framework" );
+			if ( Directory.Exists( AppLovinSDKPath ) && Directory.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
 
 				// Add support for linking with Swift frameworks
-				string IOSSdkRoot = Utils.RunLocalProcessAndReturnStdOut("/usr/bin/xcrun", "--sdk iphoneos --show-sdk-path");
-				PublicSystemLibraryPaths.Add(IOSSdkRoot + "/usr/lib/swift");
-				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos");
-				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/iphoneos");
-				PublicSystemLibraryPaths.Add(IOSSdkRoot + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.5/iphoneos");
-				
+				PrivateDependencyModuleNames.Add( "Swift" );
+	
 				// Add the AppLovin SDK framework
 				PublicAdditionalFrameworks.Add(
 					new Framework(
-						"AppLovinSDK",                          // Framework name
-						AppLovinSDKPath,                        // Zipped framework path
-						"Resources/AppLovinSDKResources.bundle" // Resources path in ZIP
+						"AppLovinSDK",
+						AppLovinSDKPath,
+						AppLovinResourcesPath
 					)
 				);
 
