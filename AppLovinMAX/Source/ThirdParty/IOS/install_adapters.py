@@ -31,16 +31,19 @@ seen = set(["AppLovinSDK"])
 class Pod:
     def __init__(self, spec):
         self.name = spec["name"]
-        self.version = spec["version"]
-        # self.vendored_frameworks = spec["vendored_frameworks"]
+        self.version = spec.get("version", None)
 
-        source = spec["source"]
+        source = spec.get("source", {})
         if "http" in source:
             self.url = source["http"]
         elif "git" in source:
             self.url = source["git"]
         else:
-            raise Exception(f"Failed to retrieve source for {self.name}")
+            self.url = None
+
+        self.vendored_frameworks = spec.get("vendored_frameworks", [])
+        if isinstance(self.vendored_frameworks, str):
+            self.vendored_frameworks = [self.vendored_frameworks]
 
         self.frameworks = spec.get("frameworks", [])
         if isinstance(self.frameworks, str):
@@ -51,9 +54,9 @@ class Pod:
             self.weak_frameworks = [self.weak_frameworks]
 
         self.dependencies = spec.get("dependencies", {})
+        self.subspecs = list(map(Pod, spec.get("subspecs", [])))
 
         # TODO: Libraries
-        # TODO: Dependencies
 
 
 """ Utilities """
@@ -108,24 +111,31 @@ def get_pod_info(name, version=""):
 
 
 def install_pod(pod):
-    dependencies.add(pod)
+    if pod.name in seen:
+        return
+
     seen.add(pod.name)
 
-    print(pod.vendored_frameworks)
-
     # Download dependency
+    # if source exists
     # zip_path = install_dir / f"{pod.name}.zip"
     # urlretrieve(pod.url, zip_path)
     # with ZipFile(zip_path, 'r') as zip_file:
     #     zip_file.extractall(install_dir)
     # zip_path.unlink()
 
+    install_dependencies(pod)
+
+    # Install dependencies for subspec
+    for subspec in pod.subspecs:
+        install_dependencies(subspec)
+
+
+def install_dependencies(pod):
     # Parse dependency info and install pods
     for d, version in pod.dependencies.items():
-
         # Split the dependency into main name and subspec
         name, subspec = d.split("/") if "/" in d else (d, None)
-
         if name not in seen:
             d_pod = get_pod_info(
                 name, version[0] if len(version) == 1 else "")
@@ -163,6 +173,7 @@ def main():
 
     print(f"\n> Installed {installed_count} adapter(s)")
 
+    print(sorted(seen))
     # print("\n***************************************************\n")
 
     # print("The script will now generate build rules you must copy into AppLovinMAX.Build.cs.\n")
