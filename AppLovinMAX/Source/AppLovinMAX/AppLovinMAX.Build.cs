@@ -7,7 +7,7 @@ public class AppLovinMAX : ModuleRules
 {
 	public AppLovinMAX(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = ModuleRules.PCHUsageMode.NoSharedPCHs;
 
 		PublicIncludePaths.AddRange( new string[] {} );
 		PrivateIncludePaths.AddRange( new string[] { "AppLovinMAX/Private" } );
@@ -33,6 +33,8 @@ public class AppLovinMAX : ModuleRules
 			if ( Directory.Exists( AppLovinSDKPath ) && Directory.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
+
+				bEnableObjCAutomaticReferenceCounting = true;
 
 				// Add support for linking with Swift frameworks
 				PrivateDependencyModuleNames.Add( "Swift" );

@@ -723,8 +723,6 @@ void UAppLovinMAX::ValidateAdUnitIdentifier(const FString &AdUnitIdentifier, con
 }
 
 // MARK: - IOS
-// Note that Objective-C in Unreal does not compile with ARC, but we are only passing
-// autoreleased objects to ARC-compiled plugin code, which allows us to avoid manual release.
 
 #if PLATFORM_IOS
 
