@@ -780,12 +780,6 @@ void ForwardAndroidEvent(JNIEnv *env, jobject thiz, jstring name, jstring params
     ForwardEvent(Name, Params);
 }
 
-// UE4
-extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
-{
-    ForwardAndroidEvent(env, thiz, name, params);
-}
-
 // UE5 
 extern "C" JNIEXPORT void JNICALL Java_com_epicgames_unreal_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
 {

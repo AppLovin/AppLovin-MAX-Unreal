@@ -25,5 +25,5 @@ struct APPLOVINMAX_API FAdInfo
     FString Placement;
 
     UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
-    float Revenue = 0; // NOTE: doubles are not supported by UE4 blueprints, so cropping to float
+    double Revenue = 0;
 };
