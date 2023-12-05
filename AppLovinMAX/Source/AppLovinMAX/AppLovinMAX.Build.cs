@@ -27,9 +27,9 @@ public class AppLovinMAX : ModuleRules
 		if ( Target.Platform == UnrealTargetPlatform.IOS )
 		{
 			string AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
-			string AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovinSDK.xcframework" );
-			string AppLovinResourcesPath = Path.Combine( AppLovinIOSPath, "AppLovinSDKResources.bundle" );
-			string AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "MAX_Unreal_Plugin.framework" );
+			string AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDK.xcframework" );
+			string AppLovinResourcesPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDKResources.bundle" );
+			string AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "AppLovin", "MAX_Unreal_Plugin.framework" );
 			if ( Directory.Exists( AppLovinSDKPath ) && Directory.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
