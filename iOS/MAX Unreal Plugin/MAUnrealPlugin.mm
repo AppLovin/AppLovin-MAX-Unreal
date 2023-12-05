@@ -39,8 +39,11 @@
 // Store these values if pub attempts to set it before initializing
 @property (nonatomic,   copy, nullable) NSString *userIdentifierToSet;
 @property (nonatomic, strong, nullable) NSArray<NSString *> *testDeviceIdentifiersToSet;
-@property (nonatomic, strong, nullable) NSNumber *verboseLoggingToSet;
+@property (nonatomic, strong, nullable) NSNumber *verboseLoggingEnabledToSet;
 @property (nonatomic, strong, nullable) NSNumber *creativeDebuggerEnabledToSet;
+@property (nonatomic, strong, nullable) NSNumber *termsAndPrivacyPolicyFlowEnabledToSet;
+@property (nonatomic, strong, nullable) NSURL *privacyPolicyURLToSet;
+@property (nonatomic, strong, nullable) NSURL *termsOfServiceURLToSet;
 
 // Fullscreen Ad Fields
 @property (nonatomic, strong) NSMutableDictionary<NSString *, MAInterstitialAd *> *interstitials;
@@ -155,10 +158,10 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     
     // Set verbose logging state if needed
-    if ( self.verboseLoggingToSet )
+    if ( self.verboseLoggingEnabledToSet )
     {
-        self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingToSet.boolValue;
-        self.verboseLoggingToSet = nil;
+        self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingEnabledToSet.boolValue;
+        self.verboseLoggingEnabledToSet = nil;
     }
     
     // Set creative debugger enabled if needed
@@ -168,6 +171,27 @@ static NSString *const TAG = @"MAUnrealPlugin";
         self.creativeDebuggerEnabledToSet = nil;
     }
     
+    // Set terms and privacy policy flow enabled if needed
+    if ( self.termsAndPrivacyPolicyFlowEnabledToSet )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = self.termsAndPrivacyPolicyFlowEnabledToSet.boolValue;
+        self.creativeDebuggerEnabledToSet = nil;
+    }
+    
+    // Set privacy policy URL if needed
+    if ( self.privacyPolicyURLToSet )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = self.privacyPolicyURLToSet;
+        self.privacyPolicyURLToSet = nil;
+    }
+    
+    // Set terms of service URL if needed
+    if ( self.termsOfServiceURLToSet )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = self.termsOfServiceURLToSet;
+        self.termsOfServiceURLToSet = nil;
+    }
+ 
     [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
         [self log: @"SDK initialized"];
         
@@ -236,6 +260,47 @@ static NSString *const TAG = @"MAUnrealPlugin";
     return [ALPrivacySettings isDoNotSell];
 }
 
+#pragma mark - Terms and Privacy Policy Flow
+
+- (void)setTermsAndPrivacyPolicyFlowEnabled:(BOOL)enabled
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = enabled;
+        self.termsAndPrivacyPolicyFlowEnabledToSet = nil;
+    }
+    else
+    {
+        self.termsAndPrivacyPolicyFlowEnabledToSet = @(enabled);
+    }
+}
+
+- (void)setPrivacyPolicyURL:(NSString *)urlString
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = [NSURL URLWithString: urlString];
+        self.privacyPolicyURLToSet = nil;
+    }
+    else
+    {
+        self.privacyPolicyURLToSet = [NSURL URLWithString: urlString];
+    }
+}
+
+- (void)setTermsOfServiceURL:(NSString *)urlString
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = [NSURL URLWithString: urlString];
+        self.termsOfServiceURLToSet = nil;
+    }
+    else
+    {
+        self.termsOfServiceURLToSet = [NSURL URLWithString: urlString];
+    }
+}
+
 #pragma mark - General
 
 - (BOOL)isTablet
@@ -286,11 +351,11 @@ static NSString *const TAG = @"MAUnrealPlugin";
     if ( [self isPluginInitialized] )
     {
         self.sdk.settings.verboseLoggingEnabled = enabled;
-        self.verboseLoggingToSet = nil;
+        self.verboseLoggingEnabledToSet = nil;
     }
     else
     {
-        self.verboseLoggingToSet = @(enabled);
+        self.verboseLoggingEnabledToSet = @(enabled);
     }
 }
 
@@ -300,9 +365,9 @@ static NSString *const TAG = @"MAUnrealPlugin";
     {
         return [self.sdk.settings isVerboseLoggingEnabled];
     }
-    else if ( self.verboseLoggingToSet )
+    else if ( self.verboseLoggingEnabledToSet )
     {
-        return self.verboseLoggingToSet.boolValue;
+        return self.verboseLoggingEnabledToSet.boolValue;
     }
     
     return false;

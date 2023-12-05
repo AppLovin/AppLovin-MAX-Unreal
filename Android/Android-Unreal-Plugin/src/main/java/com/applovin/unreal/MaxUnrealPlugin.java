@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -63,11 +64,14 @@ public class MaxUnrealPlugin
     private boolean                  isSdkInitialized    = false;
     private AppLovinSdkConfiguration sdkConfiguration;
 
-    // Store these values if pub attempts to set it before initializing
+    // Store these values if pub sets before initializing
     private String       userIdToSet;
     private List<String> testDeviceAdvertisingIdsToSet;
-    private Boolean      verboseLoggingToSet;
+    private Boolean      verboseLoggingEnabledToSet;
     private Boolean      creativeDebuggerEnabledToSet;
+    private Boolean      termsAndPrivacyPolicyFlowEnabledToSet;
+    private Uri          privacyPolicyUriToSet;
+    private Uri          termsOfServiceUriToSet;
 
     // Fullscreen Ad Fields
     private final Map<String, MaxInterstitialAd> mInterstitials = new HashMap<>( 2 );
@@ -165,10 +169,10 @@ public class MaxUnrealPlugin
         }
 
         // Set verbose logging state if needed
-        if ( verboseLoggingToSet != null )
+        if ( verboseLoggingEnabledToSet != null )
         {
-            sdk.getSettings().setVerboseLogging( verboseLoggingToSet );
-            verboseLoggingToSet = null;
+            sdk.getSettings().setVerboseLogging( verboseLoggingEnabledToSet );
+            verboseLoggingEnabledToSet = null;
         }
 
         // Set creative debugger enabled if needed
@@ -178,31 +182,47 @@ public class MaxUnrealPlugin
             creativeDebuggerEnabledToSet = null;
         }
 
-        sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener()
+        // Set terms and privacy policy flow enabled if needed
+        if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
         {
-            @Override
-            public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
+            termsAndPrivacyPolicyFlowEnabledToSet = null;
+        }
+
+        // Set privacy policy URL if needed
+        if ( privacyPolicyUriToSet != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( privacyPolicyUriToSet );
+            privacyPolicyUriToSet = null;
+        }
+
+        // Set terms of service URL if needed
+        if ( termsOfServiceUriToSet != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( termsOfServiceUriToSet );
+            termsOfServiceUriToSet = null;
+        }
+
+        sdk.initializeSdk( configuration -> {
+            d( "SDK initialized" );
+
+            sdkConfiguration = configuration;
+            isSdkInitialized = true;
+
+            // Enable orientation change listener, so that the position can be updated for vertical banners.
+            new OrientationEventListener( context )
             {
-                d( "SDK initialized" );
-
-                sdkConfiguration = configuration;
-                isSdkInitialized = true;
-
-                // Enable orientation change listener, so that the position can be updated for vertical banners.
-                new OrientationEventListener( context )
+                @Override
+                public void onOrientationChanged(final int orientation)
                 {
-                    @Override
-                    public void onOrientationChanged(final int orientation)
+                    for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : mVerticalAdViewFormats.entrySet() )
                     {
-                        for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : mVerticalAdViewFormats.entrySet() )
-                        {
-                            positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
-                        }
+                        positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
                     }
-                }.enable();
+                }
+            }.enable();
 
-                sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
-            }
+            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
         } );
     }
 
@@ -272,6 +292,47 @@ public class MaxUnrealPlugin
     }
     // endregion
 
+    // region Terms and Privacy Policy Flow
+    public void setTermsAndPrivacyPolicyFlowEnabled(final boolean enabled)
+    {
+        if ( sdk != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( enabled );
+            termsAndPrivacyPolicyFlowEnabledToSet = null;
+        }
+        else
+        {
+            termsAndPrivacyPolicyFlowEnabledToSet = enabled;
+        }
+    }
+
+    public void setPrivacyPolicyURL(final String uriString)
+    {
+        if ( sdk != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( Uri.parse( uriString ) );
+            privacyPolicyUriToSet = null;
+        }
+        else
+        {
+            privacyPolicyUriToSet = Uri.parse( uriString );
+        }
+    }
+
+    public void setTermsOfServiceURL(final String uriString)
+    {
+        if ( sdk != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( Uri.parse( uriString ) );
+            termsOfServiceUriToSet = null;
+        }
+        else
+        {
+            termsOfServiceUriToSet = Uri.parse( uriString );
+        }
+    }
+    // endregion
+
     // region General
     public boolean isTablet()
     {
@@ -310,11 +371,11 @@ public class MaxUnrealPlugin
         if ( sdk != null )
         {
             sdk.getSettings().setVerboseLogging( enabled );
-            verboseLoggingToSet = null;
+            verboseLoggingEnabledToSet = null;
         }
         else
         {
-            verboseLoggingToSet = enabled;
+            verboseLoggingEnabledToSet = enabled;
         }
     }
 
@@ -324,9 +385,9 @@ public class MaxUnrealPlugin
         {
             return sdk.getSettings().isVerboseLoggingEnabled();
         }
-        else if ( verboseLoggingToSet != null )
+        else if ( verboseLoggingEnabledToSet != null )
         {
-            return verboseLoggingToSet;
+            return verboseLoggingEnabledToSet;
         }
 
         return false;

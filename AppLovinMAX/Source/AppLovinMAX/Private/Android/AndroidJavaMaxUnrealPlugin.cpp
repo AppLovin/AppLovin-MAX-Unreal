@@ -18,6 +18,9 @@ FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
       IsAgeRestrictedUserMethod(GetClassMethod("isAgeRestrictedUser", "()Z")),
       SetDoNotSellMethod(GetClassMethod("setDoNotSell", "(Z)V")),
       IsDoNotSellMethod(GetClassMethod("isDoNotSell", "()Z")),
+      SetTermsAndPrivacyPolicyFlowEnabled(GetClassMethod("setTermsAndPrivacyPolicyFlowEnabled", "(Z)V")),
+      SetPrivacyPolicyURL(GetClassMethod("setPrivacyPolicyURL", "(Ljava/lang/String;)V")),
+      SetTermsOfServiceURL(GetClassMethod("setTermsOfServiceURL", "(Ljava/lang/String;)V")),
       IsTabletMethod(GetClassMethod("isTablet", "()Z")),
       ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V")),
       SetUserIdMethod(GetClassMethod("setUserId", "(Ljava/lang/String;)V")),
@@ -107,6 +110,23 @@ void FJavaAndroidMaxUnrealPlugin::SetDoNotSell(bool bDoNotSell)
 bool FJavaAndroidMaxUnrealPlugin::IsDoNotSell()
 {
     return CallMethod<bool>(IsDoNotSellMethod);
+}
+
+// MARK: - Terms and Privacy Policy Flow
+
+void FJavaAndroidMaxUnrealPlugin::SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled)
+{
+    CallMethod<void>(SetTermsAndPrivacyPolicyFlowEnabled, bEnabled);
+}
+
+void FJavaAndroidMaxUnrealPlugin::SetPrivacyPolicyURL(const FString &URL)
+{
+    CallMethod<void>(SetPrivacyPolicyURL, *GetJString(URL));
+}
+
+void FJavaAndroidMaxUnrealPlugin::SetTermsOfServiceURL(const FString &URL)
+{
+    CallMethod<void>(SetTermsOfServiceURL, *GetJString(URL));
 }
 
 // MARK: - General

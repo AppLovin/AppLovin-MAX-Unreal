@@ -105,6 +105,32 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static bool IsDoNotSell();
 
+    // MARK: - Terms and Privacy Policy Flow
+
+    /**
+     * Set this to @c true to enable the Terms Flow. You must also set a privacy policy URL and (optionally) terms of service URL.
+     *
+     * For iOS, you must also provide a @c NSUserTrackingUsageDescription string in your Info.plist.
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled);
+
+    /**
+     * URL for your company’s privacy policy. This is required in order to enable the Terms Flow.
+     *
+     * For iOS, this defaults to the value that you entered into your Info.plist via @c AppLovinConsentFlowInfo => @c AppLovinConsentFlowPrivacyPolicy.
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void SetPrivacyPolicyURL(const FString &URL);
+
+    /**
+     * URL for your company’s terms of service. This is optional; you can enable the Terms Flow with or without it.
+     *
+     * For iOS, this defaults to the value that you entered into your Info.plist via @c AppLovinConsentFlowInfo => @c AppLovinConsentFlowTermsOfService.
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void SetTermsOfServiceURL(const FString &URL);
+
     // MARK: - General
 
     /**

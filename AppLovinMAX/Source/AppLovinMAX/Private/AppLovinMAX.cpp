@@ -113,6 +113,35 @@ bool UAppLovinMAX::IsDoNotSell()
 #endif
 }
 
+// MARK: - Terms and Privacy Policy Flow
+
+void UAppLovinMAX::SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled)
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() setTermsAndPrivacyPolicyFlowEnabled:bEnabled];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetTermsAndPrivacyPolicyFlowEnabled(bEnabled);
+#endif
+}
+
+void UAppLovinMAX::SetPrivacyPolicyURL(const FString &URL)
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() setPrivacyPolicyURL:URL.GetNSString()];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetPrivacyPolicyURL(URL);
+#endif
+}
+
+void UAppLovinMAX::SetTermsOfServiceURL(const FString &URL)
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() setTermsOfServiceURL:URL.GetNSString()];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetTermsOfServiceURL(URL);
+#endif
+}
+
 // MARK: - General
 
 bool UAppLovinMAX::IsTablet()
@@ -780,7 +809,7 @@ void ForwardAndroidEvent(JNIEnv *env, jobject thiz, jstring name, jstring params
     ForwardEvent(Name, Params);
 }
 
-// UE5 
+// UE5
 extern "C" JNIEXPORT void JNICALL Java_com_epicgames_unreal_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
 {
     ForwardAndroidEvent(env, thiz, name, params);

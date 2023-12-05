@@ -26,6 +26,11 @@ public:
     void SetDoNotSell(bool bDoNotSell);
     bool IsDoNotSell();
 
+    // MARK: Terms and Privacy Policy Flow
+    void SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled);
+    void SetPrivacyPolicyURL(const FString &URL);
+    void SetTermsOfServiceURL(const FString &URL);
+
     // MARK: General
     bool IsTablet();
     void ShowMediationDebugger();
@@ -83,6 +88,11 @@ private:
     FJavaClassMethod IsAgeRestrictedUserMethod;
     FJavaClassMethod SetDoNotSellMethod;
     FJavaClassMethod IsDoNotSellMethod;
+
+    
+    FJavaClassMethod SetTermsAndPrivacyPolicyFlowEnabled;
+    FJavaClassMethod SetPrivacyPolicyURL;
+    FJavaClassMethod SetTermsOfServiceURL;
 
     FJavaClassMethod IsTabletMethod;
     FJavaClassMethod ShowMediationDebuggerMethod;
