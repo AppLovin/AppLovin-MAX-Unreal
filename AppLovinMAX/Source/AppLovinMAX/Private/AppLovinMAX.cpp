@@ -142,6 +142,16 @@ void UAppLovinMAX::SetTermsOfServiceURL(const FString &URL)
 #endif
 }
 
+void UAppLovinMAX::SetConsentFlowDebugUserGeography(EConsentFlowUserGeography UserGeography)
+{
+    const FString UserGeographyString = GetUserGeographyString(UserGeography);
+#if PLATFORM_IOS
+    [GetIOSPlugin() setConsentFlowDebugUserGeography:UserGeographyString.GetNSString()];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetConsentFlowDebugUserGeography(UserGeographyString);
+#endif
+}
+
 // MARK: - General
 
 bool UAppLovinMAX::IsTablet()
@@ -705,41 +715,40 @@ void ForwardEvent(const FString &Name, const FString &Body)
 
 FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
 {
-    if (Position == EAdViewPosition::TopLeft)
+    switch (Position)
     {
-        return TEXT("top_left");
+        case EAdViewPosition::TopLeft:
+            return TEXT("top_left");
+        case EAdViewPosition::TopCenter:
+            return TEXT("top_center");
+        case EAdViewPosition::TopRight:
+            return TEXT("top_right");
+        case EAdViewPosition::Centered:
+            return TEXT("centered");
+        case EAdViewPosition::CenterLeft:
+            return TEXT("center_left");
+        case EAdViewPosition::CenterRight:
+            return TEXT("center_right");
+        case EAdViewPosition::BottomLeft:
+            return TEXT("bottom_left");
+        case EAdViewPosition::BottomCenter:
+            return TEXT("bottom_center");
+        case EAdViewPosition::BottomRight:
+            return TEXT("bottom_right");
     }
-    else if (Position == EAdViewPosition::TopCenter)
+}
+
+FString UAppLovinMAX:GetUserGeographyString(EConsentFlowUserGeography UserGeography)
+{
+    // NOTE: For Android, strings must match the original enum in Java
+    switch (UserGeography)
     {
-        return TEXT("top_center");
-    }
-    else if (Position == EAdViewPosition::TopRight)
-    {
-        return TEXT("top_right");
-    }
-    else if (Position == EAdViewPosition::Centered)
-    {
-        return TEXT("centered");
-    }
-    else if (Position == EAdViewPosition::CenterLeft)
-    {
-        return TEXT("center_left");
-    }
-    else if (Position == EAdViewPosition::CenterRight)
-    {
-        return TEXT("center_right");
-    }
-    else if (Position == EAdViewPosition::BottomLeft)
-    {
-        return TEXT("bottom_left");
-    }
-    else if (Position == EAdViewPosition::BottomCenter)
-    {
-        return TEXT("bottom_center");
-    }
-    else // Position == EAdViewPosition::BottomRight
-    {
-        return TEXT("bottom_right");
+        case EConsentFlowUserGeography::Unknown:
+            return TEXT("UNKNOWN");
+        case EConsentFlowUserGeography::GDPR:
+            return TEXT("GDPR");
+        case EConsentFlowUserGeography::Other:
+            return TEXT("OTHER");
     }
 }
 

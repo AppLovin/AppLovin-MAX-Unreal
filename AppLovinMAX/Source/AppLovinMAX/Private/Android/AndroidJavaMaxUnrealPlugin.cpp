@@ -21,6 +21,7 @@ FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
       SetTermsAndPrivacyPolicyFlowEnabled(GetClassMethod("setTermsAndPrivacyPolicyFlowEnabled", "(Z)V")),
       SetPrivacyPolicyURL(GetClassMethod("setPrivacyPolicyURL", "(Ljava/lang/String;)V")),
       SetTermsOfServiceURL(GetClassMethod("setTermsOfServiceURL", "(Ljava/lang/String;)V")),
+      SetConsentFlowDebugUserGeography(GetClassMethod("setConsentFlowDebugUserGeography", "(Ljava/lang/String;)V")),
       IsTabletMethod(GetClassMethod("isTablet", "()Z")),
       ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V")),
       SetUserIdMethod(GetClassMethod("setUserId", "(Ljava/lang/String;)V")),
@@ -127,6 +128,11 @@ void FJavaAndroidMaxUnrealPlugin::SetPrivacyPolicyURL(const FString &URL)
 void FJavaAndroidMaxUnrealPlugin::SetTermsOfServiceURL(const FString &URL)
 {
     CallMethod<void>(SetTermsOfServiceURL, *GetJString(URL));
+}
+
+void FJavaAndroidMaxUnrealPlugin::SetConsentFlowDebugUserGeography(const FString &UserGeography)
+{
+    CallMethod<void>(SetConsentFlowDebugUserGeography, *GetJString(UserGeography));
 }
 
 // MARK: - General

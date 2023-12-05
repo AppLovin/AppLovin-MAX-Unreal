@@ -35,6 +35,7 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 - (void)setTermsAndPrivacyPolicyFlowEnabled:(BOOL)enabled;
 - (void)setPrivacyPolicyURL:(NSString *)urlString;
 - (void)setTermsOfServiceURL:(NSString *)urlString;
+- (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString;
 
 #pragma mark - General
 

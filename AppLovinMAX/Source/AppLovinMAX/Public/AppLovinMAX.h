@@ -32,6 +32,14 @@ enum class EAdViewPosition : uint8
     BottomRight
 };
 
+UENUM()
+enum class EConsentFlowUserGeography : uint8
+{
+    Unknown,
+    GDPR,
+    Other
+}
+
 UCLASS()
 class APPLOVINMAX_API UAppLovinMAX : public UBlueprintFunctionLibrary
 {
@@ -108,7 +116,7 @@ public:
     // MARK: - Terms and Privacy Policy Flow
 
     /**
-     * Set this to @c true to enable the Terms Flow. You must also set a privacy policy URL and (optionally) terms of service URL.
+     * Enables the MAX Terms and Privacy Policy Flow. You must also set a privacy policy URL and (optionally) terms of service URL.
      *
      * For iOS, you must also provide a @c NSUserTrackingUsageDescription string in your Info.plist.
      */
@@ -116,7 +124,7 @@ public:
     static void SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled);
 
     /**
-     * URL for your company’s privacy policy. This is required in order to enable the Terms Flow.
+     * The URL of your company’s privacy policy. This is required in order to enable the Terms Flow.
      *
      * For iOS, this defaults to the value that you entered into your Info.plist via @c AppLovinConsentFlowInfo => @c AppLovinConsentFlowPrivacyPolicy.
      */
@@ -124,12 +132,18 @@ public:
     static void SetPrivacyPolicyURL(const FString &URL);
 
     /**
-     * URL for your company’s terms of service. This is optional; you can enable the Terms Flow with or without it.
+     * The URL for your company’s terms of service. This is optional; you can enable the Terms Flow with or without it.
      *
      * For iOS, this defaults to the value that you entered into your Info.plist via @c AppLovinConsentFlowInfo => @c AppLovinConsentFlowTermsOfService.
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static void SetTermsOfServiceURL(const FString &URL);
+
+    /**
+     * Set debug user geography. You may use this to test CMP flow by setting this to @c GDPR
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void SetConsentFlowDebugUserGeography(EConsentFlowUserGeography UserGeography);
 
     // MARK: - General
 

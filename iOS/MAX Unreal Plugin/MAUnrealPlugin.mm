@@ -41,9 +41,11 @@
 @property (nonatomic, strong, nullable) NSArray<NSString *> *testDeviceIdentifiersToSet;
 @property (nonatomic, strong, nullable) NSNumber *verboseLoggingEnabledToSet;
 @property (nonatomic, strong, nullable) NSNumber *creativeDebuggerEnabledToSet;
+
 @property (nonatomic, strong, nullable) NSNumber *termsAndPrivacyPolicyFlowEnabledToSet;
 @property (nonatomic, strong, nullable) NSURL *privacyPolicyURLToSet;
 @property (nonatomic, strong, nullable) NSURL *termsOfServiceURLToSet;
+@property (nonatomic, strong, nullable) NSString *userGeographyStringToSet;
 
 // Fullscreen Ad Fields
 @property (nonatomic, strong) NSMutableDictionary<NSString *, MAInterstitialAd *> *interstitials;
@@ -143,53 +145,54 @@ static NSString *const TAG = @"MAUnrealPlugin";
     [self.sdk setPluginVersion: [@"Unreal-" stringByAppendingString: pluginVersion]];
     [self.sdk setMediationProvider: ALMediationProviderMAX];
     
-    // Set user id if needed
+    // Update SDK settings
+    
     if ( [self.userIdentifierToSet al_isValidString] )
     {
         self.sdk.userIdentifier = self.userIdentifierToSet;
         self.userIdentifierToSet = nil;
     }
     
-    // Set test device ids if needed
     if ( self.testDeviceIdentifiersToSet )
     {
         self.sdk.settings.testDeviceAdvertisingIdentifiers = self.testDeviceIdentifiersToSet;
         self.testDeviceIdentifiersToSet = nil;
     }
     
-    // Set verbose logging state if needed
     if ( self.verboseLoggingEnabledToSet )
     {
         self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingEnabledToSet.boolValue;
         self.verboseLoggingEnabledToSet = nil;
     }
     
-    // Set creative debugger enabled if needed
     if ( self.creativeDebuggerEnabledToSet )
     {
         self.sdk.settings.creativeDebuggerEnabled = self.creativeDebuggerEnabledToSet.boolValue;
         self.creativeDebuggerEnabledToSet = nil;
     }
     
-    // Set terms and privacy policy flow enabled if needed
     if ( self.termsAndPrivacyPolicyFlowEnabledToSet )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = self.termsAndPrivacyPolicyFlowEnabledToSet.boolValue;
         self.creativeDebuggerEnabledToSet = nil;
     }
     
-    // Set privacy policy URL if needed
     if ( self.privacyPolicyURLToSet )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = self.privacyPolicyURLToSet;
         self.privacyPolicyURLToSet = nil;
     }
     
-    // Set terms of service URL if needed
     if ( self.termsOfServiceURLToSet )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = self.termsOfServiceURLToSet;
         self.termsOfServiceURLToSet = nil;
+    }
+    
+    if ( self.userGeographyStringToSet )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: self.userIdentifierToSet];
+        self.userGeographyStringToSet = nil;
     }
  
     [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
@@ -285,6 +288,19 @@ static NSString *const TAG = @"MAUnrealPlugin";
     else
     {
         self.privacyPolicyURLToSet = [NSURL URLWithString: urlString];
+    }
+}
+
+- (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: userGeographyString];
+        self.userGeographyStringToSet = nil;
+    }
+    else
+    {
+        self.userGeographyStringToSet = userGeographyString;
     }
 }
 
@@ -1226,6 +1242,23 @@ static NSString *const TAG = @"MAUnrealPlugin";
     return @{@"code" : @(error.code),
              @"message" : error.message ?: @"",
              @"waterfall" : error.waterfall.description ?: @""};
+}
+
+- (ALConsentFlowUserGeography)userGeographyForString:(NSString *)userGeographyString
+{
+    ALConsentFlowUserGeography userGeography;
+    if ( [userGeographyString al_isEqualToStringIgnoringCase: @"UNKNOWN"] )
+    {
+        return ALConsentFlowUserGeographyUnknown;
+    }
+    else if ( [userGeographyString al_isEqualToStringIgnoringCase: @"GDPR"] )
+    {
+        return ALConsentFlowUserGeographyGDPR;
+    }
+    else
+    {
+        return ALConsentFlowUserGeographyOther;
+    }
 }
 
 #pragma mark - Unreal Bridge

@@ -30,6 +30,7 @@ public:
     void SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled);
     void SetPrivacyPolicyURL(const FString &URL);
     void SetTermsOfServiceURL(const FString &URL);
+    void SetConsentFlowDebugUserGeography(const FString &UserGeography);
 
     // MARK: General
     bool IsTablet();
@@ -93,6 +94,7 @@ private:
     FJavaClassMethod SetTermsAndPrivacyPolicyFlowEnabled;
     FJavaClassMethod SetPrivacyPolicyURL;
     FJavaClassMethod SetTermsOfServiceURL;
+    FJavaClassMethod SetConsentFlowDebugUserGeography;
 
     FJavaClassMethod IsTabletMethod;
     FJavaClassMethod ShowMediationDebuggerMethod;
