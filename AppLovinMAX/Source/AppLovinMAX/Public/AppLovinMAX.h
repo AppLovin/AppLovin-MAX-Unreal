@@ -38,7 +38,7 @@ enum class EConsentFlowUserGeography : uint8
     Unknown,
     GDPR,
     Other
-}
+};
 
 UCLASS()
 class APPLOVINMAX_API UAppLovinMAX : public UBlueprintFunctionLibrary
@@ -502,6 +502,7 @@ protected:
     // MARK: - Utility Methods
 
     static FString GetAdViewPositionString(EAdViewPosition AdViewPosition);
+    static FString GetUserGeographyString(EConsentFlowUserGeography UserGeography);
     static void ValidateAdUnitIdentifier(const FString &AdUnitIdentifier, const FString &DebugPurpose);
 
 #if PLATFORM_IOS

@@ -1246,7 +1246,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (ALConsentFlowUserGeography)userGeographyForString:(NSString *)userGeographyString
 {
-    ALConsentFlowUserGeography userGeography;
     if ( [userGeographyString al_isEqualToStringIgnoringCase: @"UNKNOWN"] )
     {
         return ALConsentFlowUserGeographyUnknown;

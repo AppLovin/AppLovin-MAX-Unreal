@@ -738,7 +738,7 @@ FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
     }
 }
 
-FString UAppLovinMAX:GetUserGeographyString(EConsentFlowUserGeography UserGeography)
+FString UAppLovinMAX::GetUserGeographyString(EConsentFlowUserGeography UserGeography)
 {
     // NOTE: For Android, strings must match the original enum in Java
     switch (UserGeography)
