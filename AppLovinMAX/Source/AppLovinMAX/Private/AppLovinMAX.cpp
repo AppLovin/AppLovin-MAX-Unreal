@@ -758,12 +758,9 @@ FString UAppLovinMAX::GetUserGeographyString(EConsentFlowUserGeography UserGeogr
     // NOTE: For Android, strings must match the original enum in Java
     switch (UserGeography)
     {
-        case EConsentFlowUserGeography::Unknown:
-            return TEXT("UNKNOWN");
-        case EConsentFlowUserGeography::GDPR:
-            return TEXT("GDPR");
-        case EConsentFlowUserGeography::Other:
-            return TEXT("OTHER");
+        case EConsentFlowUserGeography::Unknown: return TEXT("UNKNOWN");
+        case EConsentFlowUserGeography::GDPR: return TEXT("GDPR");
+        case EConsentFlowUserGeography::Other: return TEXT("OTHER");
     }
 }
 

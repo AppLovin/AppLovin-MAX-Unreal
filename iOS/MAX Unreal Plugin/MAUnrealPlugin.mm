@@ -189,7 +189,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         self.termsOfServiceURLToSet = nil;
     }
     
-    if ( self.userGeographyStringToSet )
+    if ( [self.userGeographyStringToSet al_isValidString] )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: self.userIdentifierToSet];
         self.userGeographyStringToSet = nil;
