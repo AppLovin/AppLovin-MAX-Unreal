@@ -715,26 +715,41 @@ void ForwardEvent(const FString &Name, const FString &Body)
 
 FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
 {
-    switch (Position)
+    if (Position == EAdViewPosition::TopLeft)
     {
-        case EAdViewPosition::TopLeft:
-            return TEXT("top_left");
-        case EAdViewPosition::TopCenter:
-            return TEXT("top_center");
-        case EAdViewPosition::TopRight:
-            return TEXT("top_right");
-        case EAdViewPosition::Centered:
-            return TEXT("centered");
-        case EAdViewPosition::CenterLeft:
-            return TEXT("center_left");
-        case EAdViewPosition::CenterRight:
-            return TEXT("center_right");
-        case EAdViewPosition::BottomLeft:
-            return TEXT("bottom_left");
-        case EAdViewPosition::BottomCenter:
-            return TEXT("bottom_center");
-        case EAdViewPosition::BottomRight:
-            return TEXT("bottom_right");
+        return TEXT("top_left");
+    }
+    else if (Position == EAdViewPosition::TopCenter)
+    {
+        return TEXT("top_center");
+    }
+    else if (Position == EAdViewPosition::TopRight)
+    {
+        return TEXT("top_right");
+    }
+    else if (Position == EAdViewPosition::Centered)
+    {
+        return TEXT("centered");
+    }
+    else if (Position == EAdViewPosition::CenterLeft)
+    {
+        return TEXT("center_left");
+    }
+    else if (Position == EAdViewPosition::CenterRight)
+    {
+        return TEXT("center_right");
+    }
+    else if (Position == EAdViewPosition::BottomLeft)
+    {
+        return TEXT("bottom_left");
+    }
+    else if (Position == EAdViewPosition::BottomCenter)
+    {
+        return TEXT("bottom_center");
+    }
+    else // Position == EAdViewPosition::BottomRight
+    {
+        return TEXT("bottom_right");
     }
 }
 

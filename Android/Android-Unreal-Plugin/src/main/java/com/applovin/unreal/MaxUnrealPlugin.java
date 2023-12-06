@@ -68,7 +68,7 @@ public class MaxUnrealPlugin
     // Store these values if pub sets before initializing
     private String       userIdToSet;
     private List<String> testDeviceAdvertisingIdsToSet;
-    private Boolean      verboseLoggingEnabledToSet;
+    private Boolean      verboseLoggingToSet;
     private Boolean      creativeDebuggerEnabledToSet;
 
     private Boolean                  termsAndPrivacyPolicyFlowEnabledToSet;
@@ -152,12 +152,9 @@ public class MaxUnrealPlugin
             }
         }
 
-        // Initialize SDK
         sdk = AppLovinSdk.getInstance( sdkKeyToUse, new AppLovinSdkSettings( context ), currentActivity );
         sdk.setPluginVersion( "Unreal-" + pluginVersion );
         sdk.setMediationProvider( AppLovinMediationProvider.MAX );
-
-        // Update SDK settings
 
         if ( !TextUtils.isEmpty( userIdToSet ) )
         {
@@ -171,10 +168,10 @@ public class MaxUnrealPlugin
             testDeviceAdvertisingIdsToSet = null;
         }
 
-        if ( verboseLoggingEnabledToSet != null )
+        if ( verboseLoggingToSet != null )
         {
-            sdk.getSettings().setVerboseLogging( verboseLoggingEnabledToSet );
-            verboseLoggingEnabledToSet = null;
+            sdk.getSettings().setVerboseLogging( verboseLoggingToSet );
+            verboseLoggingToSet = null;
         }
 
         if ( creativeDebuggerEnabledToSet != null )
@@ -206,26 +203,32 @@ public class MaxUnrealPlugin
             sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeographyToSet );
         }
 
-        sdk.initializeSdk( configuration -> {
-            d( "SDK initialized" );
-
-            sdkConfiguration = configuration;
-            isSdkInitialized = true;
-
-            // Enable orientation change listener, so that the position can be updated for vertical banners.
-            new OrientationEventListener( context )
+        sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener()
+        {
+            @Override
+            public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
             {
-                @Override
-                public void onOrientationChanged(final int orientation)
-                {
-                    for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : mVerticalAdViewFormats.entrySet() )
-                    {
-                        positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
-                    }
-                }
-            }.enable();
 
-            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
+                d( "SDK initialized" );
+
+                sdkConfiguration = configuration;
+                isSdkInitialized = true;
+
+                // Enable orientation change listener, so that the position can be updated for vertical banners.
+                new OrientationEventListener( context )
+                {
+                    @Override
+                    public void onOrientationChanged(final int orientation)
+                    {
+                        for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : mVerticalAdViewFormats.entrySet() )
+                        {
+                            positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
+                        }
+                    }
+                }.enable();
+
+                sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
+            }
         } );
     }
 
@@ -390,11 +393,11 @@ public class MaxUnrealPlugin
         if ( sdk != null )
         {
             sdk.getSettings().setVerboseLogging( enabled );
-            verboseLoggingEnabledToSet = null;
+            verboseLoggingToSet = null;
         }
         else
         {
-            verboseLoggingEnabledToSet = enabled;
+            verboseLoggingToSet = enabled;
         }
     }
 
@@ -404,9 +407,9 @@ public class MaxUnrealPlugin
         {
             return sdk.getSettings().isVerboseLoggingEnabled();
         }
-        else if ( verboseLoggingEnabledToSet != null )
+        else if ( verboseLoggingToSet != null )
         {
-            return verboseLoggingEnabledToSet;
+            return verboseLoggingToSet;
         }
 
         return false;
