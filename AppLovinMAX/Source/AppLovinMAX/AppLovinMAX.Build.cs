@@ -30,6 +30,8 @@ public class AppLovinMAX : ModuleRules
 			string AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDK.xcframework" );
 			string AppLovinResourcesPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDKResources.bundle" );
 			string AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "AppLovin", "MAX_Unreal_Plugin.framework" );
+			string AppLovinPodsPath = Path.Combine( AppLovinIOSPath, "Pods" );
+
 			if ( Directory.Exists( AppLovinSDKPath ) && Directory.Exists( AppLovinPluginPath ) )
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
@@ -56,12 +58,10 @@ public class AppLovinMAX : ModuleRules
 					)
 				);
 
-				// NOTE: For integrating adapters, run install_adapters.py and update the build rules
+				// NOTE: For integrating adapters, run install_pods.py and update the build rules
 				// below based on the script instructions
 
-				// #1: [Adapters] Add build rules for adapters and additional framework dependencies here
-
-				// #2: [Adapters] Add system frameworks needed by third-party SDKs
+				// #1: [Adapters] Add system frameworks needed by third-party SDKs
 				PublicFrameworks.AddRange(
 					new string[]
 					{
@@ -84,13 +84,17 @@ public class AppLovinMAX : ModuleRules
 					}
 				);
 
+				// #2: [Adapters] Copy build rules for weak frameworks
+
+				// #3: [Adapters] Add build rules for adapters and additional framework dependencies here
+
+				// #4: [Adapters] Add additional libraries needed by third-party SDKs
+				AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
+
 				string PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
 				AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
-
-				// #3: [Adapters] Add additional libraries needed by third-party SDKs
-				AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 			}
 			else
 			{
