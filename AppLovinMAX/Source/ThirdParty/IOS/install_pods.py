@@ -22,7 +22,7 @@ from zipfile import ZipFile
 install_dir = Path("Pods")
 build_rules = set()
 manual_pods = set()
-seen = set(["AppLovinSDK"])
+seen = set()
 
 
 """ Classes """
@@ -31,9 +31,9 @@ seen = set(["AppLovinSDK"])
 class Pod:
     all_frameworks = set()
     all_weak_frameworks = set()
+    all_libraries = set()
 
     def __init__(self, spec, parent=None):
-        self.parent = parent
         self.name = (f"{parent.name}/" if parent else "") + spec["name"]
         self.version = spec.get("version", None)
         self.resources = spec.get("resources", None)
@@ -77,7 +77,16 @@ class Pod:
         self.subspecs = list(
             map(lambda s: Pod(s, self), spec.get("subspecs", [])))
 
-        # TODO: Libraries
+        self.libraries = set(spec.get("libraries", []))
+        if len(self.libraries) != 0:
+            if "c++" in self.libraries:
+                self.libraries.remove("c++")
+            if "c++abi" in self.libraries:
+                self.libraries.remove("c++abi")
+            if "z" in self.libraries:
+                self.libraries.remove("z")  # Already used by AppLovin SDK
+
+            Pod.all_libraries |= self.libraries
 
 
 """ Utilities """
@@ -179,22 +188,22 @@ def create_build_rule(pod):
     if len(pod.framework_path) == 0:
         return
 
-    path = f"Path.Combine(AppLovinPodsPath, \"{pod.name}\", "
+    path = f'Path.Combine(AppLovinPodsPath, "{pod.name}", '
     if pod in manual_pods:
         # Manually installed pods will be directly installed to directory
-        path += f"\"{pod.module_name}.xcframework\")"
+        path += f'"{pod.module_name}.xcframework")'
     else:
         components = pod.framework_path.split("/")
-        components = map(lambda c: f"\"{c}\"", components)
+        components = map(lambda c: f'"{c}"', components)
         path += ", ".join(components) + ")"
 
     # Generate build rule
-    rule = f"""PublicAdditionalFrameworks.Add(\n\tnew Framework(\n\t\t"{pod.module_name}",\n\t\t{path},\n"""
+    rule = f"""PublicAdditionalFrameworks.Add(\n\tnew Framework(\n\t\t"{pod.module_name}",\n\t\t{path}"""
 
     if pod.resources is not None:
-        rule += f"\t\t{pod.resources}\n"
+        rule += f",\n\t\t{pod.resources}\n"
 
-    rule += "\t)\n);"
+    rule += "\n\t)\n);"
 
     build_rules.add(rule)
 
@@ -253,8 +262,8 @@ def install_google_sdk():
     google_dir = next(install_dir.glob("GoogleMobileAdsSdkiOS-*"))
     for d in google_dir.iterdir():
         if d.suffix == ".xcframework":
-            path = f"Path.Combine(AppLovinPodsPath, \"{google_dir.name}\", \"{d.name}\")"
-            rule = f"""PublicAdditionalFrameworks.Add(\n\tnew Framework(\n\t\t"{d.stem}",\n\t\t{path},\n\t)\n);"""
+            path = f'Path.Combine(AppLovinPodsPath, "{google_dir.name}", "{d.name}")'
+            rule = f'''PublicAdditionalFrameworks.Add(\n\tnew Framework(\n\t\t"{d.stem}",\n\t\t{path}\n\t)\n);'''
             build_rules.add(rule)
 
 
@@ -305,7 +314,7 @@ def main():
         print_instruction(
             "Replace the existing PublicFrameworks with:")
         formatted_frameworks = ',\n'.join(
-            sorted(map(lambda f: f"\t\t\"{f}\"", Pod.all_frameworks)))
+            sorted(map(lambda f: f'\t\t"{f}"', Pod.all_frameworks)))
         print("PublicFrameworks.AddRange(\n\tnew string[]\n\t{{\n{0}\n\t}}\n);".format(
             formatted_frameworks))
         print()
@@ -315,9 +324,19 @@ def main():
         print_instruction(
             "Add the build rule for including weak frameworks:")
         formatted_weak_frameworks = ',\n'.join(
-            sorted(map(lambda f: f"\t\t\"{f}\"", Pod.all_weak_frameworks)))
+            sorted(map(lambda f: f'\t\t"{f}"', Pod.all_weak_frameworks)))
         print("PublicWeakFrameworks.AddRange(\n\tnew string[]\n\t{{\n{0}\n\t}}\n);".format(
             formatted_weak_frameworks))
+        print()
+
+    # System Libraries
+    if len(Pod.all_libraries) != 0:
+        print_instruction(
+            "Add the build rule for including system libraries:")
+
+        for lib in Pod.all_libraries:
+            print(f'PublicSystemLibraries.Add("{lib}");')
+
         print()
 
     # Public Additional Frameworks
