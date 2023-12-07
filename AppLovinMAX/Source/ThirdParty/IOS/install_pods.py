@@ -77,7 +77,10 @@ class Pod:
         self.subspecs = list(
             map(lambda s: Pod(s, self), spec.get("subspecs", [])))
 
-        self.libraries = set(spec.get("libraries", []))
+        self.libraries = spec.get("libraries", [])
+        if isinstance(self.libraries, str):
+            self.libraries = [self.libraries]
+
         if len(self.libraries) != 0:
             if "c++" in self.libraries:
                 self.libraries.remove("c++")
@@ -86,7 +89,9 @@ class Pod:
             if "z" in self.libraries:
                 self.libraries.remove("z")  # Already used by AppLovin SDK
 
-            Pod.all_libraries |= self.libraries
+            # TODO: Add correct libs for resolv, xml2, iconv, bz2
+
+            Pod.all_libraries.update(self.libraries)
 
 
 """ Utilities """
@@ -157,31 +162,39 @@ def download_pod(pod):
     if pod.url is None:
         return
 
+    extract_dir = install_dir / pod.name
+
+    if extract_dir.exists():
+        return
+
     if pod.source == "http":
         file_name = pod.url.split('/')[-1]
         file_path = install_dir / file_name
-        extract_dir = install_dir / pod.name
-
-        if extract_dir.exists():
-            return
 
         urlretrieve(pod.url, file_path)
 
         if file_name.endswith(".zip"):
             with ZipFile(file_path, 'r') as zip_file:
                 zip_file.extractall(extract_dir)
-        elif file_name.endswith(".tar.gz") or file_name.endswith(".tgz") or file_name.endswith(".tar"):
+        elif re.search(r'\.tar(\..*)?$', str(file_path)) is not None:
             with tarfile.open(file_path, 'r:*') as tar_file:
                 tar_file.extractall(extract_dir)
         else:
-            print("Unable to extract dependencies from downloaded file")
+            file_path.unlink()
+            raise Exception(
+                "Unable to extract dependencies from downloaded file")
 
         file_path.unlink()
 
     elif pod.source == "git":
+        # Download is source code instead of vendored framework
         # Create empty directory for publisher to copy framework into
-        (install_dir / pod.name).mkdir(exist_ok=True)
-        manual_pods.add(pod)
+        if pod.framework_path == "":
+            extract_dir.mkdir(exist_ok=True)
+            manual_pods.add(pod)
+            return
+
+        run_shell(['git', 'clone', pod.url, extract_dir])
 
 
 def create_build_rule(pod):
@@ -201,7 +214,7 @@ def create_build_rule(pod):
     rule = f"""PublicAdditionalFrameworks.Add(\n\tnew Framework(\n\t\t"{pod.module_name}",\n\t\t{path}"""
 
     if pod.resources is not None:
-        rule += f",\n\t\t{pod.resources}\n"
+        rule += f',\n\t\t"{pod.resources}"'
 
     rule += "\n\t)\n);"
 
@@ -224,7 +237,6 @@ def install_dependencies(pod):
 
 def install_subspecs(pod):
     for subspec in pod.subspecs:
-        create_build_rule(subspec)
         install_dependencies(subspec)
         install_subspecs(subspec)  # can have nested subspecs
 
@@ -299,14 +311,14 @@ def main():
             else:
                 print(f"> {pod.name}")
 
-        input("\nPress Enter to continue...")
+        input("\nPress 'Enter' to continue...")
 
     print("\n-----\n")
 
     # --- Generated instructions
 
     print("Follow the generated instructions below to modify AppLovinMAX.Build.cs.\n")
-    input("Press Enter to generate build instructions...")
+    input("Press 'Enter' to generate build instructions...")
     print()
 
     # Public Frameworks
@@ -341,7 +353,7 @@ def main():
 
     # Public Additional Frameworks
     print_instruction("Add build rules for each dependency framework:")
-    print("\n\n".join(build_rules))
+    print("\n\n".join(sorted(build_rules)))
 
 
 if __name__ == "__main__":
