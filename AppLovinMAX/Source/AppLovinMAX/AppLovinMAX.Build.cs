@@ -36,6 +36,9 @@ public class AppLovinMAX : ModuleRules
 			{
 				System.Console.WriteLine( "AppLovin IOS Plugin found" );
 
+				string PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
+				AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
+
 				bEnableObjCAutomaticReferenceCounting = true;
 
 				// Add support for linking with Swift frameworks
@@ -58,41 +61,51 @@ public class AppLovinMAX : ModuleRules
 					)
 				);
 
-				// NOTE: For integrating adapters, run install_pods.py and update the build rules
-				// below based on the script instructions
-
-				// #1: [Adapters] Add system frameworks needed by third-party SDKs
+				// NOTE: For integrating adapters, please refer to our documentation:
+				// https://dash.applovin.com/documentation/mediation/unreal/mediation-adapters/ios
+				
+				// #1: [Pods] Add system frameworks needed by third-party SDKs
 				PublicFrameworks.AddRange(
-					new string[]
-					{
-						"AVFoundation",
-						"AdSupport",
-						"AppTrackingTransparency",
-						"AudioToolbox",
-						"CFNetwork",
-						"CoreGraphics",
-						"CoreMedia",
-						"CoreMotion",
-						"CoreTelephony",
-						"Foundation",
-						"MessageUI",
-						"SafariServices",
-						"StoreKit",
-						"SystemConfiguration",
-						"UIKit",
-						"WebKit"
-					}
+				        new string[]
+				        {
+				                "AVFoundation",
+				                "AdSupport",
+				                "AudioToolbox",
+				                "CFNetwork",
+				                "CoreGraphics",
+				                "CoreMedia",
+				                "CoreMotion",
+				                "CoreTelephony",
+				                "CoreVideo",
+				                "MediaPlayer",
+				                "MessageUI",
+				                "MobileCoreServices",
+				                "QuartzCore",
+				                "SafariServices",
+				                "Security",
+				                "StoreKit",
+				                "SystemConfiguration",
+				                "UIKit",
+				                "WebKit"
+				        }
 				);
 
-				// #2: [Adapters] Copy build rules for weak frameworks
+				// #2: [Pods] Copy build rules for weak frameworks
+				PublicWeakFrameworks.AddRange(
+				        new string[]
+				        {
+				                "AdSupport",
+				                "AppTrackingTransparency",
+				                "JavaScriptCore",
+				                "SafariServices",
+				                "WebKit"
+				        }
+				);
 
-				// #3: [Adapters] Add build rules for adapters and additional framework dependencies here
-
-				// #4: [Adapters] Add additional libraries needed by third-party SDKs
+				// #3: [Pods] Add additional libraries needed by third-party SDKs
 				AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 
-				string PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
-				AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
+				// #4: [Pods] Add build rules for adapters and additional framework dependencies here
 
 				PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 			}
