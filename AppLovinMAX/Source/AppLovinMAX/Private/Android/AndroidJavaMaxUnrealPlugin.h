@@ -91,10 +91,10 @@ private:
     FJavaClassMethod IsDoNotSellMethod;
 
     
-    FJavaClassMethod SetTermsAndPrivacyPolicyFlowEnabled;
-    FJavaClassMethod SetPrivacyPolicyURL;
-    FJavaClassMethod SetTermsOfServiceURL;
-    FJavaClassMethod SetConsentFlowDebugUserGeography;
+    FJavaClassMethod SetTermsAndPrivacyPolicyFlowEnabledMethod;
+    FJavaClassMethod SetPrivacyPolicyURLMethod;
+    FJavaClassMethod SetTermsOfServiceURLMethod;
+    FJavaClassMethod SetConsentFlowDebugUserGeographyMethod;
 
     FJavaClassMethod IsTabletMethod;
     FJavaClassMethod ShowMediationDebuggerMethod;

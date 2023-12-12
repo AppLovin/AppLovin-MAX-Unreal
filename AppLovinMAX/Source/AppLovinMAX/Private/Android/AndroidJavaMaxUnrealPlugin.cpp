@@ -18,10 +18,10 @@ FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
       IsAgeRestrictedUserMethod(GetClassMethod("isAgeRestrictedUser", "()Z")),
       SetDoNotSellMethod(GetClassMethod("setDoNotSell", "(Z)V")),
       IsDoNotSellMethod(GetClassMethod("isDoNotSell", "()Z")),
-      SetTermsAndPrivacyPolicyFlowEnabled(GetClassMethod("setTermsAndPrivacyPolicyFlowEnabled", "(Z)V")),
-      SetPrivacyPolicyURL(GetClassMethod("setPrivacyPolicyURL", "(Ljava/lang/String;)V")),
-      SetTermsOfServiceURL(GetClassMethod("setTermsOfServiceURL", "(Ljava/lang/String;)V")),
-      SetConsentFlowDebugUserGeography(GetClassMethod("setConsentFlowDebugUserGeography", "(Ljava/lang/String;)V")),
+      SetTermsAndPrivacyPolicyFlowEnabledMethod(GetClassMethod("setTermsAndPrivacyPolicyFlowEnabled", "(Z)V")),
+      SetPrivacyPolicyURLMethod(GetClassMethod("setPrivacyPolicyURL", "(Ljava/lang/String;)V")),
+      SetTermsOfServiceURLMethod(GetClassMethod("setTermsOfServiceURL", "(Ljava/lang/String;)V")),
+      SetConsentFlowDebugUserGeographyMethod(GetClassMethod("setConsentFlowDebugUserGeography", "(Ljava/lang/String;)V")),
       IsTabletMethod(GetClassMethod("isTablet", "()Z")),
       ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V")),
       SetUserIdMethod(GetClassMethod("setUserId", "(Ljava/lang/String;)V")),
@@ -117,22 +117,22 @@ bool FJavaAndroidMaxUnrealPlugin::IsDoNotSell()
 
 void FJavaAndroidMaxUnrealPlugin::SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled)
 {
-    CallMethod<void>(SetTermsAndPrivacyPolicyFlowEnabled, bEnabled);
+    CallMethod<void>(SetTermsAndPrivacyPolicyFlowEnabledMethod, bEnabled);
 }
 
 void FJavaAndroidMaxUnrealPlugin::SetPrivacyPolicyURL(const FString &URL)
 {
-    CallMethod<void>(SetPrivacyPolicyURL, *GetJString(URL));
+    CallMethod<void>(SetPrivacyPolicyURLMethod, *GetJString(URL));
 }
 
 void FJavaAndroidMaxUnrealPlugin::SetTermsOfServiceURL(const FString &URL)
 {
-    CallMethod<void>(SetTermsOfServiceURL, *GetJString(URL));
+    CallMethod<void>(SetTermsOfServiceURLMethod, *GetJString(URL));
 }
 
 void FJavaAndroidMaxUnrealPlugin::SetConsentFlowDebugUserGeography(const FString &UserGeography)
 {
-    CallMethod<void>(SetConsentFlowDebugUserGeography, *GetJString(UserGeography));
+    CallMethod<void>(SetConsentFlowDebugUserGeographyMethod, *GetJString(UserGeography));
 }
 
 // MARK: - General
