@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
 # This script downloads iOS dependencies from a Podfile and generates build settings for use in UE projects.
+# You must run this script in the AppLovinMAX/Source/ThirdParty/IOS directory.
 #
 # Copyright © 2021 AppLovin Corporation. All rights reserved.
 #
