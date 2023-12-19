@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 #
 # This script downloads iOS dependencies from a Podfile and generates build settings for use in UE projects.
-# You must run this script in the AppLovinMAX/Source/ThirdParty/IOS directory.
+#
+# Usage: ./install_pods.py INSTALL_DIRECTORY
 #
 # Copyright © 2021 AppLovin Corporation. All rights reserved.
 #
@@ -10,6 +11,7 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 import tarfile
 
 from urllib.request import urlretrieve
@@ -30,8 +32,10 @@ seen = set()
 
 
 class Pod:
-    all_frameworks = set()
-    all_weak_frameworks = set()
+    # Include AppLovinSDK frameworks by default
+    all_frameworks = set(['AdSupport', 'AudioToolbox', 'AVFoundation', 'CFNetwork', 'CoreGraphics', 'CoreMedia', 'CoreMotion',
+                         'CoreTelephony', 'MessageUI', 'SafariServices', 'StoreKit', 'SystemConfiguration', 'UIKit', 'WebKit'])
+    all_weak_frameworks = set(['AppTrackingTransparency'])
     all_libraries = set()
 
     def __init__(self, spec, parent=None):
@@ -116,7 +120,7 @@ def print_instruction(instruction):
 
 
 def parse_podfile():
-    with open("Podfile") as podfile:
+    with open(install_dir.parent / "Podfile") as podfile:
         # Trim whitespace
         pods = map(lambda l: l.strip(), podfile.readlines())
 
@@ -125,6 +129,9 @@ def parse_podfile():
 
         # Get pod names
         pods = map(lambda l: l.split(' ', 1)[1].strip("\'"), pods)
+
+        # Ignore AppLovinSDK
+        pods = filter(lambda l: l != "AppLovinSDK", pods)
 
     return list(map(get_pod_info, pods))
 
@@ -284,15 +291,23 @@ def install_google_sdk():
 
 
 def main():
+    global install_dir
+    if len(sys.argv) != 2:
+        print("Usage: ./install_pods.py INSTALL_DIRECTORY")
+        exit(1)
+
+    install_dir = Path(sys.argv[1]) / install_dir
+
     print("\nThis script installs AppLovin adapters and third-party SDKs using your Podfile.\n")
     print("Please refer to our documentation for complete instructions:")
     print("https://dash.applovin.com/documentation/mediation/unreal/mediation-adapters/ios\n")
 
     print("> Updating CocoaPods repos... (this may take a while)")
-    run_shell("pod --silent repo update".split())
+    # run_shell("pod --silent repo update".split())
 
     # -- Automated installation
 
+    print(f"> Installation directory:\n  {install_dir}")
     print("> Installing dependencies from Podfile...\n")
     installed_count = install_user_pods()
 
