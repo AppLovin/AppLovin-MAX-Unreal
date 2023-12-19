@@ -191,7 +191,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     
     if ( [self.userGeographyStringToSet al_isValidString] )
     {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: self.userIdentifierToSet];
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: self.userGeographyStringToSet];
         self.userGeographyStringToSet = nil;
     }
  
@@ -291,19 +291,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
 }
 
-- (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString
-{
-    if ( [self isPluginInitialized] )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: userGeographyString];
-        self.userGeographyStringToSet = nil;
-    }
-    else
-    {
-        self.userGeographyStringToSet = userGeographyString;
-    }
-}
-
 - (void)setTermsOfServiceURL:(NSString *)urlString
 {
     if ( [self isPluginInitialized] )
@@ -314,6 +301,19 @@ static NSString *const TAG = @"MAUnrealPlugin";
     else
     {
         self.termsOfServiceURLToSet = [NSURL URLWithString: urlString];
+    }
+}
+
+- (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: userGeographyString];
+        self.userGeographyStringToSet = nil;
+    }
+    else
+    {
+        self.userGeographyStringToSet = userGeographyString;
     }
 }
 
