@@ -312,7 +312,7 @@ public class MaxUnrealPlugin
         }
     }
 
-    public void setPrivacyPolicyURL(final String uriString)
+    public void setPrivacyPolicyUrl(final String uriString)
     {
         Uri uri = Uri.parse( uriString );
         if ( sdk != null )
@@ -326,7 +326,7 @@ public class MaxUnrealPlugin
         }
     }
 
-    public void setTermsOfServiceURL(final String uriString)
+    public void setTermsOfServiceUrl(final String uriString)
     {
         Uri uri = Uri.parse( uriString );
         if ( sdk != null )

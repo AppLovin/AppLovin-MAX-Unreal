@@ -19,8 +19,8 @@ FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
       SetDoNotSellMethod(GetClassMethod("setDoNotSell", "(Z)V")),
       IsDoNotSellMethod(GetClassMethod("isDoNotSell", "()Z")),
       SetTermsAndPrivacyPolicyFlowEnabledMethod(GetClassMethod("setTermsAndPrivacyPolicyFlowEnabled", "(Z)V")),
-      SetPrivacyPolicyURLMethod(GetClassMethod("setPrivacyPolicyURL", "(Ljava/lang/String;)V")),
-      SetTermsOfServiceURLMethod(GetClassMethod("setTermsOfServiceURL", "(Ljava/lang/String;)V")),
+      SetPrivacyPolicyUrlMethod(GetClassMethod("setPrivacyPolicyUrl", "(Ljava/lang/String;)V")),
+      SetTermsOfServiceUrlMethod(GetClassMethod("setTermsOfServiceUrl", "(Ljava/lang/String;)V")),
       SetConsentFlowDebugUserGeographyMethod(GetClassMethod("setConsentFlowDebugUserGeography", "(Ljava/lang/String;)V")),
       IsTabletMethod(GetClassMethod("isTablet", "()Z")),
       ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V")),
@@ -120,14 +120,14 @@ void FJavaAndroidMaxUnrealPlugin::SetTermsAndPrivacyPolicyFlowEnabled(bool bEnab
     CallMethod<void>(SetTermsAndPrivacyPolicyFlowEnabledMethod, bEnabled);
 }
 
-void FJavaAndroidMaxUnrealPlugin::SetPrivacyPolicyURL(const FString &URL)
+void FJavaAndroidMaxUnrealPlugin::SetPrivacyPolicyUrl(const FString &Url)
 {
-    CallMethod<void>(SetPrivacyPolicyURLMethod, *GetJString(URL));
+    CallMethod<void>(SetPrivacyPolicyUrlMethod, *GetJString(Url));
 }
 
-void FJavaAndroidMaxUnrealPlugin::SetTermsOfServiceURL(const FString &URL)
+void FJavaAndroidMaxUnrealPlugin::SetTermsOfServiceUrl(const FString &Url)
 {
-    CallMethod<void>(SetTermsOfServiceURLMethod, *GetJString(URL));
+    CallMethod<void>(SetTermsOfServiceUrlMethod, *GetJString(Url));
 }
 
 void FJavaAndroidMaxUnrealPlugin::SetConsentFlowDebugUserGeography(const FString &UserGeography)

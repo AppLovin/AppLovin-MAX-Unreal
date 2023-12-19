@@ -124,21 +124,21 @@ void UAppLovinMAX::SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled)
 #endif
 }
 
-void UAppLovinMAX::SetPrivacyPolicyURL(const FString &URL)
+void UAppLovinMAX::SetPrivacyPolicyUrl(const FString &Url)
 {
 #if PLATFORM_IOS
-    [GetIOSPlugin() setPrivacyPolicyURL:URL.GetNSString()];
+    [GetIOSPlugin() setPrivacyPolicyURL:Url.GetNSString()];
 #elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetPrivacyPolicyURL(URL);
+    GetAndroidPlugin()->SetPrivacyPolicyUrl(Url);
 #endif
 }
 
-void UAppLovinMAX::SetTermsOfServiceURL(const FString &URL)
+void UAppLovinMAX::SetTermsOfServiceUrl(const FString &Url)
 {
 #if PLATFORM_IOS
-    [GetIOSPlugin() setTermsOfServiceURL:URL.GetNSString()];
+    [GetIOSPlugin() setTermsOfServiceURL:Url.GetNSString()];
 #elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetTermsOfServiceURL(URL);
+    GetAndroidPlugin()->SetTermsOfServiceUrl(Url);
 #endif
 }
 

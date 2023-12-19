@@ -129,7 +129,7 @@ public:
      * For iOS, this defaults to the value that you entered into your Info.plist via @c AppLovinConsentFlowInfo => @c AppLovinConsentFlowPrivacyPolicy.
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void SetPrivacyPolicyURL(const FString &URL);
+    static void SetPrivacyPolicyUrl(const FString &Url);
 
     /**
      * The URL for your company’s terms of service. This is optional; you can enable the Terms Flow with or without it.
@@ -137,7 +137,7 @@ public:
      * For iOS, this defaults to the value that you entered into your Info.plist via @c AppLovinConsentFlowInfo => @c AppLovinConsentFlowTermsOfService.
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void SetTermsOfServiceURL(const FString &URL);
+    static void SetTermsOfServiceUrl(const FString &Url);
 
     /**
      * Set debug user geography. You may use this to test CMP flow by setting this to @c GDPR

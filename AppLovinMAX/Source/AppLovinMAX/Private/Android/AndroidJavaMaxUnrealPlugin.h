@@ -28,8 +28,8 @@ public:
 
     // MARK: Terms and Privacy Policy Flow
     void SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled);
-    void SetPrivacyPolicyURL(const FString &URL);
-    void SetTermsOfServiceURL(const FString &URL);
+    void SetPrivacyPolicyUrl(const FString &Url);
+    void SetTermsOfServiceUrl(const FString &Url);
     void SetConsentFlowDebugUserGeography(const FString &UserGeography);
 
     // MARK: General
@@ -92,8 +92,8 @@ private:
 
     
     FJavaClassMethod SetTermsAndPrivacyPolicyFlowEnabledMethod;
-    FJavaClassMethod SetPrivacyPolicyURLMethod;
-    FJavaClassMethod SetTermsOfServiceURLMethod;
+    FJavaClassMethod SetPrivacyPolicyUrlMethod;
+    FJavaClassMethod SetTermsOfServiceUrlMethod;
     FJavaClassMethod SetConsentFlowDebugUserGeographyMethod;
 
     FJavaClassMethod IsTabletMethod;
