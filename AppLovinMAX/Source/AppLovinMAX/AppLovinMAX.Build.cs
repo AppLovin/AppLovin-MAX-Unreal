@@ -66,40 +66,31 @@ public class AppLovinMAX : ModuleRules
 				
 				// #1: [Pods] Add system frameworks needed by third-party SDKs
 				PublicFrameworks.AddRange(
-				        new string[]
-				        {
-				                "AVFoundation",
-				                "AdSupport",
-				                "AudioToolbox",
-				                "CFNetwork",
-				                "CoreGraphics",
-				                "CoreMedia",
-				                "CoreMotion",
-				                "CoreTelephony",
-				                "CoreVideo",
-				                "MediaPlayer",
-				                "MessageUI",
-				                "MobileCoreServices",
-				                "QuartzCore",
-				                "SafariServices",
-				                "Security",
-				                "StoreKit",
-				                "SystemConfiguration",
-				                "UIKit",
-				                "WebKit"
-				        }
+			        new string[]
+			        {
+		                "AdSupport",
+		                "AudioToolbox",
+		                "AVFoundation",
+		                "CFNetwork",
+		                "CoreGraphics",
+		                "CoreMedia",
+		                "CoreMotion",
+		                "CoreTelephony",
+		                "MessageUI",
+		                "SafariServices",
+		                "StoreKit",
+		                "SystemConfiguration",
+		                "UIKit",
+		                "WebKit"
+			        }
 				);
 
 				// #2: [Pods] Copy build rules for weak frameworks
 				PublicWeakFrameworks.AddRange(
-				        new string[]
-				        {
-				                "AdSupport",
-				                "AppTrackingTransparency",
-				                "JavaScriptCore",
-				                "SafariServices",
-				                "WebKit"
-				        }
+			        new string[]
+			        {
+		                "AppTrackingTransparency"
+			        }
 				);
 
 				// #3: [Pods] Add additional libraries needed by third-party SDKs
