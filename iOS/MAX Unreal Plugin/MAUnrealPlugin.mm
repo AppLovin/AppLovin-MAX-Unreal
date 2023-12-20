@@ -317,6 +317,32 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
 }
 
+- (void)showCMPForExistingUser
+{
+    if ( self.isPluginInitialized )
+    {
+        [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
+            NSDictionary <NSString *, id> *parameters = @{};
+            if ( error )
+            {
+                parameters = @{@"code" : @(error.code),
+                               @"message" : error.message ?: @"",
+                               @"cmpCode" : @(error.cmpCode) ?: @(-1),
+                               @"cmpMessage" : error.cmpMessage ?: @""};
+            }
+            
+            [self sendUnrealEventWithName: @"OnCmpCompletedEvent" parameters: parameters];
+        }];
+    }
+}
+
+- (BOOL)hasSupportedCMP
+{
+    if ( !self.isPluginInitialized ) return false;
+    
+    return [self.sdk.cmpService hasSupportedCMP];
+}
+
 #pragma mark - General
 
 - (BOOL)isTablet
@@ -1263,7 +1289,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 #pragma mark - Unreal Bridge
 
 // NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so the keys must match with the corresponding UPROPERTY
-- (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
+- (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, id> *)parameters
 {
     if ( self.eventCallback )
     {

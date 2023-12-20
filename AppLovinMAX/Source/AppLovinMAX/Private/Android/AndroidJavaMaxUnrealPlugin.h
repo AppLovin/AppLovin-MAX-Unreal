@@ -31,6 +31,8 @@ public:
     void SetPrivacyPolicyUrl(const FString &Url);
     void SetTermsOfServiceUrl(const FString &Url);
     void SetConsentFlowDebugUserGeography(const FString &UserGeography);
+    void ShowCmpForExistingUser();
+    bool HasSupportedCmp();
 
     // MARK: General
     bool IsTablet();
@@ -95,6 +97,8 @@ private:
     FJavaClassMethod SetPrivacyPolicyUrlMethod;
     FJavaClassMethod SetTermsOfServiceUrlMethod;
     FJavaClassMethod SetConsentFlowDebugUserGeographyMethod;
+    FJavaClassMethod ShowCmpForExistingUserMethod;
+    FJavaClassMethod HasSupportedCmpMethod;
 
     FJavaClassMethod IsTabletMethod;
     FJavaClassMethod ShowMediationDebuggerMethod;

@@ -31,6 +31,8 @@ import com.applovin.mediation.MaxRewardedAdListener;
 import com.applovin.mediation.ads.MaxAdView;
 import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.applovin.mediation.ads.MaxRewardedAd;
+import com.applovin.sdk.AppLovinCmpError;
+import com.applovin.sdk.AppLovinCmpService;
 import com.applovin.sdk.AppLovinMediationProvider;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
@@ -54,7 +56,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class MaxUnrealPlugin
-        implements MaxAdListener, MaxAdViewAdListener, MaxRewardedAdListener, MaxAdRevenueListener
+        implements MaxAdListener, MaxAdViewAdListener, MaxRewardedAdListener, MaxAdRevenueListener, AppLovinCmpService.OnCompletedListener
 {
     private static final String TAG     = "MaxUnrealPlugin";
     private static final String SDK_TAG = "AppLovinSdk";
@@ -352,6 +354,36 @@ public class MaxUnrealPlugin
         {
             userGeographyToSet = userGeography;
         }
+    }
+
+    public void showCmpForExistingUser()
+    {
+        if ( isPluginInitialized )
+        {
+            sdk.getCmpService().showCmpForExistingUser( getGameActivity(), this );
+        }
+    }
+
+    public boolean hasSupportedCmp()
+    {
+        if ( !isPluginInitialized ) return false;
+
+        return sdk.getCmpService().hasSupportedCmp();
+    }
+
+    @Override
+    public void onCompleted(final AppLovinCmpError error)
+    {
+        JSONObject params = new JSONObject();
+        if ( error != null )
+        {
+            JsonUtils.putInt( params, "code", error.getCode().getValue() );
+            JsonUtils.putString( params, "message", error.getMessage() );
+            JsonUtils.putInt( params, "cmpCode", error.getCmpCode() );
+            JsonUtils.putString( params, "cmpMessage", error.getCmpMessage() );
+        }
+
+        sendUnrealEvent( "OnCmpCompletedEvent", params );
     }
     // endregion
 

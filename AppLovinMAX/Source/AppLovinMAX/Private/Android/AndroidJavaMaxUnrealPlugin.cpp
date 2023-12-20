@@ -22,6 +22,8 @@ FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
       SetPrivacyPolicyUrlMethod(GetClassMethod("setPrivacyPolicyUrl", "(Ljava/lang/String;)V")),
       SetTermsOfServiceUrlMethod(GetClassMethod("setTermsOfServiceUrl", "(Ljava/lang/String;)V")),
       SetConsentFlowDebugUserGeographyMethod(GetClassMethod("setConsentFlowDebugUserGeography", "(Ljava/lang/String;)V")),
+      ShowCmpForExistingUserMethod(GetClassMethod("showCmpForExistingUser", "()V")),
+      HasSupportedCmpMethod(GetClassMethod("hasSupportedCmp", "()Z")),
       IsTabletMethod(GetClassMethod("isTablet", "()Z")),
       ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V")),
       SetUserIdMethod(GetClassMethod("setUserId", "(Ljava/lang/String;)V")),
@@ -133,6 +135,16 @@ void FJavaAndroidMaxUnrealPlugin::SetTermsOfServiceUrl(const FString &Url)
 void FJavaAndroidMaxUnrealPlugin::SetConsentFlowDebugUserGeography(const FString &UserGeography)
 {
     CallMethod<void>(SetConsentFlowDebugUserGeographyMethod, *GetJString(UserGeography));
+}
+
+void FJavaAndroidMaxUnrealPlugin::ShowCmpForExistingUser()
+{
+    CallMethod<void>(ShowCmpForExistingUserMethod);
+}
+
+bool FJavaAndroidMaxUnrealPlugin::HasSupportedCmp()
+{
+    return CallMethod<bool>(HasSupportedCmpMethod);
 }
 
 // MARK: - General

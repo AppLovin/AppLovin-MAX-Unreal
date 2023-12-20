@@ -152,6 +152,24 @@ void UAppLovinMAX::SetConsentFlowDebugUserGeography(EConsentFlowUserGeography Us
 #endif
 }
 
+void UAppLovinMAX::ShowCmpForExistingUser()
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() showCMPForExistingUser];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->ShowCmpForExistingUser();
+#endif
+}
+
+bool UAppLovinMAX::HasSupportedCmp()
+{
+#if PLATFORM_IOS
+    return [GetIOSPlugin() hasSupportedCMP];
+#elif PLATFORM_ANDROID
+    return GetAndroidPlugin()->HasSupportedCmp();
+#endif
+}
+
 // MARK: - General
 
 bool UAppLovinMAX::IsTablet()
@@ -522,6 +540,7 @@ void UAppLovinMAX::SetRewardedAdExtraParameter(const FString &AdUnitIdentifier, 
 
 // Static Delegate Initialization
 UAppLovinMAX::FOnSdkInitializedDelegate UAppLovinMAX::OnSdkInitializedDelegate;
+UAppLovinMAX::FOnCmpCompletedDelegate UAppLovinMAX::OnCmpCompletedDelegate;
 UAppLovinMAX::FOnBannerAdLoadedDelegate UAppLovinMAX::OnBannerAdLoadedDelegate;
 UAppLovinMAX::FOnBannerAdLoadFailedDelegate UAppLovinMAX::OnBannerAdLoadFailedDelegate;
 UAppLovinMAX::FOnBannerAdClickedDelegate UAppLovinMAX::OnBannerAdClickedDelegate;
@@ -558,6 +577,14 @@ void ForwardEvent(const FString &Name, const FString &Body)
         FJsonObjectConverter::JsonObjectStringToUStruct<FSdkConfiguration>(Body, &SdkConfiguration, 0, 0);
         UAppLovinMAX::OnSdkInitializedDelegate.Broadcast(SdkConfiguration);
         UAppLovinMAXDelegate::BroadcastSdkInitializedEvent(SdkConfiguration);
+    }
+    else if (Name == TEXT("OnCmpCompletedEvent"))
+    {
+        FCmpError CmpError;
+        FJsonObjectConverter::JsonObjectStringToUStruct<FCmpError>(Body, &CmpError, 0, 0);
+        
+        UAppLovinMAX::OnCmpCompletedDelegate.Broadcast(CmpError);
+        UAppLovinMAXDelegate::BroadcastCmpCompletedEvent(CmpError);
     }
     else // Ad Events
     {

@@ -5,6 +5,7 @@
 #include "AdError.h"
 #include "AdInfo.h"
 #include "AdReward.h"
+#include "CmpError.h"
 #include "SdkConfiguration.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AppLovinMAX.generated.h"
@@ -144,6 +145,20 @@ public:
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
     static void SetConsentFlowDebugUserGeography(EConsentFlowUserGeography UserGeography);
+
+    /**
+     * Shows the CMP flow to an existing user.
+     * Note that the user's current consent will be reset before the CMP alert is shown
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static void ShowCmpForExistingUser();
+
+    /**
+     * Returns whether or not a supported CMP is integrated.
+     * @return True if a supported CMP is integrated.
+     */
+    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
+    static bool HasSupportedCmp();
 
     // MARK: - General
 
@@ -434,6 +449,8 @@ public:
 
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnSdkInitializedDelegate, const FSdkConfiguration & /*SdkConfiguration*/);
 
+    DECLARE_MULTICAST_DELEGATE_OneParam(FOnCmpCompletedDelegate, const FCmpError & /*CmpError*/);
+
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnBannerAdLoadedDelegate, const FAdInfo & /*AdInfo*/);
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnBannerAdLoadFailedDelegate, const FAdInfo & /*AdInfo*/, const FAdError & /*AdError*/);
     DECLARE_MULTICAST_DELEGATE_OneParam(FOnBannerAdClickedDelegate, const FAdInfo & /*AdInfo*/);
@@ -466,6 +483,8 @@ public:
     DECLARE_MULTICAST_DELEGATE_TwoParams(FOnRewardedAdReceivedRewardDelegate, const FAdInfo & /*AdInfo*/, const FAdReward & /*Reward*/);
 
     static FOnSdkInitializedDelegate OnSdkInitializedDelegate;
+
+    static FOnCmpCompletedDelegate OnCmpCompletedDelegate;
 
     static FOnBannerAdLoadedDelegate OnBannerAdLoadedDelegate;
     static FOnBannerAdLoadFailedDelegate OnBannerAdLoadFailedDelegate;

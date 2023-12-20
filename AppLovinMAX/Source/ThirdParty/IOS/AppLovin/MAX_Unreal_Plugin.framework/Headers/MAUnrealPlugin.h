@@ -36,6 +36,8 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 - (void)setPrivacyPolicyURL:(NSString *)urlString;
 - (void)setTermsOfServiceURL:(NSString *)urlString;
 - (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString;
+- (void)showCMPForExistingUser;
+- (BOOL)hasSupportedCMP;
 
 #pragma mark - General
 

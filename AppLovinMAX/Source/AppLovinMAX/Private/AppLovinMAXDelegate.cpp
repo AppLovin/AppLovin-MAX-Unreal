@@ -30,6 +30,20 @@ void UAppLovinMAXDelegate::BroadcastSdkInitializedEvent(const FSdkConfiguration 
     });
 }
 
+void UAppLovinMAXDelegate::BroadcastCmpCompletedEvent(const FCmpError &CmpError)
+{
+    AsyncTask(ENamedThreads::GameThread, [=]()
+    {
+        for (TObjectIterator<UAppLovinMAXDelegate> Itr; Itr; ++Itr)
+        {
+            if (IsValidDelegate(*Itr))
+            {
+                Itr->OnCmpCompletedDelegate.Broadcast(CmpError);
+            }
+        }
+    });
+}
+
 void UAppLovinMAXDelegate::BroadcastAdEvent(const FString &Name, const FAdInfo &AdInfo)
 {
     AsyncTask(ENamedThreads::GameThread, [=]()
