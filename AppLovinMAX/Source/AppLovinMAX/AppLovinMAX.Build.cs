@@ -51,131 +51,128 @@ public class AppLovinMAX : ModuleRules
 		var AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "AppLovin", "MAX_Unreal_Plugin.framework" );
 		var AppLovinPodsPath = Path.Combine( AppLovinIOSPath, "Pods" );
 
-		if ( Directory.Exists( AppLovinSDKPath ) && Directory.Exists( AppLovinPluginPath ) )
-		{
-			System.Console.WriteLine( "AppLovin IOS Plugin found" );
-
-			var PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
-			AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
-
-			bEnableObjCAutomaticReferenceCounting = true;
-
-			// Add support for linking with Swift frameworks
-			PrivateDependencyModuleNames.Add( "Swift" );
-
-			// Add the AppLovin SDK framework
-			PublicAdditionalFrameworks.Add(
-				new Framework(
-					"AppLovinSDK",
-					AppLovinSDKPath,
-					AppLovinResourcesPath
-				)
-			);
-
-			// Add the AppLovin Unreal iOS plugin
-			PublicAdditionalFrameworks.Add(
-				new Framework(
-					"MAX_Unreal_Plugin",
-					AppLovinPluginPath
-				)
-			);
-
-			var PluginFrameworks = new HashSet<string> {
-				"AdSupport",
-				"AudioToolbox",
-				"AVFoundation",
-				"CFNetwork",
-				"CoreGraphics",
-				"CoreMedia",
-				"CoreMotion",
-				"CoreTelephony",
-				"MessageUI",
-				"SafariServices",
-				"StoreKit",
-				"SystemConfiguration",
-				"UIKit",
-				"WebKit"
-			};
-
-			var PluginWeakFrameworks = new HashSet<string> { "AppTrackingTransparency" };
-			var PluginSystemLibraries = new HashSet<string>();
-
-			// Parse installed Pods configuration
-			if ( Directory.Exists( AppLovinPodsPath ) )
-			{
-				XDocument PodConfig = XDocument.Load( Path.Combine( AppLovinPodsPath, "config.xml" ) );
-
-				var TagsToPublicSet = new[] {
-			        ("PublicFrameworks", PluginFrameworks),
-			        ("PublicWeakFrameworks", PluginWeakFrameworks),
-			        ("PublicSystemLibraries", PluginSystemLibraries)
-			    };
-
-			    foreach ( var (Tag, PluginSet) in TagsToPublicSet )
-			    {
-			        foreach ( var Item in PodConfig.Descendants( Tag ).Elements( "item" ) )
-			        {
-			        	PluginSet.Add( Item.Value );
-			        }
-			    }
-
-				// Process the additional frameworks
-				foreach ( var Item in PodConfig.Descendants( "PublicAdditionalFrameworks" ).Elements( "item" ) )
-				{
-                    var Name = Item.Element( "Name" ).Value;
-                    var Resources = Item.Element( "Resources" ).Value;
-
-                    var RelativePathComponents = Item.Element( "PathComponents" )
-						.Elements( "item" )
-						.Select(Component => Component.Value)
-						.Aggregate( Path.Combine );
-					var AdditionalFrameworkPath = Path.Combine( AppLovinPodsPath, RelativePathComponents );
-
-					var AdditionalFramework = Resources != "None"
-			            ? new Framework( Name, AdditionalFrameworkPath, Resources )
-			            : new Framework( Name, AdditionalFrameworkPath );
-
-					PublicAdditionalFrameworks.Add( AdditionalFramework );
-				}
-			}
-
-			PublicFrameworks.AddRange( PluginFrameworks.ToArray() );
-			PublicWeakFrameworks.AddRange( PluginWeakFrameworks.ToArray() );
-			PublicSystemLibraries.AddRange( PluginSystemLibraries.ToArray() );
-
-			AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
-
-			PublicDefinitions.Add( "WITH_APPLOVIN=1" );
-		}
-		else
+		if ( !Directory.Exists( AppLovinSDKPath ) || !Directory.Exists( AppLovinPluginPath ) )
 		{
 			System.Console.WriteLine( "AppLovin IOS Plugin not found" );
 			PublicDefinitions.Add( "WITH_APPLOVIN=0" );
 		}
+
+		System.Console.WriteLine( "AppLovin IOS Plugin found" );
+
+		var PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
+		AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
+
+		bEnableObjCAutomaticReferenceCounting = true;
+
+		// Add support for linking with Swift frameworks
+		PrivateDependencyModuleNames.Add( "Swift" );
+
+		// Add the AppLovin SDK framework
+		PublicAdditionalFrameworks.Add(
+			new Framework(
+				"AppLovinSDK",
+				AppLovinSDKPath,
+				AppLovinResourcesPath
+			)
+		);
+
+		// Add the AppLovin Unreal iOS plugin
+		PublicAdditionalFrameworks.Add(
+			new Framework(
+				"MAX_Unreal_Plugin",
+				AppLovinPluginPath
+			)
+		);
+
+		var PluginFrameworks = new HashSet<string> {
+			"AdSupport",
+			"AudioToolbox",
+			"AVFoundation",
+			"CFNetwork",
+			"CoreGraphics",
+			"CoreMedia",
+			"CoreMotion",
+			"CoreTelephony",
+			"MessageUI",
+			"SafariServices",
+			"StoreKit",
+			"SystemConfiguration",
+			"UIKit",
+			"WebKit"
+		};
+
+		var PluginWeakFrameworks = new HashSet<string> { "AppTrackingTransparency" };
+		var PluginSystemLibraries = new HashSet<string>();
+
+		// Parse installed Pods configuration
+		if ( Directory.Exists( AppLovinPodsPath ) )
+		{
+			XDocument PodConfig = XDocument.Load( Path.Combine( AppLovinPodsPath, "config.xml" ) );
+
+			var TagsToPublicSet = new[] {
+		        ("PublicFrameworks", PluginFrameworks),
+		        ("PublicWeakFrameworks", PluginWeakFrameworks),
+		        ("PublicSystemLibraries", PluginSystemLibraries)
+		    };
+
+		    foreach ( var (Tag, PluginSet) in TagsToPublicSet )
+		    {
+		        foreach ( var Item in PodConfig.Descendants( Tag ).Elements( "item" ) )
+		        {
+		        	PluginSet.Add( Item.Value );
+		        }
+		    }
+
+			// Process the additional frameworks
+			foreach ( var Item in PodConfig.Descendants( "PublicAdditionalFrameworks" ).Elements( "item" ) )
+			{
+                var Name = Item.Element( "Name" ).Value;
+                var Resources = Item.Element( "Resources" ).Value;
+                var RelativePathComponents = Item.Element( "PathComponents" )
+					.Elements( "item" )
+					.Select(Component => Component.Value)
+					.Aggregate( Path.Combine );
+				var AdditionalFrameworkPath = Path.Combine( AppLovinPodsPath, RelativePathComponents );
+
+				System.Console.WriteLine( "Adding CocoaPod dependency: " + Name + " (" + AdditionalFrameworkPath + ")" );
+
+				var AdditionalFramework = Resources != "None"
+		            ? new Framework( Name, AdditionalFrameworkPath, Resources )
+		            : new Framework( Name, AdditionalFrameworkPath );
+
+				PublicAdditionalFrameworks.Add( AdditionalFramework );
+			}
+		}
+
+		PublicFrameworks.AddRange( PluginFrameworks.ToArray() );
+		PublicWeakFrameworks.AddRange( PluginWeakFrameworks.ToArray() );
+		PublicSystemLibraries.AddRange( PluginSystemLibraries.ToArray() );
+
+		AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
+
+		PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 	}
 
 	private void InstallAndroid()
 	{
 		var AppLovinAndroidPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "Android", "repository", "com", "applovin", "applovin-max-unreal-plugin", "release" );
 		var AppLovinPluginPath = Path.Combine( AppLovinAndroidPath, "applovin-max-unreal-plugin-release.aar" );
-		if ( File.Exists( AppLovinPluginPath ) )
-		{
-			System.Console.WriteLine( "AppLovin Android Plugin found" );
-
-			PrivateIncludePaths.Add( "AppLovinMAX/Private/Android" );
-			
-			// Includes Android JNI support 
-			PrivateDependencyModuleNames.Add( "Launch" );
-
-			var PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
-			AdditionalPropertiesForReceipt.Add( "AndroidPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_Android.xml" ) );
-
-			PublicDefinitions.Add( "WITH_APPLOVIN=1" );
-		}
-		else
+		if ( !File.Exists( AppLovinPluginPath ) )
 		{
 			System.Console.WriteLine( "AppLovin Android Plugin not found" );
 			PublicDefinitions.Add( "WITH_APPLOVIN=0" );
 		}
+
+		System.Console.WriteLine( "AppLovin Android Plugin found" );
+
+		PrivateIncludePaths.Add( "AppLovinMAX/Private/Android" );
+		
+		// Includes Android JNI support 
+		PrivateDependencyModuleNames.Add( "Launch" );
+
+		var PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
+		AdditionalPropertiesForReceipt.Add( "AndroidPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_Android.xml" ) );
+
+		PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 	}
 }
