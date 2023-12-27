@@ -2,8 +2,6 @@
 #
 # This script downloads iOS dependencies from a Podfile and generates build settings for use in UE projects.
 #
-# Usage: ./install_pods.py INSTALL_DIRECTORY
-#
 # Copyright © 2021 AppLovin Corporation. All rights reserved.
 #
 
@@ -11,8 +9,9 @@ import json
 import re
 import shutil
 import subprocess
-import sys
 import tarfile
+
+import xml.etree.ElementTree as ET
 
 from urllib.request import urlretrieve
 from pathlib import Path
@@ -22,8 +21,8 @@ from zipfile import ZipFile
 """ Globals """
 
 
-install_dir = Path("Pods")
-build_rules = set()
+install_dir = Path.cwd() / "Pods"
+build_rules = []
 manual_pods = set()
 seen = set()
 
@@ -32,10 +31,8 @@ seen = set()
 
 
 class Pod:
-    # Include AppLovinSDK frameworks by default
-    all_frameworks = set(['AdSupport', 'AudioToolbox', 'AVFoundation', 'CFNetwork', 'CoreGraphics', 'CoreMedia', 'CoreMotion',
-                         'CoreTelephony', 'MessageUI', 'SafariServices', 'StoreKit', 'SystemConfiguration', 'UIKit', 'WebKit'])
-    all_weak_frameworks = set(['AppTrackingTransparency'])
+    all_frameworks = set()
+    all_weak_frameworks = set()
     all_libraries = set()
 
     def __init__(self, spec, parent=None):
@@ -107,13 +104,29 @@ def run_shell(command):
     return process.stdout.decode().strip()
 
 
-def print_instruction(instruction):
-    if not hasattr(print_instruction, "counter"):
-        print_instruction.counter = 1
+# Dictionaries cannot be added to sets, so ensure uniqueness when adding to list
+def add_unique(l, object):
+    if not any(x == object for x in l):
+        l.append(object)
 
-    print(f"{print_instruction.counter}. {instruction}\n")
 
-    print_instruction.counter += 1
+def dict_to_xml(parent, data):
+    if isinstance(data, dict):
+        for key, value in data.items():
+            sub_elem = ET.SubElement(parent, key)
+            dict_to_xml(sub_elem, value)
+    elif isinstance(data, list):
+        for item in data:
+            item_elem = ET.SubElement(parent, 'item')
+            dict_to_xml(item_elem, item)
+    else:
+        parent.text = str(data)
+
+
+def serialize_to_xml(data, root_tag='root'):
+    root = ET.Element(root_tag)
+    dict_to_xml(root, data)
+    return ET.tostring(root, encoding='unicode')
 
 
 """ Installation """
@@ -209,24 +222,20 @@ def create_build_rule(pod):
     if len(pod.framework_path) == 0:
         return
 
-    path = f'Path.Combine(AppLovinPodsPath, "{pod.name}", '
+    # Create relative path components
+    path = list(install_dir.parts) + [pod.name]
     if pod in manual_pods:
         # Manually installed pods will be directly installed to directory
-        path += f'"{pod.module_name}.xcframework")'
+        path.append(f"{pod.module_name}.xcframework")
     else:
-        components = pod.framework_path.split("/")
-        components = map(lambda c: f'"{c}"', components)
-        path += ", ".join(components) + ")"
+        path += pod.framework_path.split("/")
 
     # Generate build rule
-    rule = f"""PublicAdditionalFrameworks.Add(\n\tnew Framework(\n\t\t"{pod.module_name}",\n\t\t{path}"""
-
-    if pod.resources is not None:
-        rule += f',\n\t\t"{pod.resources}"'
-
-    rule += "\n\t)\n);"
-
-    build_rules.add(rule)
+    add_unique(build_rules, {
+        "Name": pod.module_name,
+        "PathComponents": path,
+        "Resources": pod.resources
+    })
 
 
 def install_dependencies(pod):
@@ -237,7 +246,7 @@ def install_dependencies(pod):
             if "/" in dependency \
             else (dependency, None)
 
-        if name not in seen:
+        if name != "AppLovinSDK" and name not in seen:
             dependency_pod = get_pod_info(
                 name, version[0] if len(version) == 1 else "")
             install_pod(dependency_pod)
@@ -282,38 +291,32 @@ def install_google_sdk():
     google_dir = next(install_dir.glob("GoogleMobileAdsSdkiOS-*"))
     for d in google_dir.iterdir():
         if d.suffix == ".xcframework":
-            path = f'Path.Combine(AppLovinPodsPath, "{google_dir.name}", "{d.name}")'
-            rule = f'''PublicAdditionalFrameworks.Add(\n\tnew Framework(\n\t\t"{d.stem}",\n\t\t{path}\n\t)\n);'''
-            build_rules.add(rule)
+            add_unique(build_rules, {
+                "Name": d.stem,
+                "PathComponents": list(install_dir.parts) + [google_dir.name, d.name],
+                "Resources": None
+            })
 
 
 """ Main """
 
 
 def main():
-    global install_dir
-    if len(sys.argv) != 2:
-        print("Usage: ./install_pods.py INSTALL_DIRECTORY")
-        exit(1)
-
-    install_dir = Path(sys.argv[1]) / install_dir
-
     print("\nThis script installs AppLovin adapters and third-party SDKs using your Podfile.\n")
     print("Please refer to our documentation for complete instructions:")
     print("https://dash.applovin.com/documentation/mediation/unreal/mediation-adapters/ios\n")
 
     print("> Updating CocoaPods repos... (this may take a while)")
-    # run_shell("pod --silent repo update".split())
+    # run_shell("pod --silent repo update".split()) TODO: Readd
 
-    # -- Automated installation
+    # -- Automated Installation
 
-    print(f"> Installation directory:\n  {install_dir}")
     print("> Installing dependencies from Podfile...\n")
     installed_count = install_user_pods()
 
     print(f"\n> Installed {installed_count} pod(s)")
 
-    # --- Manual installation
+    # --- Manual Installation
 
     if len(manual_pods) != 0:
         print("\n-----\n")
@@ -329,47 +332,29 @@ def main():
 
         input("\nPress 'Enter' to continue...")
 
-    print("\n-----\n")
+        # TODO: Check if the manual frameworks were installed?
 
-    # --- Generated instructions
+    # -- Write XML Configuration
 
-    print("Follow the generated instructions below to modify AppLovinMAX.Build.cs.\n")
-    input("Press 'Enter' to generate build instructions...")
-    print()
+    # Create the root element
+    root = ET.Element("data")
 
-    # Public Frameworks
-    if len(Pod.all_frameworks) != 0:
-        print_instruction(
-            "Replace the existing PublicFrameworks with:")
-        formatted_frameworks = ',\n'.join(
-            sorted(map(lambda f: f'\t\t"{f}"', Pod.all_frameworks)))
-        print("PublicFrameworks.AddRange(\n\tnew string[]\n\t{{\n{0}\n\t}}\n);".format(
-            formatted_frameworks))
-        print()
+    # Create a child element
+    item = ET.SubElement(root, "item")
+    item.set("key", "value")
 
-    # Weak Frameworks
-    if len(Pod.all_weak_frameworks) != 0:
-        print_instruction(
-            "Add the build rule for including weak frameworks:")
-        formatted_weak_frameworks = ',\n'.join(
-            sorted(map(lambda f: f'\t\t"{f}"', Pod.all_weak_frameworks)))
-        print("PublicWeakFrameworks.AddRange(\n\tnew string[]\n\t{{\n{0}\n\t}}\n);".format(
-            formatted_weak_frameworks))
-        print()
+    # Create a tree from the root element
+    config_data = {
+        "PublicFrameworks": sorted(list(Pod.all_frameworks)),
+        "PublicWeakFrameworks": sorted(list(Pod.all_weak_frameworks)),
+        "PublicSystemLibraries": sorted(list(Pod.all_libraries)),
+        "PublicAdditionalFrameworks": sorted(build_rules, key=lambda x: x["Name"])
+    }
 
-    # System Libraries
-    if len(Pod.all_libraries) != 0:
-        print_instruction(
-            "Add the build rule for including system libraries:")
+    config_xml = serialize_to_xml(config_data)
 
-        for lib in Pod.all_libraries:
-            print(f'PublicSystemLibraries.Add("{lib}");')
-
-        print()
-
-    # Public Additional Frameworks
-    print_instruction("Add build rules for each dependency framework:")
-    print("\n\n".join(sorted(build_rules)))
+    with open(install_dir / "config.xml", "w", encoding="utf-8") as file:
+        file.write(config_xml)
 
 
 if __name__ == "__main__":
