@@ -319,7 +319,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)showCMPForExistingUser
 {
-    if ( self.isPluginInitialized )
+    if ( [self isPluginInitialized] )
     {
         [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
             NSDictionary <NSString *, id> *parameters = @{};
@@ -338,7 +338,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (BOOL)hasSupportedCMP
 {
-    if ( !self.isPluginInitialized ) return false;
+    if ( ![self isPluginInitialized] ) return false;
     
     return [self.sdk.cmpService hasSupportedCMP];
 }
