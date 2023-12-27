@@ -80,7 +80,7 @@ public class AppLovinMAX : ModuleRules
 				)
 			);
 
-			var SdkPublicFrameworks = new HashSet<string> {
+			var PluginFrameworks = new HashSet<string> {
 				"AdSupport",
 				"AudioToolbox",
 				"AVFoundation",
@@ -97,65 +97,51 @@ public class AppLovinMAX : ModuleRules
 				"WebKit"
 			};
 
-			var SdkPublicWeakFrameworks = new HashSet<string> { "AppTrackingTransparency" };
-			var SdkPublicSystemLibraries = new HashSet<string>();
+			var PluginWeakFrameworks = new HashSet<string> { "AppTrackingTransparency" };
+			var PluginSystemLibraries = new HashSet<string>();
 
+			// Parse installed Pods configuration
 			if ( Directory.Exists( AppLovinPodsPath ) )
 			{
 				XDocument PodConfig = XDocument.Load( Path.Combine( AppLovinPodsPath, "config.xml" ) );
 
-				var PodPublicFrameworks = PodConfig.Descendants("PublicFrameworks").Descendants("item");
-				foreach ( var Item in PodPublicFrameworks )
-				{
-					SdkPublicFrameworks.Add( Item.Value );
-				}
-				
-				var PodPublicWeakFrameworks = PodConfig.Descendants("PublicWeakFrameworks").Descendants("item");
-				foreach ( var Item in PodPublicWeakFrameworks )
-				{
-					SdkPublicWeakFrameworks.Add( Item.Value );
-				}
+				var TagsToPublicSet = new[] {
+			        ("PublicFrameworks", PluginFrameworks),
+			        ("PublicWeakFrameworks", PluginWeakFrameworks),
+			        ("PublicSystemLibraries", PluginSystemLibraries)
+			    };
 
-				var PodPublicSystemLibraries = PodConfig.Descendants("PublicSystemLibraries").Descendants("item");
-				foreach ( var Item in PodPublicSystemLibraries )
-				{
-					SdkPublicSystemLibraries.Add( Item.Value );
-				}
+			    foreach ( var (Tag, PluginSet) in TagsToPublicSet )
+			    {
+			        foreach ( var Item in PodConfig.Descendants( Tag ).Elements( "item" ) )
+			        {
+			        	PluginSet.Add( Item.Value );
+			        }
+			    }
 
-		        var PodPublicAdditionalFrameworks = PodConfig.Descendants("PublicAdditionalFrameworks").Descendants("item");
-				foreach ( var Item in PodPublicAdditionalFrameworks )
+				// Process the additional frameworks
+				foreach ( var Item in PodConfig.Descendants( "PublicAdditionalFrameworks" ).Elements( "item" ) )
 				{
-                    var Name = Item.Element("Name")?.Value;
-                    var PathComponents = Item.Element("PathComponents")?
-						.Elements("item")
+                    var Name = Item.Element( "Name" ).Value;
+                    var Resources = Item.Element( "Resources" ).Value;
+
+                    var RelativePathComponents = Item.Element( "PathComponents" )
+						.Elements( "item" )
 						.Select(Component => Component.Value)
-						.ToList();
-                    var Resources = Item.Element("Resources")?.Value;
+						.Aggregate( Path.Combine );
+					var AdditionalFrameworkPath = Path.Combine( AppLovinPodsPath, RelativePathComponents );
 
-					if ( Name != null && PathComponents != null )
-					{
-						var AdditionalFrameworkPath = Path.Combine( PathComponents.ToArray() );
-						System.Console.WriteLine(AdditionalFrameworkPath);
+					var AdditionalFramework = Resources != "None"
+			            ? new Framework( Name, AdditionalFrameworkPath, Resources )
+			            : new Framework( Name, AdditionalFrameworkPath );
 
-						if ( Resources != null )
-						{
-							PublicAdditionalFrameworks.Add(
-								new Framework( Name, AdditionalFrameworkPath, Resources )
-							);
-						}
-						else
-						{
-							PublicAdditionalFrameworks.Add(
-								new Framework( Name, AdditionalFrameworkPath )
-							);
-						}
-					}
+					PublicAdditionalFrameworks.Add( AdditionalFramework );
 				}
 			}
 
-			PublicFrameworks.AddRange( SdkPublicFrameworks.ToArray() );
-			PublicWeakFrameworks.AddRange( SdkPublicWeakFrameworks.ToArray() );
-			PublicSystemLibraries.AddRange( SdkPublicSystemLibraries.ToArray() );
+			PublicFrameworks.AddRange( PluginFrameworks.ToArray() );
+			PublicWeakFrameworks.AddRange( PluginWeakFrameworks.ToArray() );
+			PublicSystemLibraries.AddRange( PluginSystemLibraries.ToArray() );
 
 			AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 

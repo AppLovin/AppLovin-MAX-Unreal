@@ -46,6 +46,7 @@ class Pod:
             self.source = "http"
         elif "git" in source:
             self.url = source["git"]
+            self.git_tag = source["tag"]
             self.source = "git"
         else:
             self.url = None
@@ -215,7 +216,11 @@ def download_pod(pod):
             manual_pods.add(pod)
             return
 
-        run_shell(['git', 'clone', pod.url, extract_dir])
+        cmd = ['git', 'clone', pod.url, extract_dir, "--single-branch"]
+        if pod.git_tag != None:
+            cmd += ["--branch", pod.git_tag]
+
+        run_shell(cmd)
 
 
 def create_build_rule(pod):
@@ -223,7 +228,7 @@ def create_build_rule(pod):
         return
 
     # Create relative path components
-    path = list(install_dir.parts) + [pod.name]
+    path = [pod.name]
     if pod in manual_pods:
         # Manually installed pods will be directly installed to directory
         path.append(f"{pod.module_name}.xcframework")
@@ -232,7 +237,7 @@ def create_build_rule(pod):
 
     # Generate build rule
     add_unique(build_rules, {
-        "Name": pod.module_name,
+        "Name": pod.name,
         "PathComponents": path,
         "Resources": pod.resources
     })
@@ -293,7 +298,7 @@ def install_google_sdk():
         if d.suffix == ".xcframework":
             add_unique(build_rules, {
                 "Name": d.stem,
-                "PathComponents": list(install_dir.parts) + [google_dir.name, d.name],
+                "PathComponents": [google_dir.name, d.name],
                 "Resources": None
             })
 
@@ -306,12 +311,12 @@ def main():
     print("Please refer to our documentation for complete instructions:")
     print("https://dash.applovin.com/documentation/mediation/unreal/mediation-adapters/ios\n")
 
-    print("> Updating CocoaPods repos... (this may take a while)")
-    # run_shell("pod --silent repo update".split()) TODO: Readd
+    print("> Updating CocoaPods repos...")
+    run_shell("pod --silent repo update".split())
 
     # -- Automated Installation
 
-    print("> Installing dependencies from Podfile...\n")
+    print("> Installing dependencies from Podfile... (this may take a while)\n")
     installed_count = install_user_pods()
 
     print(f"\n> Installed {installed_count} pod(s)")
@@ -332,23 +337,14 @@ def main():
 
         input("\nPress 'Enter' to continue...")
 
-        # TODO: Check if the manual frameworks were installed?
-
     # -- Write XML Configuration
-
-    # Create the root element
-    root = ET.Element("data")
-
-    # Create a child element
-    item = ET.SubElement(root, "item")
-    item.set("key", "value")
 
     # Create a tree from the root element
     config_data = {
-        "PublicFrameworks": sorted(list(Pod.all_frameworks)),
-        "PublicWeakFrameworks": sorted(list(Pod.all_weak_frameworks)),
-        "PublicSystemLibraries": sorted(list(Pod.all_libraries)),
-        "PublicAdditionalFrameworks": sorted(build_rules, key=lambda x: x["Name"])
+        "PublicFrameworks": list(Pod.all_frameworks),
+        "PublicWeakFrameworks": list(Pod.all_weak_frameworks),
+        "PublicSystemLibraries": list(Pod.all_libraries),
+        "PublicAdditionalFrameworks": build_rules
     }
 
     config_xml = serialize_to_xml(config_data)
