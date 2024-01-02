@@ -167,6 +167,8 @@ bool UAppLovinMAX::HasSupportedCmp()
     return [GetIOSPlugin() hasSupportedCMP];
 #elif PLATFORM_ANDROID
     return GetAndroidPlugin()->HasSupportedCmp();
+#else
+    return false;
 #endif
 }
 
