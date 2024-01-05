@@ -12,7 +12,7 @@ public class AppLovinMAX : ModuleRules
 	public AppLovinMAX(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.NoSharedPCHs;
-		PrivatePCHHeaderFile = "Public/AppLovinMAX.h";
+		PrivatePCHHeaderFile = "Private/AppLovinMAXPrivatePCH.h";
 
 		PublicIncludePaths.AddRange( new string[] {} );
 		PrivateIncludePaths.AddRange( new string[] { "AppLovinMAX/Private" } );
