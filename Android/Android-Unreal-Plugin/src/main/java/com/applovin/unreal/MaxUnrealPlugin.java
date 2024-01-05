@@ -203,6 +203,7 @@ public class MaxUnrealPlugin
         if ( userGeographyToSet != null )
         {
             sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeographyToSet );
+            userGeographyToSet = null;
         }
 
         sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener()
