@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 #
 # This script downloads iOS dependencies from a Podfile and generates build settings for use in UE projects.
+# Copy this script into the AppLovinMAX plugin's `Source/ThirdParty/IOS`` directory and run it from there to install dependencies.
+# Usage: ./install_pods.py
 #
 # Copyright © 2021 AppLovin Corporation. All rights reserved.
 #
@@ -314,7 +316,7 @@ def main():
     additional_libraries = []
     additional_frameworks = []
 
-    # Prevent linking multiple frameworks distributed for same dependency name (e.g., Facebook)
+    # Prevent duplicate linking of dependencies distributed with static/dynamic frameworks (e.g., Facebook, Vungle)
     seen_pod_names = set()
 
     def find_resources_bundle(prefix, dir):
@@ -352,6 +354,10 @@ def main():
 
             # Contains .framework, so link to xcframework directly
             elif find_dirs_with_extension("framework", pod_dir):
+                # Prefer static frameworks over dynamic ones
+                if "/dynamic/" in str(xcf).lower():
+                    continue
+
                 add_unique(additional_frameworks, {
                     "Name": name,
                     "Path": xcf.relative_to(install_dir),
