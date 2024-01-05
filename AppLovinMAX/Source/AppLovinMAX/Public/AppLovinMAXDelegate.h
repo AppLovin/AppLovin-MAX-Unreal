@@ -6,11 +6,14 @@
 #include "AdError.h"
 #include "AdInfo.h"
 #include "AdReward.h"
+#include "CmpError.h"
 #include "Components/ActorComponent.h"
 #include "SdkConfiguration.h"
 #include "AppLovinMAXDelegate.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSdkInitializedDynamicDelegate, const FSdkConfiguration &, SdkConfiguration);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCmpCompletedDelegate, const FCmpError &, CmpError);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBannerAdLoadedDynamicDelegate, const FAdInfo &, AdInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBannerAdLoadFailedDynamicDelegate, const FAdInfo &, AdInfo, const FAdError &, AdError);
@@ -55,12 +58,20 @@ public:
     // MARK: - Broadcast Methods
     
     static void BroadcastSdkInitializedEvent(const FSdkConfiguration &SdkConfiguration);
+    static void BroadcastCmpCompletedEvent(const FCmpError &CmpError);
     static void BroadcastAdEvent(const FString &Name, const FAdInfo &AdInfo);
     static void BroadcastAdErrorEvent(const FString &Name, const FAdInfo &AdInfo, const FAdError &AdError);
     static void BroadcastRewardedAdReceivedRewardEvent(const FAdInfo &AdInfo, const FAdReward &Reward);
 
+    // MARK: - Initialization
+
     UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
     FOnSdkInitializedDynamicDelegate OnSdkInitializedDynamicDelegate;
+
+    // MARK: - Terms and Privacy Policy Flow
+
+    UPROPERTY(BlueprintAssignable, Category = "AppLovinMAX")
+    FOnCmpCompletedDelegate OnCmpCompletedDelegate;
 
     // MARK: - Banners
 

@@ -30,6 +30,15 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 - (void)setDoNotSell:(BOOL)doNotSell;
 - (BOOL)isDoNotSell;
 
+#pragma mark - Terms and Privacy Policy Flow
+
+- (void)setTermsAndPrivacyPolicyFlowEnabled:(BOOL)enabled;
+- (void)setPrivacyPolicyURL:(NSString *)urlString;
+- (void)setTermsOfServiceURL:(NSString *)urlString;
+- (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString;
+- (void)showCMPForExistingUser;
+- (BOOL)hasSupportedCMP;
+
 #pragma mark - General
 
 - (BOOL)isTablet;

@@ -39,8 +39,13 @@
 // Store these values if pub attempts to set it before initializing
 @property (nonatomic,   copy, nullable) NSString *userIdentifierToSet;
 @property (nonatomic, strong, nullable) NSArray<NSString *> *testDeviceIdentifiersToSet;
-@property (nonatomic, strong, nullable) NSNumber *verboseLoggingToSet;
+@property (nonatomic, strong, nullable) NSNumber *verboseLoggingEnabledToSet;
 @property (nonatomic, strong, nullable) NSNumber *creativeDebuggerEnabledToSet;
+
+@property (nonatomic, strong, nullable) NSNumber *termsAndPrivacyPolicyFlowEnabledToSet;
+@property (nonatomic, strong, nullable) NSURL *privacyPolicyURLToSet;
+@property (nonatomic, strong, nullable) NSURL *termsOfServiceURLToSet;
+@property (nonatomic, strong, nullable) NSString *userGeographyStringToSet;
 
 // Fullscreen Ad Fields
 @property (nonatomic, strong) NSMutableDictionary<NSString *, MAInterstitialAd *> *interstitials;
@@ -140,34 +145,56 @@ static NSString *const TAG = @"MAUnrealPlugin";
     [self.sdk setPluginVersion: [@"Unreal-" stringByAppendingString: pluginVersion]];
     [self.sdk setMediationProvider: ALMediationProviderMAX];
     
-    // Set user id if needed
+    // Update SDK settings
+    
     if ( [self.userIdentifierToSet al_isValidString] )
     {
         self.sdk.userIdentifier = self.userIdentifierToSet;
         self.userIdentifierToSet = nil;
     }
     
-    // Set test device ids if needed
     if ( self.testDeviceIdentifiersToSet )
     {
         self.sdk.settings.testDeviceAdvertisingIdentifiers = self.testDeviceIdentifiersToSet;
         self.testDeviceIdentifiersToSet = nil;
     }
     
-    // Set verbose logging state if needed
-    if ( self.verboseLoggingToSet )
+    if ( self.verboseLoggingEnabledToSet )
     {
-        self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingToSet.boolValue;
-        self.verboseLoggingToSet = nil;
+        self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingEnabledToSet.boolValue;
+        self.verboseLoggingEnabledToSet = nil;
     }
     
-    // Set creative debugger enabled if needed
     if ( self.creativeDebuggerEnabledToSet )
     {
         self.sdk.settings.creativeDebuggerEnabled = self.creativeDebuggerEnabledToSet.boolValue;
         self.creativeDebuggerEnabledToSet = nil;
     }
     
+    if ( self.termsAndPrivacyPolicyFlowEnabledToSet )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = self.termsAndPrivacyPolicyFlowEnabledToSet.boolValue;
+        self.creativeDebuggerEnabledToSet = nil;
+    }
+    
+    if ( self.privacyPolicyURLToSet )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = self.privacyPolicyURLToSet;
+        self.privacyPolicyURLToSet = nil;
+    }
+    
+    if ( self.termsOfServiceURLToSet )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = self.termsOfServiceURLToSet;
+        self.termsOfServiceURLToSet = nil;
+    }
+    
+    if ( [self.userGeographyStringToSet al_isValidString] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: self.userGeographyStringToSet];
+        self.userGeographyStringToSet = nil;
+    }
+ 
     [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
         [self log: @"SDK initialized"];
         
@@ -236,6 +263,86 @@ static NSString *const TAG = @"MAUnrealPlugin";
     return [ALPrivacySettings isDoNotSell];
 }
 
+#pragma mark - Terms and Privacy Policy Flow
+
+- (void)setTermsAndPrivacyPolicyFlowEnabled:(BOOL)enabled
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = enabled;
+        self.termsAndPrivacyPolicyFlowEnabledToSet = nil;
+    }
+    else
+    {
+        self.termsAndPrivacyPolicyFlowEnabledToSet = @(enabled);
+    }
+}
+
+- (void)setPrivacyPolicyURL:(NSString *)urlString
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = [NSURL URLWithString: urlString];
+        self.privacyPolicyURLToSet = nil;
+    }
+    else
+    {
+        self.privacyPolicyURLToSet = [NSURL URLWithString: urlString];
+    }
+}
+
+- (void)setTermsOfServiceURL:(NSString *)urlString
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = [NSURL URLWithString: urlString];
+        self.termsOfServiceURLToSet = nil;
+    }
+    else
+    {
+        self.termsOfServiceURLToSet = [NSURL URLWithString: urlString];
+    }
+}
+
+- (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString
+{
+    if ( [self isPluginInitialized] )
+    {
+        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: userGeographyString];
+        self.userGeographyStringToSet = nil;
+    }
+    else
+    {
+        self.userGeographyStringToSet = userGeographyString;
+    }
+}
+
+- (void)showCMPForExistingUser
+{
+    if ( [self isPluginInitialized] )
+    {
+        [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
+            NSDictionary <NSString *, id> *parameters = @{};
+            if ( error )
+            {
+                parameters = @{@"code" : @(error.code),
+                               @"message" : error.message ?: @"",
+                               @"cmpCode" : @(error.cmpCode) ?: @(-1),
+                               @"cmpMessage" : error.cmpMessage ?: @""};
+            }
+            
+            [self sendUnrealEventWithName: @"OnCmpCompletedEvent" parameters: parameters];
+        }];
+    }
+}
+
+- (BOOL)hasSupportedCMP
+{
+    if ( ![self isPluginInitialized] ) return false;
+    
+    return [self.sdk.cmpService hasSupportedCMP];
+}
+
 #pragma mark - General
 
 - (BOOL)isTablet
@@ -286,11 +393,11 @@ static NSString *const TAG = @"MAUnrealPlugin";
     if ( [self isPluginInitialized] )
     {
         self.sdk.settings.verboseLoggingEnabled = enabled;
-        self.verboseLoggingToSet = nil;
+        self.verboseLoggingEnabledToSet = nil;
     }
     else
     {
-        self.verboseLoggingToSet = @(enabled);
+        self.verboseLoggingEnabledToSet = @(enabled);
     }
 }
 
@@ -300,9 +407,9 @@ static NSString *const TAG = @"MAUnrealPlugin";
     {
         return [self.sdk.settings isVerboseLoggingEnabled];
     }
-    else if ( self.verboseLoggingToSet )
+    else if ( self.verboseLoggingEnabledToSet )
     {
-        return self.verboseLoggingToSet.boolValue;
+        return self.verboseLoggingEnabledToSet.boolValue;
     }
     
     return false;
@@ -1163,10 +1270,26 @@ static NSString *const TAG = @"MAUnrealPlugin";
              @"waterfall" : error.waterfall.description ?: @""};
 }
 
+- (ALConsentFlowUserGeography)userGeographyForString:(NSString *)userGeographyString
+{
+    if ( [userGeographyString al_isEqualToStringIgnoringCase: @"UNKNOWN"] )
+    {
+        return ALConsentFlowUserGeographyUnknown;
+    }
+    else if ( [userGeographyString al_isEqualToStringIgnoringCase: @"GDPR"] )
+    {
+        return ALConsentFlowUserGeographyGDPR;
+    }
+    else
+    {
+        return ALConsentFlowUserGeographyOther;
+    }
+}
+
 #pragma mark - Unreal Bridge
 
 // NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so the keys must match with the corresponding UPROPERTY
-- (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, NSString *> *)parameters
+- (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, id> *)parameters
 {
     if ( self.eventCallback )
     {

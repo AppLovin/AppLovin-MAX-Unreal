@@ -8,7 +8,7 @@ Please check out our [documentation](https://dash.applovin.com/documentation/med
 
 ## Demo App
 
-The plugin is contained in `AppLovinMAX/`. The `AppLovinMAXDemo_4.27/` and `AppLovinMAXDemo_5.2/` directories contain demo apps for UE4 and UE5 respectively.
+The plugin is contained in `AppLovinMAX/`. The `AppLovinMAXDemo_5.2/` directory contains the demo app for UE5.
 
 ### Getting Started
 
@@ -58,7 +58,7 @@ To get started with the demo app, follow the instructions below:
     - **C++**: Update the values in `Constants.h`.
     - **Blueprints**: Open the widget blueprint for the corresponding ad format in the UE Editor (e.g., `InterstitialMenu`) and set the `AdUnitIdentifier` in the event graph. When the app is running, select the "Use Blueprint" checkbox in the ad format submenu to use the blueprint logic.
 
-7. Deploy the demo app to a platform using the **Launch** button in UE4 or the **Platforms** button in UE5. Alternatively, package the project for a specific platform under **File > Package Project...**
+7. Deploy the demo app to a platform using the **Platforms** button in UE5. Alternatively, package the project for a specific platform under **File > Package Project...**
 
 <img src="https://user-images.githubusercontent.com/17148467/160496309-e1ef6519-c4cf-4d71-a34f-a17e79fb8bae.png" width="350" />
 

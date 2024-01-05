@@ -18,6 +18,12 @@ FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
       IsAgeRestrictedUserMethod(GetClassMethod("isAgeRestrictedUser", "()Z")),
       SetDoNotSellMethod(GetClassMethod("setDoNotSell", "(Z)V")),
       IsDoNotSellMethod(GetClassMethod("isDoNotSell", "()Z")),
+      SetTermsAndPrivacyPolicyFlowEnabledMethod(GetClassMethod("setTermsAndPrivacyPolicyFlowEnabled", "(Z)V")),
+      SetPrivacyPolicyUrlMethod(GetClassMethod("setPrivacyPolicyUrl", "(Ljava/lang/String;)V")),
+      SetTermsOfServiceUrlMethod(GetClassMethod("setTermsOfServiceUrl", "(Ljava/lang/String;)V")),
+      SetConsentFlowDebugUserGeographyMethod(GetClassMethod("setConsentFlowDebugUserGeography", "(Ljava/lang/String;)V")),
+      ShowCmpForExistingUserMethod(GetClassMethod("showCmpForExistingUser", "()V")),
+      HasSupportedCmpMethod(GetClassMethod("hasSupportedCmp", "()Z")),
       IsTabletMethod(GetClassMethod("isTablet", "()Z")),
       ShowMediationDebuggerMethod(GetClassMethod("showMediationDebugger", "()V")),
       SetUserIdMethod(GetClassMethod("setUserId", "(Ljava/lang/String;)V")),
@@ -64,14 +70,7 @@ void FJavaAndroidMaxUnrealPlugin::Initialize(const FString &PluginVersion, const
 
     // Create listener for Android plugin event handling
     jclass ListenerClass;
-    if (FEngineVersion::Current().GetMajor() == 4) // UE4
-    {
-      ListenerClass = FAndroidApplication::FindJavaClass("com/epicgames/ue4/GameActivity$MaxUnrealPluginListener");
-    }
-    else // UE5+
-    {
-      ListenerClass = FAndroidApplication::FindJavaClass("com/epicgames/unreal/GameActivity$MaxUnrealPluginListener");
-    }
+    ListenerClass = FAndroidApplication::FindJavaClass("com/epicgames/unreal/GameActivity$MaxUnrealPluginListener");
 
     jmethodID Constructor = JEnv->GetMethodID(ListenerClass, "<init>", "()V");
     auto LocalListener = NewScopedJavaObject(JEnv, JEnv->NewObject(ListenerClass, Constructor));
@@ -114,6 +113,38 @@ void FJavaAndroidMaxUnrealPlugin::SetDoNotSell(bool bDoNotSell)
 bool FJavaAndroidMaxUnrealPlugin::IsDoNotSell()
 {
     return CallMethod<bool>(IsDoNotSellMethod);
+}
+
+// MARK: - Terms and Privacy Policy Flow
+
+void FJavaAndroidMaxUnrealPlugin::SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled)
+{
+    CallMethod<void>(SetTermsAndPrivacyPolicyFlowEnabledMethod, bEnabled);
+}
+
+void FJavaAndroidMaxUnrealPlugin::SetPrivacyPolicyUrl(const FString &Url)
+{
+    CallMethod<void>(SetPrivacyPolicyUrlMethod, *GetJString(Url));
+}
+
+void FJavaAndroidMaxUnrealPlugin::SetTermsOfServiceUrl(const FString &Url)
+{
+    CallMethod<void>(SetTermsOfServiceUrlMethod, *GetJString(Url));
+}
+
+void FJavaAndroidMaxUnrealPlugin::SetConsentFlowDebugUserGeography(const FString &UserGeography)
+{
+    CallMethod<void>(SetConsentFlowDebugUserGeographyMethod, *GetJString(UserGeography));
+}
+
+void FJavaAndroidMaxUnrealPlugin::ShowCmpForExistingUser()
+{
+    CallMethod<void>(ShowCmpForExistingUserMethod);
+}
+
+bool FJavaAndroidMaxUnrealPlugin::HasSupportedCmp()
+{
+    return CallMethod<bool>(HasSupportedCmpMethod);
 }
 
 // MARK: - General

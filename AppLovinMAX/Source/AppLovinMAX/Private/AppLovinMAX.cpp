@@ -113,6 +113,65 @@ bool UAppLovinMAX::IsDoNotSell()
 #endif
 }
 
+// MARK: - Terms and Privacy Policy Flow
+
+void UAppLovinMAX::SetTermsAndPrivacyPolicyFlowEnabled(bool bEnabled)
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() setTermsAndPrivacyPolicyFlowEnabled:bEnabled];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetTermsAndPrivacyPolicyFlowEnabled(bEnabled);
+#endif
+}
+
+void UAppLovinMAX::SetPrivacyPolicyUrl(const FString &Url)
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() setPrivacyPolicyURL:Url.GetNSString()];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetPrivacyPolicyUrl(Url);
+#endif
+}
+
+void UAppLovinMAX::SetTermsOfServiceUrl(const FString &Url)
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() setTermsOfServiceURL:Url.GetNSString()];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetTermsOfServiceUrl(Url);
+#endif
+}
+
+void UAppLovinMAX::SetConsentFlowDebugUserGeography(EConsentFlowUserGeography UserGeography)
+{
+    const FString UserGeographyString = GetUserGeographyString(UserGeography);
+#if PLATFORM_IOS
+    [GetIOSPlugin() setConsentFlowDebugUserGeography:UserGeographyString.GetNSString()];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->SetConsentFlowDebugUserGeography(UserGeographyString);
+#endif
+}
+
+void UAppLovinMAX::ShowCmpForExistingUser()
+{
+#if PLATFORM_IOS
+    [GetIOSPlugin() showCMPForExistingUser];
+#elif PLATFORM_ANDROID
+    GetAndroidPlugin()->ShowCmpForExistingUser();
+#endif
+}
+
+bool UAppLovinMAX::HasSupportedCmp()
+{
+#if PLATFORM_IOS
+    return [GetIOSPlugin() hasSupportedCMP];
+#elif PLATFORM_ANDROID
+    return GetAndroidPlugin()->HasSupportedCmp();
+#else
+    return false;
+#endif
+}
+
 // MARK: - General
 
 bool UAppLovinMAX::IsTablet()
@@ -483,6 +542,7 @@ void UAppLovinMAX::SetRewardedAdExtraParameter(const FString &AdUnitIdentifier, 
 
 // Static Delegate Initialization
 UAppLovinMAX::FOnSdkInitializedDelegate UAppLovinMAX::OnSdkInitializedDelegate;
+UAppLovinMAX::FOnCmpCompletedDelegate UAppLovinMAX::OnCmpCompletedDelegate;
 UAppLovinMAX::FOnBannerAdLoadedDelegate UAppLovinMAX::OnBannerAdLoadedDelegate;
 UAppLovinMAX::FOnBannerAdLoadFailedDelegate UAppLovinMAX::OnBannerAdLoadFailedDelegate;
 UAppLovinMAX::FOnBannerAdClickedDelegate UAppLovinMAX::OnBannerAdClickedDelegate;
@@ -519,6 +579,14 @@ void ForwardEvent(const FString &Name, const FString &Body)
         FJsonObjectConverter::JsonObjectStringToUStruct<FSdkConfiguration>(Body, &SdkConfiguration, 0, 0);
         UAppLovinMAX::OnSdkInitializedDelegate.Broadcast(SdkConfiguration);
         UAppLovinMAXDelegate::BroadcastSdkInitializedEvent(SdkConfiguration);
+    }
+    else if (Name == TEXT("OnCmpCompletedEvent"))
+    {
+        FCmpError CmpError;
+        FJsonObjectConverter::JsonObjectStringToUStruct<FCmpError>(Body, &CmpError, 0, 0);
+        
+        UAppLovinMAX::OnCmpCompletedDelegate.Broadcast(CmpError);
+        UAppLovinMAXDelegate::BroadcastCmpCompletedEvent(CmpError);
     }
     else // Ad Events
     {
@@ -714,6 +782,17 @@ FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
     }
 }
 
+FString UAppLovinMAX::GetUserGeographyString(EConsentFlowUserGeography UserGeography)
+{
+    // NOTE: For Android, strings must match the original enum in Java
+    switch (UserGeography)
+    {
+        case EConsentFlowUserGeography::Unknown: return TEXT("UNKNOWN");
+        case EConsentFlowUserGeography::GDPR: return TEXT("GDPR");
+        case EConsentFlowUserGeography::Other: return TEXT("OTHER");
+    }
+}
+
 void UAppLovinMAX::ValidateAdUnitIdentifier(const FString &AdUnitIdentifier, const FString &DebugPurpose)
 {
     if (AdUnitIdentifier.IsEmpty())
@@ -723,8 +802,6 @@ void UAppLovinMAX::ValidateAdUnitIdentifier(const FString &AdUnitIdentifier, con
 }
 
 // MARK: - IOS
-// Note that Objective-C in Unreal does not compile with ARC, but we are only passing
-// autoreleased objects to ARC-compiled plugin code, which allows us to avoid manual release.
 
 #if PLATFORM_IOS
 
@@ -782,13 +859,7 @@ void ForwardAndroidEvent(JNIEnv *env, jobject thiz, jstring name, jstring params
     ForwardEvent(Name, Params);
 }
 
-// UE4
-extern "C" JNIEXPORT void JNICALL Java_com_epicgames_ue4_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
-{
-    ForwardAndroidEvent(env, thiz, name, params);
-}
-
-// UE5 
+// UE5
 extern "C" JNIEXPORT void JNICALL Java_com_epicgames_unreal_GameActivity_00024MaxUnrealPluginListener_forwardEvent(JNIEnv *env, jobject thiz, jstring name, jstring params)
 {
     ForwardAndroidEvent(env, thiz, name, params);

@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,10 +31,13 @@ import com.applovin.mediation.MaxRewardedAdListener;
 import com.applovin.mediation.ads.MaxAdView;
 import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.applovin.mediation.ads.MaxRewardedAd;
+import com.applovin.sdk.AppLovinCmpError;
+import com.applovin.sdk.AppLovinCmpService;
 import com.applovin.sdk.AppLovinMediationProvider;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
+import com.applovin.sdk.AppLovinSdkConfiguration.ConsentFlowUserGeography;
 import com.applovin.sdk.AppLovinSdkSettings;
 import com.applovin.sdk.AppLovinSdkUtils;
 
@@ -52,7 +56,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class MaxUnrealPlugin
-        implements MaxAdListener, MaxAdViewAdListener, MaxRewardedAdListener, MaxAdRevenueListener
+        implements MaxAdListener, MaxAdViewAdListener, MaxRewardedAdListener, MaxAdRevenueListener, AppLovinCmpService.OnCompletedListener
 {
     private static final String TAG     = "MaxUnrealPlugin";
     private static final String SDK_TAG = "AppLovinSdk";
@@ -63,11 +67,16 @@ public class MaxUnrealPlugin
     private boolean                  isSdkInitialized    = false;
     private AppLovinSdkConfiguration sdkConfiguration;
 
-    // Store these values if pub attempts to set it before initializing
+    // Store these values if pub sets before initializing
     private String       userIdToSet;
     private List<String> testDeviceAdvertisingIdsToSet;
     private Boolean      verboseLoggingToSet;
     private Boolean      creativeDebuggerEnabledToSet;
+
+    private Boolean                  termsAndPrivacyPolicyFlowEnabledToSet;
+    private Uri                      privacyPolicyUriToSet;
+    private Uri                      termsOfServiceUriToSet;
+    private ConsentFlowUserGeography userGeographyToSet;
 
     // Fullscreen Ad Fields
     private final Map<String, MaxInterstitialAd> mInterstitials = new HashMap<>( 2 );
@@ -145,37 +154,56 @@ public class MaxUnrealPlugin
             }
         }
 
-        // Initialize SDK
         sdk = AppLovinSdk.getInstance( sdkKeyToUse, new AppLovinSdkSettings( context ), currentActivity );
         sdk.setPluginVersion( "Unreal-" + pluginVersion );
         sdk.setMediationProvider( AppLovinMediationProvider.MAX );
 
-        // Set user id if needed
         if ( !TextUtils.isEmpty( userIdToSet ) )
         {
             sdk.setUserIdentifier( userIdToSet );
             userIdToSet = null;
         }
 
-        // Set test device ids if needed
         if ( testDeviceAdvertisingIdsToSet != null )
         {
             sdk.getSettings().setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
             testDeviceAdvertisingIdsToSet = null;
         }
 
-        // Set verbose logging state if needed
         if ( verboseLoggingToSet != null )
         {
             sdk.getSettings().setVerboseLogging( verboseLoggingToSet );
             verboseLoggingToSet = null;
         }
 
-        // Set creative debugger enabled if needed
         if ( creativeDebuggerEnabledToSet != null )
         {
             sdk.getSettings().setCreativeDebuggerEnabled( creativeDebuggerEnabledToSet );
             creativeDebuggerEnabledToSet = null;
+        }
+
+        if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
+            termsAndPrivacyPolicyFlowEnabledToSet = null;
+        }
+
+        if ( privacyPolicyUriToSet != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( privacyPolicyUriToSet );
+            privacyPolicyUriToSet = null;
+        }
+
+        if ( termsOfServiceUriToSet != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( termsOfServiceUriToSet );
+            termsOfServiceUriToSet = null;
+        }
+
+        if ( userGeographyToSet != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeographyToSet );
+            userGeographyToSet = null;
         }
 
         sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener()
@@ -183,6 +211,7 @@ public class MaxUnrealPlugin
             @Override
             public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
             {
+
                 d( "SDK initialized" );
 
                 sdkConfiguration = configuration;
@@ -269,6 +298,93 @@ public class MaxUnrealPlugin
     public boolean isDoNotSell()
     {
         return AppLovinPrivacySettings.isDoNotSell( getGameActivity() );
+    }
+    // endregion
+
+    // region Terms and Privacy Policy Flow
+    public void setTermsAndPrivacyPolicyFlowEnabled(final boolean enabled)
+    {
+        if ( sdk != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( enabled );
+            termsAndPrivacyPolicyFlowEnabledToSet = null;
+        }
+        else
+        {
+            termsAndPrivacyPolicyFlowEnabledToSet = enabled;
+        }
+    }
+
+    public void setPrivacyPolicyUrl(final String uriString)
+    {
+        Uri uri = Uri.parse( uriString );
+        if ( sdk != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( uri );
+            privacyPolicyUriToSet = null;
+        }
+        else
+        {
+            privacyPolicyUriToSet = uri;
+        }
+    }
+
+    public void setTermsOfServiceUrl(final String uriString)
+    {
+        Uri uri = Uri.parse( uriString );
+        if ( sdk != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( uri );
+            termsOfServiceUriToSet = null;
+        }
+        else
+        {
+            termsOfServiceUriToSet = uri;
+        }
+    }
+
+    public void setConsentFlowDebugUserGeography(final String userGeographyString)
+    {
+        ConsentFlowUserGeography userGeography = ConsentFlowUserGeography.valueOf( userGeographyString );
+        if ( sdk != null )
+        {
+            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeography );
+            userGeographyToSet = null;
+        }
+        else
+        {
+            userGeographyToSet = userGeography;
+        }
+    }
+
+    public void showCmpForExistingUser()
+    {
+        if ( isPluginInitialized )
+        {
+            sdk.getCmpService().showCmpForExistingUser( getGameActivity(), this );
+        }
+    }
+
+    public boolean hasSupportedCmp()
+    {
+        if ( !isPluginInitialized ) return false;
+
+        return sdk.getCmpService().hasSupportedCmp();
+    }
+
+    @Override
+    public void onCompleted(final AppLovinCmpError error)
+    {
+        JSONObject params = new JSONObject();
+        if ( error != null )
+        {
+            JsonUtils.putInt( params, "code", error.getCode().getValue() );
+            JsonUtils.putString( params, "message", error.getMessage() );
+            JsonUtils.putInt( params, "cmpCode", error.getCmpCode() );
+            JsonUtils.putString( params, "cmpMessage", error.getCmpMessage() );
+        }
+
+        sendUnrealEvent( "OnCmpCompletedEvent", params );
     }
     // endregion
 
