@@ -284,14 +284,14 @@ def main():
     print("https://dash.applovin.com/documentation/mediation/unreal/mediation-adapters/ios\n")
 
     print("> Updating CocoaPods repos...")
-    # run_shell("pod --silent repo update".split())
+    run_shell("pod --silent repo update".split())
 
     # -- Automated Installation -- #
 
     print("> Installing dependencies from Podfile... (this may take a while)\n")
-    # installed_count = install_user_pods()
+    installed_count = install_user_pods()
 
-    # print(f"\n> Installed {installed_count} pod(s)")
+    print(f"\n> Installed {installed_count} pod(s)")
 
     # -- Manual Installation -- #
 
@@ -316,6 +316,13 @@ def main():
 
     # Prevent linking multiple frameworks distributed for same dependency name (e.g., Facebook)
     seen_pod_names = set()
+
+    def find_resources_bundle(prefix, dir):
+        resources = next(dir.rglob(f"{prefix}*.bundle"), None)
+        if resources:
+            resources = resources.relative_to(install_dir)
+
+        return resources
 
     # Iterate through each subdirectory per Pod
     pod_dirs = [x for x in install_dir.iterdir() if x.is_dir()]
@@ -345,14 +352,10 @@ def main():
 
             # Contains .framework, so link to xcframework directly
             elif find_dirs_with_extension("framework", pod_dir):
-                resources = next(xcf.parent.rglob("*.bundle"), None)
-                if resources:
-                    resources = resources.relative_to(install_dir)
-
                 add_unique(additional_frameworks, {
                     "Name": name,
                     "Path": xcf.relative_to(install_dir),
-                    "Resources": resources
+                    "Resources": find_resources_bundle(name, xcf.parent)
                 })
 
                 seen_pod_names.add(name)
@@ -369,7 +372,7 @@ def main():
                 add_unique(additional_frameworks, {
                     "Name": name,
                     "Path": f.relative_to(install_dir),
-                    "Resources": next(f.parent.rglob("*.bundle"), None)
+                    "Resources": find_resources_bundle(name, f.parent)
                 })
 
                 seen_pod_names.add(name)
