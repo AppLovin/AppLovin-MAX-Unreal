@@ -117,28 +117,34 @@ public class AppLovinMAX : ModuleRules
 
 		    foreach ( var (Tag, PluginSet) in TagsToPublicSet )
 		    {
-		        foreach ( var Item in PodConfig.Descendants( Tag ).Elements( "item" ) )
+		        foreach ( var Item in PodConfig.Descendants( Tag ).Elements( "Item" ) )
 		        {
 		        	PluginSet.Add( Item.Value );
 		        }
 		    }
 
+			// Process the additional libraries
+			foreach ( var Item in PodConfig.Descendants( "PublicAdditionalLibraries" ).Elements( "Item" ) )
+			{
+				var LibraryPath = Path.Combine( AppLovinPodsPath, Item.Value );
+
+				System.Console.WriteLine( "Adding CocoaPod library: " + LibraryPath );
+
+				PublicAdditionalLibraries.Add( LibraryPath );
+			}
+
 			// Process the additional frameworks
-			foreach ( var Item in PodConfig.Descendants( "PublicAdditionalFrameworks" ).Elements( "item" ) )
+			foreach ( var Item in PodConfig.Descendants( "PublicAdditionalFrameworks" ).Elements( "Item" ) )
 			{
                 var Name = Item.Element( "Name" ).Value;
-                var Resources = Item.Element( "Resources" ).Value;
-                var RelativePathComponents = Item.Element( "PathComponents" )
-					.Elements( "item" )
-					.Select(Component => Component.Value)
-					.Aggregate( Path.Combine );
-				var AdditionalFrameworkPath = Path.Combine( AppLovinPodsPath, RelativePathComponents );
+				var FrameworkPath = Path.Combine( AppLovinPodsPath, Item.Element( "Path" ).Value );
+				var Resources = Path.Combine( AppLovinPodsPath, Item.Element( "Resources" ).Value );
 
-				System.Console.WriteLine( "Adding CocoaPod dependency: " + Name + " (" + AdditionalFrameworkPath + ")" );
+				System.Console.WriteLine( "Adding CocoaPod framework: " + Name + " (" + FrameworkPath + ")" );
 
 				var AdditionalFramework = Resources != "None"
-		            ? new Framework( Name, AdditionalFrameworkPath, Resources )
-		            : new Framework( Name, AdditionalFrameworkPath );
+		            ? new Framework( Name, FrameworkPath, Resources )
+		            : new Framework( Name, FrameworkPath );
 
 				PublicAdditionalFrameworks.Add( AdditionalFramework );
 			}

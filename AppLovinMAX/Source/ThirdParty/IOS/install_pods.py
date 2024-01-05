@@ -22,7 +22,6 @@ from zipfile import ZipFile
 
 
 install_dir = Path.cwd() / "Pods"
-build_rules = []
 manual_pods = set()
 seen = set()
 
@@ -111,6 +110,10 @@ def add_unique(l, object):
         l.append(object)
 
 
+def find_dirs_with_extension(extension, dir):
+    return [d for d in dir.rglob(f"*.{extension}") if d.is_dir()]
+
+
 def dict_to_xml(parent, data):
     if isinstance(data, dict):
         for key, value in data.items():
@@ -118,7 +121,7 @@ def dict_to_xml(parent, data):
             dict_to_xml(sub_elem, value)
     elif isinstance(data, list):
         for item in data:
-            item_elem = ET.SubElement(parent, 'item')
+            item_elem = ET.SubElement(parent, 'Item')
             dict_to_xml(item_elem, item)
     else:
         parent.text = str(data)
@@ -175,7 +178,6 @@ def install_pod(pod):
         install_google_sdk()
     else:
         download_pod(pod)
-        create_build_rule(pod)
         install_dependencies(pod)
         install_subspecs(pod)
 
@@ -221,26 +223,6 @@ def download_pod(pod):
             cmd += ["--branch", pod.git_tag]
 
         run_shell(cmd)
-
-
-def create_build_rule(pod):
-    if len(pod.framework_path) == 0:
-        return
-
-    # Create relative path components
-    path = [pod.name]
-    if pod in manual_pods:
-        # Manually installed pods will be directly installed to directory
-        path.append(f"{pod.module_name}.xcframework")
-    else:
-        path += pod.framework_path.split("/")
-
-    # Generate build rule
-    add_unique(build_rules, {
-        "Name": pod.name,
-        "PathComponents": path,
-        "Resources": pod.resources
-    })
 
 
 def install_dependencies(pod):
@@ -292,16 +274,6 @@ def install_google_sdk():
 
     download_path.unlink()
 
-    # Get downloaded directory name with version
-    google_dir = next(install_dir.glob("GoogleMobileAdsSdkiOS-*"))
-    for d in google_dir.iterdir():
-        if d.suffix == ".xcframework":
-            add_unique(build_rules, {
-                "Name": d.stem,
-                "PathComponents": [google_dir.name, d.name],
-                "Resources": None
-            })
-
 
 """ Main """
 
@@ -312,16 +284,16 @@ def main():
     print("https://dash.applovin.com/documentation/mediation/unreal/mediation-adapters/ios\n")
 
     print("> Updating CocoaPods repos...")
-    run_shell("pod --silent repo update".split())
+    # run_shell("pod --silent repo update".split())
 
-    # -- Automated Installation
+    # -- Automated Installation -- #
 
     print("> Installing dependencies from Podfile... (this may take a while)\n")
-    installed_count = install_user_pods()
+    # installed_count = install_user_pods()
 
-    print(f"\n> Installed {installed_count} pod(s)")
+    # print(f"\n> Installed {installed_count} pod(s)")
 
-    # --- Manual Installation
+    # -- Manual Installation -- #
 
     if len(manual_pods) != 0:
         print("\n-----\n")
@@ -335,16 +307,86 @@ def main():
             else:
                 print(f"> {pod.name}")
 
-        input("\nPress 'Enter' to continue...")
+        input("\nPress 'Enter' after downloading frameworks to continue installation...")
 
-    # -- Write XML Configuration
+    # -- Build Rules -- #
+
+    additional_libraries = []
+    additional_frameworks = []
+
+    # Prevent linking multiple frameworks distributed for same dependency name (e.g., Facebook)
+    seen_pod_names = set()
+
+    # Iterate through each subdirectory per Pod
+    pod_dirs = [x for x in install_dir.iterdir() if x.is_dir()]
+    for pod_dir in pod_dirs:
+        found = False
+
+        # Search for all .xcframeworks
+        xcframeworks = find_dirs_with_extension("xcframework", pod_dir)
+
+        # Create a build rule for each xcframework
+        for xcf in xcframeworks:
+            name = xcf.stem
+            if name in seen_pod_names:
+                continue
+
+            # If xcframework contains *.a, link as static library
+            static_libs = [path for path in xcf.glob(
+                "**/*.a") if "simulator" not in str(path)]
+
+            if static_libs:
+                static_lib = static_libs[0]
+                add_unique(additional_libraries,
+                           static_lib.relative_to(install_dir))
+
+                seen_pod_names.add(name)
+                found = True
+
+            # Contains .framework, so link to xcframework directly
+            elif find_dirs_with_extension("framework", pod_dir):
+                resources = next(xcf.parent.rglob("*.bundle"), None)
+                if resources:
+                    resources = resources.relative_to(install_dir)
+
+                add_unique(additional_frameworks, {
+                    "Name": name,
+                    "Path": xcf.relative_to(install_dir),
+                    "Resources": resources
+                })
+
+                seen_pod_names.add(name)
+                found = True
+
+        # No xcframeworks found, search for .frameworks
+        if not found:
+            frameworks = find_dirs_with_extension("framework", pod_dir)
+            for f in frameworks:
+                name = f.stem
+                if name in seen_pod_names:
+                    continue
+
+                add_unique(additional_frameworks, {
+                    "Name": name,
+                    "Path": f.relative_to(install_dir),
+                    "Resources": next(f.parent.rglob("*.bundle"), None)
+                })
+
+                seen_pod_names.add(name)
+                found = True
+
+        if not found:
+            print(f"Failed to find framework for {pod_dir.name}")
+
+    # -- Write XML Configuration -- #
 
     # Create a tree from the root element
     config_data = {
         "PublicFrameworks": list(Pod.all_frameworks),
         "PublicWeakFrameworks": list(Pod.all_weak_frameworks),
         "PublicSystemLibraries": list(Pod.all_libraries),
-        "PublicAdditionalFrameworks": build_rules
+        "PublicAdditionalLibraries": additional_libraries,
+        "PublicAdditionalFrameworks": additional_frameworks
     }
 
     config_xml = serialize_to_xml(config_data)
