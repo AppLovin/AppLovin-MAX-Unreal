@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import lombok.Data;
 import lombok.val;
 import lombok.var;
 
@@ -80,15 +81,15 @@ public class MaxUnrealPlugin
     private ConsentFlowUserGeography userGeographyToSet;
 
     // Fullscreen Ad Fields
-    private final Map<String, MaxInterstitialAd> mInterstitials = new HashMap<>( 2 );
-    private final Map<String, MaxRewardedAd>     mRewardedAds   = new HashMap<>( 2 );
+    private final Map<String, MaxInterstitialAd> interstitials = new HashMap<>( 2 );
+    private final Map<String, MaxRewardedAd>     rewardedAds   = new HashMap<>( 2 );
 
     // Banner Fields
-    private final Map<String, MaxAdView>   mAdViews                    = new HashMap<>( 2 );
-    private final Map<String, MaxAdFormat> mAdViewAdFormats            = new HashMap<>( 2 );
-    private final Map<String, String>      mAdViewPositions            = new HashMap<>( 2 );
-    private final Map<String, MaxAdFormat> mVerticalAdViewFormats      = new HashMap<>( 2 );
-    private final List<String>             mAdUnitIdsToShowAfterCreate = new ArrayList<>( 2 );
+    private final Map<String, MaxAdView>   adViews                    = new HashMap<>( 2 );
+    private final Map<String, MaxAdFormat> adViewAdFormats            = new HashMap<>( 2 );
+    private final Map<String, String>      adViewPositions            = new HashMap<>( 2 );
+    private final Map<String, MaxAdFormat> verticalAdViewFormats      = new HashMap<>( 2 );
+    private final List<String>             adUnitIdsToShowAfterCreate = new ArrayList<>( 2 );
 
     private final WeakReference<Activity> gameActivity;
     private       EventListener           eventListener;
@@ -220,7 +221,7 @@ public class MaxUnrealPlugin
                 @Override
                 public void onOrientationChanged(final int orientation)
                 {
-                    for ( val adUnitFormats : mVerticalAdViewFormats.entrySet() )
+                    for ( val adUnitFormats : verticalAdViewFormats.entrySet() )
                     {
                         positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
                     }
@@ -622,7 +623,7 @@ public class MaxUnrealPlugin
         {
             name = ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdLoadedEvent" : "OnBannerAdLoadedEvent";
 
-            val adViewPosition = mAdViewPositions.get( ad.getAdUnitId() );
+            val adViewPosition = adViewPositions.get( ad.getAdUnitId() );
             if ( !TextUtils.isEmpty( adViewPosition ) )
             {
                 // Only position ad if not native UI component
@@ -664,15 +665,15 @@ public class MaxUnrealPlugin
         }
 
         final String name;
-        if ( mAdViews.containsKey( adUnitId ) )
+        if ( adViews.containsKey( adUnitId ) )
         {
-            name = ( MaxAdFormat.MREC == mAdViewAdFormats.get( adUnitId ) ) ? "OnMRecAdLoadFailedEvent" : "OnBannerAdLoadFailedEvent";
+            name = ( MaxAdFormat.MREC == adViewAdFormats.get( adUnitId ) ) ? "OnMRecAdLoadFailedEvent" : "OnBannerAdLoadFailedEvent";
         }
-        else if ( mInterstitials.containsKey( adUnitId ) )
+        else if ( interstitials.containsKey( adUnitId ) )
         {
             name = "OnInterstitialAdLoadFailedEvent";
         }
-        else if ( mRewardedAds.containsKey( adUnitId ) )
+        else if ( rewardedAds.containsKey( adUnitId ) )
         {
             name = "OnRewardedAdLoadFailedEvent";
         }
@@ -896,17 +897,17 @@ public class MaxUnrealPlugin
                 relativeLayout.addView( adView );
 
                 // Position ad view immediately so if publisher sets color before ad loads, it will not be the size of the screen
-                mAdViewAdFormats.put( adUnitId, adFormat );
+                adViewAdFormats.put( adUnitId, adFormat );
                 positionAdView( adUnitId, adFormat );
             }
 
             adView.loadAd();
 
             // The publisher may have requested to show the banner before it was created. Now that the banner is created, show it.
-            if ( mAdUnitIdsToShowAfterCreate.contains( adUnitId ) )
+            if ( adUnitIdsToShowAfterCreate.contains( adUnitId ) )
             {
                 showAdView( adUnitId, adFormat );
-                mAdUnitIdsToShowAfterCreate.remove( adUnitId );
+                adUnitIdsToShowAfterCreate.remove( adUnitId );
             }
         } );
     }
@@ -941,10 +942,10 @@ public class MaxUnrealPlugin
             }
 
             // Check if the previous position is same as the new position. If so, no need to update the position again.
-            val previousPosition = mAdViewPositions.get( adUnitId );
+            val previousPosition = adViewPositions.get( adUnitId );
             if ( adViewPosition == null || adViewPosition.equals( previousPosition ) ) return;
 
-            mAdViewPositions.put( adUnitId, adViewPosition );
+            adViewPositions.put( adUnitId, adViewPosition );
             positionAdView( adUnitId, adFormat );
         } );
     }
@@ -960,7 +961,7 @@ public class MaxUnrealPlugin
                 e( adFormat.getLabel() + " does not exist for ad unit id " + adUnitId );
 
                 // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
-                mAdUnitIdsToShowAfterCreate.add( adUnitId );
+                adUnitIdsToShowAfterCreate.add( adUnitId );
                 return;
             }
 
@@ -973,7 +974,7 @@ public class MaxUnrealPlugin
     {
         getGameActivity().runOnUiThread( () -> {
             d( "Hiding " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
-            mAdUnitIdsToShowAfterCreate.remove( adUnitId );
+            adUnitIdsToShowAfterCreate.remove( adUnitId );
 
             val adView = retrieveAdView( adUnitId, adFormat );
             if ( adView == null )
@@ -1008,10 +1009,10 @@ public class MaxUnrealPlugin
             adView.setListener( null );
             adView.destroy();
 
-            mAdViews.remove( adUnitId );
-            mAdViewAdFormats.remove( adUnitId );
-            mAdViewPositions.remove( adUnitId );
-            mVerticalAdViewFormats.remove( adUnitId );
+            adViews.remove( adUnitId );
+            adViewAdFormats.remove( adUnitId );
+            adViewPositions.remove( adUnitId );
+            verticalAdViewFormats.remove( adUnitId );
         } );
     }
 
@@ -1061,7 +1062,7 @@ public class MaxUnrealPlugin
                     forcedAdFormat = getDeviceSpecificBannerAdViewAdFormat();
                 }
 
-                mAdViewAdFormats.put( adUnitId, forcedAdFormat );
+                adViewAdFormats.put( adUnitId, forcedAdFormat );
                 positionAdView( adUnitId, forcedAdFormat );
             }
         } );
@@ -1089,13 +1090,13 @@ public class MaxUnrealPlugin
 
     private MaxInterstitialAd retrieveInterstitial(String adUnitId)
     {
-        var result = mInterstitials.get( adUnitId );
+        var result = interstitials.get( adUnitId );
         if ( result == null )
         {
             result = new MaxInterstitialAd( adUnitId, sdk, getGameActivity() );
             result.setListener( this );
 
-            mInterstitials.put( adUnitId, result );
+            interstitials.put( adUnitId, result );
         }
 
         return result;
@@ -1103,13 +1104,13 @@ public class MaxUnrealPlugin
 
     private MaxRewardedAd retrieveRewardedAd(String adUnitId)
     {
-        var result = mRewardedAds.get( adUnitId );
+        var result = rewardedAds.get( adUnitId );
         if ( result == null )
         {
             result = MaxRewardedAd.getInstance( adUnitId, sdk, getGameActivity() );
             result.setListener( this );
 
-            mRewardedAds.put( adUnitId, result );
+            rewardedAds.put( adUnitId, result );
         }
 
         return result;
@@ -1123,15 +1124,15 @@ public class MaxUnrealPlugin
     @SuppressWarnings("RedundantCast")
     public MaxAdView retrieveAdView(String adUnitId, MaxAdFormat adFormat, String adViewPosition)
     {
-        var result = mAdViews.get( adUnitId );
+        var result = adViews.get( adUnitId );
         if ( result == null && adViewPosition != null )
         {
             // Must explicitly cast the GameActivity to Context to avoid a crash from NoSuchMethodError
             result = new MaxAdView( adUnitId, adFormat, sdk, (Context) getGameActivity() );
             result.setListener( this );
 
-            mAdViews.put( adUnitId, result );
-            mAdViewPositions.put( adUnitId, adViewPosition );
+            adViews.put( adUnitId, result );
+            adViewPositions.put( adUnitId, adViewPosition );
         }
 
         return result;
@@ -1159,7 +1160,7 @@ public class MaxUnrealPlugin
         }
 
         // Size the ad
-        val adViewPosition = mAdViewPositions.get( adUnitId );
+        val adViewPosition = adViewPositions.get( adUnitId );
         val adViewSize = getAdViewSize( adFormat );
         val width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.widthDp );
         val height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.heightDp );
@@ -1175,7 +1176,7 @@ public class MaxUnrealPlugin
         adView.setRotation( 0 );
         adView.setTranslationX( 0 );
         params.setMargins( 0, 0, 0, 0 );
-        mVerticalAdViewFormats.remove( adUnitId );
+        verticalAdViewFormats.remove( adUnitId );
 
         if ( "centered".equalsIgnoreCase( adViewPosition ) )
         {
@@ -1259,7 +1260,7 @@ public class MaxUnrealPlugin
                         adView.setRotation( 270 );
 
                         // Store the ad view with format, so that it can be updated when the orientation changes.
-                        mVerticalAdViewFormats.put( adUnitId, adFormat );
+                        verticalAdViewFormats.put( adUnitId, adFormat );
                     }
                 }
             }
@@ -1293,16 +1294,11 @@ public class MaxUnrealPlugin
         return AppLovinSdkUtils.isTablet( context ) ? MaxAdFormat.LEADER : MaxAdFormat.BANNER;
     }
 
+    @Data
     protected static class AdViewSize
     {
         public final int widthDp;
         public final int heightDp;
-
-        private AdViewSize(final int widthDp, final int heightDp)
-        {
-            this.widthDp = widthDp;
-            this.heightDp = heightDp;
-        }
     }
 
     public static AdViewSize getAdViewSize(final MaxAdFormat format)
