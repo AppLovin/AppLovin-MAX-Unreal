@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -70,11 +69,11 @@ public class MaxUnrealPlugin
     private AppLovinSdkConfiguration sdkConfiguration;
 
     // Store these values if pub sets before initializing
-    private String       userIdToSet;
-    private List<String> testDeviceAdvertisingIdsToSet;
-    private Boolean      verboseLoggingEnabledToSet;
-    private Boolean      creativeDebuggerEnabledToSet;
-
+    private String                   userIdToSet;
+    private List<String>             testDeviceAdvertisingIdsToSet;
+    private Boolean                  verboseLoggingEnabledToSet;
+    private Boolean                  creativeDebuggerEnabledToSet;
+    private Boolean                  mutedToSet;
     private Boolean                  termsAndPrivacyPolicyFlowEnabledToSet;
     private Uri                      privacyPolicyUriToSet;
     private Uri                      termsOfServiceUriToSet;
@@ -156,7 +155,7 @@ public class MaxUnrealPlugin
             }
         }
 
-        sdk = AppLovinSdk.getInstance( sdkKeyToUse, new AppLovinSdkSettings( context ), currentActivity );
+        sdk = AppLovinSdk.getInstance( sdkKeyToUse, generateSdkSettings( context ), currentActivity );
         sdk.setPluginVersion( "Unreal-" + pluginVersion );
         sdk.setMediationProvider( AppLovinMediationProvider.MAX );
 
@@ -166,70 +165,80 @@ public class MaxUnrealPlugin
             userIdToSet = null;
         }
 
-        if ( testDeviceAdvertisingIdsToSet != null )
-        {
-            sdk.getSettings().setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
-            testDeviceAdvertisingIdsToSet = null;
-        }
-
-        if ( verboseLoggingEnabledToSet != null )
-        {
-            sdk.getSettings().setVerboseLogging( verboseLoggingEnabledToSet );
-            verboseLoggingEnabledToSet = null;
-        }
-
-        if ( creativeDebuggerEnabledToSet != null )
-        {
-            sdk.getSettings().setCreativeDebuggerEnabled( creativeDebuggerEnabledToSet );
-            creativeDebuggerEnabledToSet = null;
-        }
-
-        if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
-            termsAndPrivacyPolicyFlowEnabledToSet = null;
-        }
-
-        if ( privacyPolicyUriToSet != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( privacyPolicyUriToSet );
-            privacyPolicyUriToSet = null;
-        }
-
-        if ( termsOfServiceUriToSet != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( termsOfServiceUriToSet );
-            termsOfServiceUriToSet = null;
-        }
-
-        if ( userGeographyToSet != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeographyToSet );
-            userGeographyToSet = null;
-        }
-
         sdk.initializeSdk( configuration -> {
-
             d( "SDK initialized" );
 
             sdkConfiguration = configuration;
             isSdkInitialized = true;
 
-            // Enable orientation change listener, so that the position can be updated for vertical banners.
-            new OrientationEventListener( context )
-            {
-                @Override
-                public void onOrientationChanged(final int orientation)
+            // Enable orientation change listener, so that the ad view positions can be updated when the device is rotated.
+            getGameActivity().getWindow().getDecorView().getRootView().addOnLayoutChangeListener( (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                val viewBoundsChanged = left != oldLeft || right != oldRight || bottom != oldBottom || top != oldTop;
+                if ( !viewBoundsChanged ) return;
+
+                for ( val adUnitFormats : verticalAdViewFormats.entrySet() )
                 {
-                    for ( val adUnitFormats : verticalAdViewFormats.entrySet() )
-                    {
-                        positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
-                    }
+                    positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
                 }
-            }.enable();
+            } );
 
             sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
         } );
+    }
+
+    private AppLovinSdkSettings generateSdkSettings(Context context)
+    {
+        val settings = new AppLovinSdkSettings( context );
+
+        if ( testDeviceAdvertisingIdsToSet != null )
+        {
+            settings.setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
+            testDeviceAdvertisingIdsToSet = null;
+        }
+
+        if ( verboseLoggingEnabledToSet != null )
+        {
+            settings.setVerboseLogging( verboseLoggingEnabledToSet );
+            verboseLoggingEnabledToSet = null;
+        }
+
+        if ( creativeDebuggerEnabledToSet != null )
+        {
+            settings.setCreativeDebuggerEnabled( creativeDebuggerEnabledToSet );
+            creativeDebuggerEnabledToSet = null;
+        }
+
+        if ( mutedToSet != null )
+        {
+            settings.setMuted( mutedToSet );
+            mutedToSet = null;
+        }
+
+        if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
+        {
+            settings.getTermsAndPrivacyPolicyFlowSettings().setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
+            termsAndPrivacyPolicyFlowEnabledToSet = null;
+        }
+
+        if ( privacyPolicyUriToSet != null )
+        {
+            settings.getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( privacyPolicyUriToSet );
+            privacyPolicyUriToSet = null;
+        }
+
+        if ( termsOfServiceUriToSet != null )
+        {
+            settings.getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( termsOfServiceUriToSet );
+            termsOfServiceUriToSet = null;
+        }
+
+        if ( userGeographyToSet != null )
+        {
+            settings.getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeographyToSet );
+            userGeographyToSet = null;
+        }
+
+        return settings;
     }
 
     private JSONObject getInitializationMessage(final Context context)
@@ -406,14 +415,20 @@ public class MaxUnrealPlugin
 
     public void setMuted(final boolean muted)
     {
-        if ( !isPluginInitialized ) return;
-
-        sdk.getSettings().setMuted( muted );
+        if ( sdk != null )
+        {
+            sdk.getSettings().setMuted( muted );
+        }
+        else
+        {
+            mutedToSet = muted;
+        }
     }
 
     public boolean isMuted()
     {
         if ( !isPluginInitialized ) return false;
+        if ( mutedToSet != null ) return mutedToSet;
 
         return sdk.getSettings().isMuted();
     }
