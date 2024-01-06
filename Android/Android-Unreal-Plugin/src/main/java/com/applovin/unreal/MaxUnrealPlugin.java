@@ -72,7 +72,7 @@ public class MaxUnrealPlugin
     // Store these values if pub sets before initializing
     private String       userIdToSet;
     private List<String> testDeviceAdvertisingIdsToSet;
-    private Boolean      verboseLoggingToSet;
+    private Boolean      verboseLoggingEnabledToSet;
     private Boolean      creativeDebuggerEnabledToSet;
 
     private Boolean                  termsAndPrivacyPolicyFlowEnabledToSet;
@@ -172,10 +172,10 @@ public class MaxUnrealPlugin
             testDeviceAdvertisingIdsToSet = null;
         }
 
-        if ( verboseLoggingToSet != null )
+        if ( verboseLoggingEnabledToSet != null )
         {
-            sdk.getSettings().setVerboseLogging( verboseLoggingToSet );
-            verboseLoggingToSet = null;
+            sdk.getSettings().setVerboseLogging( verboseLoggingEnabledToSet );
+            verboseLoggingEnabledToSet = null;
         }
 
         if ( creativeDebuggerEnabledToSet != null )
@@ -423,11 +423,11 @@ public class MaxUnrealPlugin
         if ( sdk != null )
         {
             sdk.getSettings().setVerboseLogging( enabled );
-            verboseLoggingToSet = null;
+            verboseLoggingEnabledToSet = null;
         }
         else
         {
-            verboseLoggingToSet = enabled;
+            verboseLoggingEnabledToSet = enabled;
         }
     }
 
@@ -437,9 +437,9 @@ public class MaxUnrealPlugin
         {
             return sdk.getSettings().isVerboseLoggingEnabled();
         }
-        else if ( verboseLoggingToSet != null )
+        else if ( verboseLoggingEnabledToSet != null )
         {
-            return verboseLoggingToSet;
+            return verboseLoggingEnabledToSet;
         }
 
         return false;
