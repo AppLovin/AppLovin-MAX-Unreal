@@ -716,7 +716,7 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
-        if ( isInterOrRewardedAd( adFormat ) )
+        if ( isInterstitialOrRewardedAd( adFormat ) )
         {
             logInvalidAdFormat( adFormat );
             return;
@@ -731,7 +731,7 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
-        if ( !isInterOrRewardedAd( adFormat ) )
+        if ( !isInterstitialOrRewardedAd( adFormat ) )
         {
             logInvalidAdFormat( adFormat );
             return;
@@ -749,7 +749,7 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [HIDDEN] events
         val adFormat = ad.getFormat();
-        if ( !isInterOrRewardedAd( adFormat ) )
+        if ( !isInterstitialOrRewardedAd( adFormat ) )
         {
             logInvalidAdFormat( adFormat );
             return;
@@ -1272,14 +1272,14 @@ public class MaxUnrealPlugin
         }
     }
 
-    private boolean isInterOrRewardedAd(final MaxAdFormat adFormat)
+    private boolean isInterstitialOrRewardedAd(final MaxAdFormat adFormat)
     {
         return MaxAdFormat.INTERSTITIAL == adFormat || MaxAdFormat.REWARDED == adFormat;
     }
 
     private boolean isInvalidAdFormat(final MaxAdFormat adFormat)
     {
-        return adFormat == null || ( !adFormat.isAdViewAd() && !isInterOrRewardedAd( adFormat ) );
+        return adFormat == null || ( !adFormat.isAdViewAd() && !isInterstitialOrRewardedAd( adFormat ) );
     }
 
     private JSONObject getAdInfo(final MaxAd ad)
