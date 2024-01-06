@@ -632,12 +632,15 @@ public class MaxUnrealPlugin
     @Override
     public void onAdLoaded(@NonNull MaxAd ad)
     {
-        final String name;
         val adFormat = ad.getFormat();
-        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat || MaxAdFormat.MREC == adFormat )
+        if ( isInvalidAdFormat( adFormat ) )
         {
-            name = ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdLoadedEvent" : "OnBannerAdLoadedEvent";
+            logInvalidAdFormat( adFormat );
+            return;
+        }
 
+        if ( adFormat.isAdViewAd() )
+        {
             val adViewPosition = adViewPositions.get( ad.getAdUnitId() );
             if ( !TextUtils.isEmpty( adViewPosition ) )
             {
@@ -653,20 +656,8 @@ public class MaxUnrealPlugin
                 adView.stopAutoRefresh();
             }
         }
-        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
-        {
-            name = "OnInterstitialAdLoadedEvent";
-        }
-        else if ( MaxAdFormat.REWARDED == adFormat )
-        {
-            name = "OnRewardedAdLoadedEvent";
-        }
-        else
-        {
-            logInvalidAdFormat( adFormat );
-            return;
-        }
 
+        val name = getEventName( adFormat, "Loaded" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
@@ -675,29 +666,31 @@ public class MaxUnrealPlugin
     {
         if ( TextUtils.isEmpty( adUnitId ) )
         {
-            logStackTrace( new IllegalArgumentException( "adUnitId cannot be null" ) );
+            logStackTrace( new IllegalArgumentException( "Ad unit ID cannot be null" ) );
             return;
         }
 
-        final String name;
+        // Determine ad format
+        final MaxAdFormat format;
         if ( adViews.containsKey( adUnitId ) )
         {
-            name = ( MaxAdFormat.MREC == adViewAdFormats.get( adUnitId ) ) ? "OnMRecAdLoadFailedEvent" : "OnBannerAdLoadFailedEvent";
+            format = adViewAdFormats.get( adUnitId );
         }
         else if ( interstitials.containsKey( adUnitId ) )
         {
-            name = "OnInterstitialAdLoadFailedEvent";
+            format = MaxAdFormat.INTERSTITIAL;
         }
         else if ( rewardedAds.containsKey( adUnitId ) )
         {
-            name = "OnRewardedAdLoadFailedEvent";
+            format = MaxAdFormat.REWARDED;
         }
         else
         {
-            logStackTrace( new IllegalStateException( "Invalid adUnitId: " + adUnitId ) );
+            logStackTrace( new IllegalStateException( "Invalid ad unit ID: " + adUnitId ) );
             return;
         }
 
+        val name = getEventName( format, "LoadFailed" );
         val params = getErrorInfo( error );
         JsonUtils.putString( params, "adUnitIdentifier", adUnitId );
 
@@ -708,29 +701,13 @@ public class MaxUnrealPlugin
     public void onAdClicked(@NonNull final MaxAd ad)
     {
         val adFormat = ad.getFormat();
-        final String name;
-        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat )
-        {
-            name = "OnBannerAdClickedEvent";
-        }
-        else if ( MaxAdFormat.MREC == adFormat )
-        {
-            name = "OnMRecAdClickedEvent";
-        }
-        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
-        {
-            name = "OnInterstitialAdClickedEvent";
-        }
-        else if ( MaxAdFormat.REWARDED == adFormat )
-        {
-            name = "OnRewardedAdClickedEvent";
-        }
-        else
+        if ( isInvalidAdFormat( adFormat ) )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
+        val name = getEventName( adFormat, "Clicked" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
@@ -739,18 +716,13 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
-
-        final String name;
-        if ( MaxAdFormat.INTERSTITIAL == adFormat )
+        if ( isInterOrRewardedAd( adFormat ) )
         {
-            name = "OnInterstitialAdDisplayedEvent";
-        }
-        else // REWARDED
-        {
-            name = "OnRewardedAdDisplayedEvent";
+            logInvalidAdFormat( adFormat );
+            return;
         }
 
+        val name = getEventName( adFormat, "Displayed" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
@@ -759,21 +731,16 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
-
-        final String name;
-        if ( MaxAdFormat.INTERSTITIAL == adFormat )
+        if ( !isInterOrRewardedAd( adFormat ) )
         {
-            name = "OnInterstitialAdDisplayFailedEvent";
-        }
-        else // REWARDED
-        {
-            name = "OnRewardedAdDisplayFailedEvent";
+            logInvalidAdFormat( adFormat );
+            return;
         }
 
-        JSONObject params = getAdInfo( ad );
+        val params = getAdInfo( ad );
         JsonUtils.putAll( params, getErrorInfo( error ) );
 
+        val name = getEventName( adFormat, "DisplayFailed" );
         sendUnrealEvent( name, params );
     }
 
@@ -782,18 +749,13 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [HIDDEN] events
         val adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
-
-        final String name;
-        if ( MaxAdFormat.INTERSTITIAL == adFormat )
+        if ( !isInterOrRewardedAd( adFormat ) )
         {
-            name = "OnInterstitialAdHiddenEvent";
-        }
-        else // REWARDED
-        {
-            name = "OnRewardedAdHiddenEvent";
+            logInvalidAdFormat( adFormat );
+            return;
         }
 
+        val name = getEventName( adFormat, "Hidden" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
@@ -801,26 +763,28 @@ public class MaxUnrealPlugin
     public void onAdExpanded(@NonNull final MaxAd ad)
     {
         val adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
+        if ( !adFormat.isAdViewAd() )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
-        sendUnrealEvent( ( MaxAdFormat.MREC == adFormat ) ? "OnMrecAdCollapsedEvent" : "OnBannerAdExpandedEvent", getAdInfo( ad ) );
+        val name = getEventName( adFormat, "Expanded" );
+        sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
     public void onAdCollapsed(@NonNull final MaxAd ad)
     {
         val adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
+        if ( !adFormat.isAdViewAd() )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
-        sendUnrealEvent( ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdCollapsedEvent" : "OnBannerAdCollapsedEvent", getAdInfo( ad ) );
+        val name = getEventName( adFormat, "Collapsed" );
+        sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
@@ -849,40 +813,21 @@ public class MaxUnrealPlugin
         JsonUtils.putString( params, "label", reward.getLabel() );
         JsonUtils.putInt( params, "amount", reward.getAmount() );
 
-        sendUnrealEvent( "OnRewardedAdReceivedRewardEvent", params );
+        val name = getEventName( adFormat, "ReceivedReward" );
+        sendUnrealEvent( name, params );
     }
 
     @Override
     public void onAdRevenuePaid(@NonNull final MaxAd ad)
     {
         val adFormat = ad.getFormat();
-        final String name;
-        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat )
-        {
-            name = "OnBannerAdRevenuePaidEvent";
-        }
-        else if ( MaxAdFormat.MREC == adFormat )
-        {
-            name = "OnMRecAdRevenuePaidEvent";
-        }
-        else if ( MaxAdFormat.CROSS_PROMO == adFormat )
-        {
-            name = "OnCrossPromoAdRevenuePaidEvent";
-        }
-        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
-        {
-            name = "OnInterstitialAdRevenuePaidEvent";
-        }
-        else if ( MaxAdFormat.REWARDED == adFormat )
-        {
-            name = "OnRewardedAdRevenuePaidEvent";
-        }
-        else
+        if ( isInvalidAdFormat( adFormat ) )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
+        val name = getEventName( adFormat, "AdRevenuePaid" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
@@ -1336,6 +1281,16 @@ public class MaxUnrealPlugin
         }
     }
 
+    private boolean isInterOrRewardedAd(final MaxAdFormat adFormat)
+    {
+        return MaxAdFormat.INTERSTITIAL == adFormat || MaxAdFormat.REWARDED == adFormat;
+    }
+
+    private boolean isInvalidAdFormat(final MaxAdFormat adFormat)
+    {
+        return adFormat == null || ( !adFormat.isAdViewAd() && !isInterOrRewardedAd( adFormat ) );
+    }
+
     private JSONObject getAdInfo(final MaxAd ad)
     {
         val adInfo = new JSONObject();
@@ -1359,6 +1314,32 @@ public class MaxUnrealPlugin
 
         return errorInfo;
     }
+
+    private String getEventName(final MaxAdFormat adFormat, final String event)
+    {
+        if ( adFormat != null )
+        {
+            if ( adFormat.isBannerOrLeaderAd() )
+            {
+                return "OnBannerAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.MREC == adFormat )
+            {
+                return "OnMRecAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.INTERSTITIAL == adFormat )
+            {
+                return "OnInterstitialAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.REWARDED == adFormat )
+            {
+                return "OnRewardedAd" + event + "Event";
+            }
+        }
+
+        throw new IllegalArgumentException( "Invalid ad format" );
+    }
+
 
     private static Map<String, String> deserialize(final String serialized)
     {
