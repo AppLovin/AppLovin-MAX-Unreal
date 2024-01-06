@@ -795,7 +795,7 @@ public class MaxUnrealPlugin
             return;
         }
 
-        sendUnrealEvent( ( MaxAdFormat.MREC == adFormat ) ? "OnMrecAdCollapsedEvent" : "OnBannerAdExpandedEvent", getAdInfo( ad ) );
+        sendUnrealEvent( ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdExpandedEvent" : "OnBannerAdExpandedEvent", getAdInfo( ad ) );
     }
 
     @Override
