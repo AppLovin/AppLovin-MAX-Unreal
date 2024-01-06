@@ -1010,17 +1010,8 @@ public class MaxUnrealPlugin
             // Handle local changes as needed
             if ( "force_banner".equalsIgnoreCase( key ) && MaxAdFormat.MREC != adFormat )
             {
-                final MaxAdFormat forcedAdFormat;
-
-                boolean shouldForceBanner = Boolean.parseBoolean( value );
-                if ( shouldForceBanner )
-                {
-                    forcedAdFormat = MaxAdFormat.BANNER;
-                }
-                else
-                {
-                    forcedAdFormat = getDeviceSpecificBannerAdViewAdFormat();
-                }
+                val shouldForceBanner = Boolean.parseBoolean( value );
+                val forcedAdFormat = shouldForceBanner ? MaxAdFormat.BANNER : getDeviceSpecificBannerAdViewAdFormat();
 
                 adViewAdFormats.put( adUnitId, forcedAdFormat );
                 positionAdView( adUnitId, forcedAdFormat );
@@ -1339,7 +1330,6 @@ public class MaxUnrealPlugin
 
         throw new IllegalArgumentException( "Invalid ad format" );
     }
-
 
     private static Map<String, String> deserialize(final String serialized)
     {
