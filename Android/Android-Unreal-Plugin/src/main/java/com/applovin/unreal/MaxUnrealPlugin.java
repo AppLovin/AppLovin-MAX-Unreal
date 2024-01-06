@@ -51,6 +51,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by Ritam Sarmah on May 5 2021
  */
@@ -618,7 +620,7 @@ public class MaxUnrealPlugin
 
     // region Ad Callbacks
     @Override
-    public void onAdLoaded(MaxAd ad)
+    public void onAdLoaded(@NonNull MaxAd ad)
     {
         String name;
         MaxAdFormat adFormat = ad.getFormat();
@@ -659,7 +661,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdLoadFailed(final String adUnitId, final MaxError error)
+    public void onAdLoadFailed(@NonNull final String adUnitId, @NonNull final MaxError error)
     {
         if ( TextUtils.isEmpty( adUnitId ) )
         {
@@ -693,7 +695,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdClicked(final MaxAd ad)
+    public void onAdClicked(@NonNull final MaxAd ad)
     {
         final MaxAdFormat adFormat = ad.getFormat();
         final String name;
@@ -723,7 +725,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdDisplayed(final MaxAd ad)
+    public void onAdDisplayed(@NonNull final MaxAd ad)
     {
         // BMLs do not support [DISPLAY] events
         final MaxAdFormat adFormat = ad.getFormat();
@@ -743,7 +745,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdDisplayFailed(final MaxAd ad, final MaxError error)
+    public void onAdDisplayFailed(@NonNull final MaxAd ad, @NonNull final MaxError error)
     {
         // BMLs do not support [DISPLAY] events
         final MaxAdFormat adFormat = ad.getFormat();
@@ -766,7 +768,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdHidden(final MaxAd ad)
+    public void onAdHidden(@NonNull final MaxAd ad)
     {
         // BMLs do not support [HIDDEN] events
         final MaxAdFormat adFormat = ad.getFormat();
@@ -786,7 +788,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdExpanded(final MaxAd ad)
+    public void onAdExpanded(@NonNull final MaxAd ad)
     {
         final MaxAdFormat adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
@@ -799,7 +801,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdCollapsed(final MaxAd ad)
+    public void onAdCollapsed(@NonNull final MaxAd ad)
     {
         final MaxAdFormat adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
@@ -812,19 +814,19 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onRewardedVideoCompleted(final MaxAd ad)
+    public void onRewardedVideoCompleted(@NonNull final MaxAd ad)
     {
         // This event is not forwarded
     }
 
     @Override
-    public void onRewardedVideoStarted(final MaxAd ad)
+    public void onRewardedVideoStarted(@NonNull final MaxAd ad)
     {
         // This event is not forwarded
     }
 
     @Override
-    public void onUserRewarded(final MaxAd ad, final MaxReward reward)
+    public void onUserRewarded(@NonNull final MaxAd ad, @NonNull final MaxReward reward)
     {
         final MaxAdFormat adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.REWARDED )
@@ -841,7 +843,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdRevenuePaid(final MaxAd ad)
+    public void onAdRevenuePaid(@NonNull final MaxAd ad)
     {
         final MaxAdFormat adFormat = ad.getFormat();
         final String name;

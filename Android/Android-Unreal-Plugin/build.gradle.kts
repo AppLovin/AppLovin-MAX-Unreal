@@ -56,6 +56,12 @@ dependencies {
     else {
         compileOnly ("com.applovin:applovin-sdk:+@aar")
     }
+
+    implementation("androidx.annotation:annotation:1.5.0")
+
+    compileOnly("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
+
 }
 
 repositories {
