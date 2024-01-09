@@ -33,14 +33,6 @@ enum class EAdViewPosition : uint8
     BottomRight
 };
 
-UENUM()
-enum class EConsentFlowUserGeography : uint8
-{
-    Unknown,
-    GDPR,
-    Other
-};
-
 UCLASS()
 class APPLOVINMAX_API UAppLovinMAX : public UBlueprintFunctionLibrary
 {
