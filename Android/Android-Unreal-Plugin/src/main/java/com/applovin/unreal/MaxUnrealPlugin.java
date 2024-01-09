@@ -241,7 +241,9 @@ public class MaxUnrealPlugin
 
         if ( sdkConfiguration != null )
         {
+            JsonUtils.putInt( message, "consentFlowUserGeography", sdkConfiguration.getConsentFlowUserGeography().ordinal() );
             JsonUtils.putString( message, "countryCode", sdkConfiguration.getCountryCode() );
+
         }
 
         JsonUtils.putBoolean( message, "hasUserConsent", AppLovinPrivacySettings.hasUserConsent( context ) );

@@ -215,6 +215,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         // increment app tracking status values by 1 to make them all unsigned
         message[@"appTrackingStatus"] = @(self.sdkConfiguration.appTrackingTransparencyStatus + 1);
         message[@"countryCode"] = self.sdkConfiguration.countryCode;
+        message[@"consentFlowUserGeography"] = @(self.sdkConfiguration.consentFlowUserGeography);
     }
     
     message[@"hasUserConsent"] = @([ALPrivacySettings hasUserConsent]);
