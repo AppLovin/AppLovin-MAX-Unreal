@@ -397,8 +397,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (BOOL)isMuted
 {
-    if ( !self.sdk ) return false;
     if ( self.mutedToSet ) return self.mutedToSet.boolValue;
+    if ( !self.sdk ) return false;
     
     return self.sdk.settings.muted;
 }

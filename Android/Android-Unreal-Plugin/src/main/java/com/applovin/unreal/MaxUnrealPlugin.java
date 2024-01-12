@@ -430,8 +430,8 @@ public class MaxUnrealPlugin
 
     public boolean isMuted()
     {
-        if ( sdk == null ) return false;
         if ( mutedToSet != null ) return mutedToSet;
+        if ( sdk == null ) return false;
 
         return sdk.getSettings().isMuted();
     }
