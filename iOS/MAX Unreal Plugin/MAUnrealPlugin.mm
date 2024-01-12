@@ -36,7 +36,7 @@
 @property (nonatomic, assign, getter=isSDKInitialized) BOOL sdkInitialized;
 @property (nonatomic, strong) ALSdkConfiguration *sdkConfiguration;
 
-// Store these values if pub attempts to set it before initializing
+// Store these values if pub sets before initializing
 @property (nonatomic,   copy, nullable) NSString *userIdentifierToSet;
 @property (nonatomic, strong, nullable) NSArray<NSString *> *testDeviceIdentifiersToSet;
 @property (nonatomic, strong, nullable) NSNumber *verboseLoggingEnabledToSet;
@@ -174,7 +174,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     if ( self.termsAndPrivacyPolicyFlowEnabledToSet )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = self.termsAndPrivacyPolicyFlowEnabledToSet.boolValue;
-        self.creativeDebuggerEnabledToSet = nil;
+        self.termsAndPrivacyPolicyFlowEnabledToSet = nil;
     }
     
     if ( self.privacyPolicyURLToSet )
