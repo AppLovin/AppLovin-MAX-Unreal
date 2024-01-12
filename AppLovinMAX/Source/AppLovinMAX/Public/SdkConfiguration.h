@@ -7,6 +7,14 @@
 
 // MARK: - Enums
 
+UENUM()
+enum class EConsentFlowUserGeography : uint8
+{
+    Unknown,
+    GDPR,
+    Other
+};
+
 UENUM(BlueprintType)
 enum class EAppTrackingStatus : uint8 // iOS only
 {
@@ -22,6 +30,13 @@ USTRUCT(BlueprintType)
 struct APPLOVINMAX_API FSdkConfiguration
 {
     GENERATED_BODY()
+
+    /**
+     * Get the user's geography used to determine the type of consent flow shown to the user.
+     * If no such determination could be made, EConsentFlowUserGeography::Unknown will be returned.
+     */
+    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
+    EConsentFlowUserGeography ConsentFlowUserGeography;
 
     /** Get the country code for this user. */
     UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
