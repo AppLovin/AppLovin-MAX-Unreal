@@ -2,7 +2,6 @@ package com.applovin.unreal;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.applovin.impl.sdk.utils.AndroidManifest;
 import com.applovin.impl.sdk.utils.JsonUtils;
 import com.applovin.impl.sdk.utils.StringUtils;
 import com.applovin.mediation.MaxAd;
@@ -120,45 +120,30 @@ public class MaxUnrealPlugin
         // Guard against running init logic multiple times
         if ( isPluginInitialized )
         {
-            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
+            sendInitializationEvent( context );
             return;
         }
 
-        isPluginInitialized = true;
-
         d( "Initializing AppLovin MAX Unreal v" + pluginVersion + "..." );
 
-        // Set listener
+        isPluginInitialized = true;
         eventListener = listener;
 
         // If SDK key passed in is empty, check Android Manifest
-        var sdkKeyToUse = sdkKey;
-        if ( TextUtils.isEmpty( sdkKey ) )
+        val sdkKeyToUse = TextUtils.isEmpty( sdkKey )
+                ? AndroidManifest.getManifest( context ).getMetaDataString( "applovin.sdk.key" )
+                : sdkKey;
+
+        if ( TextUtils.isEmpty( sdkKeyToUse ) )
         {
-            try
-            {
-                val packageManager = context.getPackageManager();
-                val packageName = context.getPackageName();
-                val applicationInfo = packageManager.getApplicationInfo( packageName, PackageManager.GET_META_DATA );
-                val metaData = applicationInfo.metaData;
-
-                sdkKeyToUse = metaData.getString( "applovin.sdk.key", "" );
-            }
-            catch ( Throwable th )
-            {
-                e( "Unable to retrieve SDK key from Android Manifest: " + th );
-            }
-
-            if ( TextUtils.isEmpty( sdkKeyToUse ) )
-            {
-                throw new IllegalStateException( "Unable to initialize AppLovin SDK - no SDK key provided and not found in Android Manifest!" );
-            }
+            throw new IllegalStateException( "Unable to initialize AppLovin SDK - no SDK key provided and not found in Android Manifest!" );
         }
 
         sdk = AppLovinSdk.getInstance( sdkKeyToUse, generateSdkSettings( context ), currentActivity );
         sdk.setPluginVersion( "Unreal-" + pluginVersion );
         sdk.setMediationProvider( AppLovinMediationProvider.MAX );
 
+        // Set targeting data
         if ( !TextUtils.isEmpty( userIdToSet ) )
         {
             sdk.setUserIdentifier( userIdToSet );
@@ -166,13 +151,12 @@ public class MaxUnrealPlugin
         }
 
         sdk.initializeSdk( configuration -> {
-            d( "SDK initialized" );
-
             sdkConfiguration = configuration;
             isSdkInitialized = true;
 
             // Enable orientation change listener, so that the ad view positions can be updated when the device is rotated.
-            getGameActivity().getWindow().getDecorView().getRootView().addOnLayoutChangeListener( (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            val rootView = getGameActivity().getWindow().getDecorView().getRootView();
+            rootView.addOnLayoutChangeListener( (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
                 val viewBoundsChanged = left != oldLeft || right != oldRight || bottom != oldBottom || top != oldTop;
                 if ( !viewBoundsChanged ) return;
 
@@ -182,7 +166,7 @@ public class MaxUnrealPlugin
                 }
             } );
 
-            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
+            sendInitializationEvent( context );
         } );
     }
 
@@ -214,49 +198,51 @@ public class MaxUnrealPlugin
             mutedToSet = null;
         }
 
+        val termsAndPrivacyPolicyFlowSettings = settings.getTermsAndPrivacyPolicyFlowSettings();
+
         if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
         {
-            settings.getTermsAndPrivacyPolicyFlowSettings().setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
+            termsAndPrivacyPolicyFlowSettings.setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
             termsAndPrivacyPolicyFlowEnabledToSet = null;
         }
 
         if ( privacyPolicyUriToSet != null )
         {
-            settings.getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( privacyPolicyUriToSet );
+            termsAndPrivacyPolicyFlowSettings.setPrivacyPolicyUri( privacyPolicyUriToSet );
             privacyPolicyUriToSet = null;
         }
 
         if ( termsOfServiceUriToSet != null )
         {
-            settings.getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( termsOfServiceUriToSet );
+            termsAndPrivacyPolicyFlowSettings.setTermsOfServiceUri( termsOfServiceUriToSet );
             termsOfServiceUriToSet = null;
         }
 
         if ( userGeographyToSet != null )
         {
-            settings.getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeographyToSet );
+            termsAndPrivacyPolicyFlowSettings.setDebugUserGeography( userGeographyToSet );
             userGeographyToSet = null;
         }
 
         return settings;
     }
 
-    private JSONObject getInitializationMessage(final Context context)
+    private void sendInitializationEvent(final Context context)
     {
-        val message = new JSONObject();
+        val params = new JSONObject();
 
         if ( sdkConfiguration != null )
         {
-            JsonUtils.putInt( message, "consentFlowUserGeography", sdkConfiguration.getConsentFlowUserGeography().ordinal() );
-            JsonUtils.putString( message, "countryCode", sdkConfiguration.getCountryCode() );
+            JsonUtils.putInt( params, "consentFlowUserGeography", sdkConfiguration.getConsentFlowUserGeography().ordinal() );
+            JsonUtils.putString( params, "countryCode", sdkConfiguration.getCountryCode() );
         }
 
-        JsonUtils.putBoolean( message, "hasUserConsent", AppLovinPrivacySettings.hasUserConsent( context ) );
-        JsonUtils.putBoolean( message, "isAgeRestrictedUser", AppLovinPrivacySettings.isAgeRestrictedUser( context ) );
-        JsonUtils.putBoolean( message, "isDoNotSell", AppLovinPrivacySettings.isDoNotSell( context ) );
-        JsonUtils.putBoolean( message, "isTablet", AppLovinSdkUtils.isTablet( context ) );
+        JsonUtils.putBoolean( params, "hasUserConsent", AppLovinPrivacySettings.hasUserConsent( context ) );
+        JsonUtils.putBoolean( params, "isAgeRestrictedUser", AppLovinPrivacySettings.isAgeRestrictedUser( context ) );
+        JsonUtils.putBoolean( params, "isDoNotSell", AppLovinPrivacySettings.isDoNotSell( context ) );
+        JsonUtils.putBoolean( params, "isTablet", AppLovinSdkUtils.isTablet( context ) );
 
-        return message;
+        sendUnrealEvent( "OnSdkInitializedEvent", params );
     }
 
     public boolean isInitialized()
@@ -1073,7 +1059,6 @@ public class MaxUnrealPlugin
         return retrieveAdView( adUnitId, adFormat, null );
     }
 
-    @SuppressWarnings("RedundantCast")
     public MaxAdView retrieveAdView(String adUnitId, MaxAdFormat adFormat, String adViewPosition)
     {
         var result = adViews.get( adUnitId );
