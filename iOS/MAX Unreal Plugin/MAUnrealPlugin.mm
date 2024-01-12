@@ -41,6 +41,7 @@
 @property (nonatomic, strong, nullable) NSArray<NSString *> *testDeviceIdentifiersToSet;
 @property (nonatomic, strong, nullable) NSNumber *verboseLoggingEnabledToSet;
 @property (nonatomic, strong, nullable) NSNumber *creativeDebuggerEnabledToSet;
+@property (nonatomic, strong, nullable) NSNumber *mutedToSet;
 
 @property (nonatomic, strong, nullable) NSNumber *termsAndPrivacyPolicyFlowEnabledToSet;
 @property (nonatomic, strong, nullable) NSURL *privacyPolicyURLToSet;
@@ -171,6 +172,12 @@ static NSString *const TAG = @"MAUnrealPlugin";
         self.creativeDebuggerEnabledToSet = nil;
     }
     
+    if ( self.mutedToSet )
+    {
+        self.sdk.settings.muted = self.mutedToSet.boolValue;
+        self.mutedToSet = nil;
+    }
+    
     if ( self.termsAndPrivacyPolicyFlowEnabledToSet )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = self.termsAndPrivacyPolicyFlowEnabledToSet.boolValue;
@@ -268,7 +275,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setTermsAndPrivacyPolicyFlowEnabled:(BOOL)enabled
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = enabled;
         self.termsAndPrivacyPolicyFlowEnabledToSet = nil;
@@ -281,7 +288,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setPrivacyPolicyURL:(NSString *)urlString
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = [NSURL URLWithString: urlString];
         self.privacyPolicyURLToSet = nil;
@@ -294,7 +301,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setTermsOfServiceURL:(NSString *)urlString
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = [NSURL URLWithString: urlString];
         self.termsOfServiceURLToSet = nil;
@@ -307,7 +314,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: userGeographyString];
         self.userGeographyStringToSet = nil;
@@ -320,7 +327,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)showCMPForExistingUser
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
             NSDictionary <NSString *, id> *parameters = @{};
@@ -339,7 +346,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (BOOL)hasSupportedCMP
 {
-    if ( ![self isPluginInitialized] ) return false;
+    if ( !self.sdk ) return false;
     
     return [self.sdk.cmpService hasSupportedCMP];
 }
@@ -364,7 +371,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setUserId:(NSString *)userId
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.userIdentifier = userId;
         self.userIdentifierToSet = nil;
@@ -377,21 +384,27 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setMuted:(BOOL)muted
 {
-    if ( ![self isPluginInitialized] ) return;
-    
-    self.sdk.settings.muted = muted;
+    if ( self.sdk )
+    {
+        self.sdk.settings.muted = muted;
+        self.mutedToSet = nil;
+    }
+    else
+    {
+        self.mutedToSet = @(muted);
+    }
 }
 
 - (BOOL)isMuted
 {
-    if ( ![self isPluginInitialized] ) return false;
+    if ( !self.sdk ) return false;
     
     return self.sdk.settings.muted;
 }
 
 - (void)setVerboseLoggingEnabled:(BOOL)enabled
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.settings.verboseLoggingEnabled = enabled;
         self.verboseLoggingEnabledToSet = nil;
@@ -418,7 +431,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setCreativeDebuggerEnabled:(BOOL)enabled
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.settings.creativeDebuggerEnabled = enabled;
         self.creativeDebuggerEnabledToSet = nil;
@@ -431,7 +444,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setTestDeviceAdvertisingIds:(NSArray<NSString *> *)testDeviceAdvertisingIds
 {
-    if ( [self isPluginInitialized] )
+    if ( self.sdk )
     {
         self.sdk.settings.testDeviceAdvertisingIdentifiers = testDeviceAdvertisingIds;
         self.testDeviceIdentifiersToSet = nil;
