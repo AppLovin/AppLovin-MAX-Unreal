@@ -6,7 +6,6 @@
 
 #include "Android/AndroidApplication.h"
 #include "Android/AndroidJNI.h"
-#include "Misc/EngineVersion.h"
 
 FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
     : FJavaClassObject(GetClassName(), "(Landroid/app/Activity;)V", FAndroidApplication::GetGameActivityThis()),
