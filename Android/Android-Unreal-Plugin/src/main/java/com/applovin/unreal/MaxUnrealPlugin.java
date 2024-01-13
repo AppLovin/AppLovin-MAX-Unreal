@@ -72,6 +72,7 @@ public class MaxUnrealPlugin
     private List<String> testDeviceAdvertisingIdsToSet;
     private Boolean      verboseLoggingToSet;
     private Boolean      creativeDebuggerEnabledToSet;
+    private Boolean      mutedToSet;
 
     private Boolean                  termsAndPrivacyPolicyFlowEnabledToSet;
     private Uri                      privacyPolicyUriToSet;
@@ -182,6 +183,12 @@ public class MaxUnrealPlugin
             creativeDebuggerEnabledToSet = null;
         }
 
+        if ( mutedToSet != null )
+        {
+            sdk.getSettings().setMuted( mutedToSet );
+            mutedToSet = null;
+        }
+
         if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
         {
             sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
@@ -262,7 +269,7 @@ public class MaxUnrealPlugin
     {
         if ( sdk == null )
         {
-            Log.e( "[" + TAG + "]", "Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize()'!" );
+            e( "Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize()'!" );
             return;
         }
 
@@ -360,7 +367,7 @@ public class MaxUnrealPlugin
 
     public void showCmpForExistingUser()
     {
-        if ( isPluginInitialized )
+        if ( sdk != null )
         {
             sdk.getCmpService().showCmpForExistingUser( getGameActivity(), this );
         }
@@ -368,7 +375,7 @@ public class MaxUnrealPlugin
 
     public boolean hasSupportedCmp()
     {
-        if ( !isPluginInitialized ) return false;
+        if ( sdk == null ) return false;
 
         return sdk.getCmpService().hasSupportedCmp();
     }
@@ -410,14 +417,21 @@ public class MaxUnrealPlugin
 
     public void setMuted(final boolean muted)
     {
-        if ( !isPluginInitialized ) return;
-
-        sdk.getSettings().setMuted( muted );
+        if ( sdk != null )
+        {
+            sdk.getSettings().setMuted( muted );
+            mutedToSet = null;
+        }
+        else
+        {
+            mutedToSet = muted;
+        }
     }
 
     public boolean isMuted()
     {
-        if ( !isPluginInitialized ) return false;
+        if ( mutedToSet != null ) return mutedToSet;
+        if ( sdk == null ) return false;
 
         return sdk.getSettings().isMuted();
     }
@@ -464,7 +478,7 @@ public class MaxUnrealPlugin
 
     public void setTestDeviceAdvertisingIds(final String[] advertisingIds)
     {
-        if ( isPluginInitialized )
+        if ( sdk != null )
         {
             sdk.getSettings().setTestDeviceAdvertisingIds( Arrays.asList( advertisingIds ) );
             testDeviceAdvertisingIdsToSet = null;
