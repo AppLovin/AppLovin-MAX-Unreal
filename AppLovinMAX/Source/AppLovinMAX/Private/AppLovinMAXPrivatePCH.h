@@ -2,5 +2,5 @@
 
 #pragma once
 
-#include "AppLovinMAX.h"
+#include "CoreMinimal.h"
 
