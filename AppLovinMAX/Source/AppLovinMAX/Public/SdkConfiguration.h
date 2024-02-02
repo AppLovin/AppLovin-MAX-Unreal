@@ -36,7 +36,7 @@ struct APPLOVINMAX_API FSdkConfiguration
      * If no such determination could be made, EConsentFlowUserGeography::Unknown will be returned.
      */
     UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
-    EConsentFlowUserGeography ConsentFlowUserGeography;
+    EConsentFlowUserGeography ConsentFlowUserGeography = EConsentFlowUserGeography::Unknown;
 
     /** Get the country code for this user. */
     UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")

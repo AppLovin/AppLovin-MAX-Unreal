@@ -785,11 +785,17 @@ FString UAppLovinMAX::GetAdViewPositionString(EAdViewPosition Position)
 FString UAppLovinMAX::GetUserGeographyString(EConsentFlowUserGeography UserGeography)
 {
     // NOTE: For Android, strings must match the original enum in Java
-    switch (UserGeography)
+    if (UserGeography == EConsentFlowUserGeography::GDPR)
     {
-        case EConsentFlowUserGeography::Unknown: return TEXT("UNKNOWN");
-        case EConsentFlowUserGeography::GDPR: return TEXT("GDPR");
-        case EConsentFlowUserGeography::Other: return TEXT("OTHER");
+        return TEXT("GDPR");
+    }
+    else if (UserGeography == EConsentFlowUserGeography::Other)
+    {
+        return TEXT("OTHER");
+    }
+    else // UserGeography == EConsentFlowUserGeography::Unknown
+    {
+        return TEXT("UNKNOWN");
     }
 }
 
