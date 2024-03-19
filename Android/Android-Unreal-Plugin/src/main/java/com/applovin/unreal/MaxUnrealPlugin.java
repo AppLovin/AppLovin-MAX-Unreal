@@ -868,10 +868,6 @@ public class MaxUnrealPlugin
         {
             name = "OnMRecAdRevenuePaidEvent";
         }
-        else if ( MaxAdFormat.CROSS_PROMO == adFormat )
-        {
-            name = "OnCrossPromoAdRevenuePaidEvent";
-        }
         else if ( MaxAdFormat.INTERSTITIAL == adFormat )
         {
             name = "OnInterstitialAdRevenuePaidEvent";

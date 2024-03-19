@@ -216,8 +216,8 @@ public:
     static void SetCreativeDebuggerEnabled(bool bEnabled);
 
     /**
-     * Enable devices to receive test ads, by passing in the advertising identifier (IDFA/GAID) of each test device.
-     * Refer to AppLovin logs for the IDFA/GAID of your current device.
+     * Enable devices to receive test ads, by passing in the advertising identifier (IDFA or IDFV) of each test device.
+     * Refer to AppLovin logs for the IDFA or IDFV of your current device.
      * @param AdvertisingIdentifiers - A string array of advertising identifiers from devices that will receive test ads.
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
