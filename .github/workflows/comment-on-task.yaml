@@ -1,0 +1,24 @@
+on:
+    pull_request:
+        types:
+            [
+                opened,
+                synchronize,
+                edited,
+                closed,
+                ready_for_review,
+                converted_to_draft,
+                reopened,
+            ]
+
+jobs:
+    asana-pr-action:
+        runs-on: ubuntu-latest
+        name: Create a comment in Asana Task
+        steps:
+            - name: Create a comment
+              uses: AppLovin/asana-pr-action@stable
+              id: createComment
+              with:
+                  asana-user-gid: "1204988948487975"
+                  asana-token: ${{ secrets.ASANA_TOKEN }}
