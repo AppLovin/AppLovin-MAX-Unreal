@@ -2,24 +2,14 @@ plugins {
     id("com.android.library")
 }
 
-private val versionMajor = 1
-private val versionMinor = 0
-private val versionPatch = 0
-
-var libraryVersionName by extra("${versionMajor}.${versionMinor}.${versionPatch}")
-var libraryVersionCode by extra((versionMajor * 10000) + (versionMinor * 100) + versionPatch)
-var libraryArtifactId by extra("applovin-max-unreal-plugin")
-var libraryArtifactName by extra("${libraryArtifactId}-${libraryVersionName}.aar")
-
 var libraryVersions = rootProject.extra["versions"] as Map<*, *>
 
 android {
+    namespace = "com.applovin.unreal"
     compileSdkVersion(libraryVersions["compileSdk"] as Int)
 
     defaultConfig {
         minSdkVersion(libraryVersions["minSdk"] as Int)
-        versionCode = libraryVersionCode
-        versionName = libraryVersionName
 
         consumerProguardFiles("proguard-rules.pro")
     }
