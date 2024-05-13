@@ -4,7 +4,7 @@ AppLovin MAX Unreal Plugin for Android and iOS.
 
 ## Documentation
 
-Please check out our [documentation](https://dash.applovin.com/documentation/mediation/unreal/getting-started/integration) to get started on integrating and enabling mediated networks using our guides.
+Please check out our [documentation](https://developers.applovin.com/en/unreal/overview/integration) to get started on integrating and enabling mediated networks using our guides.
 
 ## Demo App
 
