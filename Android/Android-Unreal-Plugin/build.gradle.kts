@@ -6,15 +6,15 @@ var libraryVersions = rootProject.extra["versions"] as Map<*, *>
 
 android {
     namespace = "com.applovin.unreal"
-    compileSdkVersion(libraryVersions["compileSdk"] as Int)
+    compileSdk = libraryVersions["compileSdk"] as Int
 
     defaultConfig {
-        minSdkVersion(libraryVersions["minSdk"] as Int)
+        minSdk = libraryVersions["minSdk"] as Int
 
         consumerProguardFiles("proguard-rules.pro")
     }
 
-    flavorDimensions("default")
+    flavorDimensions.add("default")
     productFlavors {
         // Flavor when building Unreal Plugin as a standalone product
         create("standalone") {
@@ -40,19 +40,17 @@ android {
 dependencies {
 
     // AppLovin Workspace SDK
-    if (file("../../../SDK-Android/Android-SDK/build.gradle.kts").exists()){
+    if (file("../../../SDK-Android/Android-SDK/build.gradle.kts").exists())
+    {
         compileOnly(project(":Android-SDK"))
     }
-    else {
-        compileOnly ("com.applovin:applovin-sdk:+@aar")
+    else
+    {
+        compileOnly("com.applovin:applovin-sdk:+@aar")
     }
 }
 
 repositories {
     google()
     mavenCentral()
-
-    flatDir {
-        dirs("libs")
-    }
 }
