@@ -32,21 +32,12 @@
 
 // Parent Fields
 @property (nonatomic, weak) ALSdk *sdk;
-@property (nonatomic, assign, getter=isPluginInitialized) BOOL pluginInitialized;
-@property (nonatomic, assign, getter=isSDKInitialized) BOOL sdkInitialized;
-@property (nonatomic, strong) ALSdkConfiguration *sdkConfiguration;
+@property (nonatomic, strong) ALAtomicBoolean *pluginInitialized;
+@property (nonatomic, strong) ALAtomicBoolean *sdkInitialized;
+@property (nonatomic, strong, nullable) ALSdkConfiguration *sdkConfiguration;
 
 // Store these values if pub sets before initializing
-@property (nonatomic,   copy, nullable) NSString *userIdentifierToSet;
-@property (nonatomic, strong, nullable) NSArray<NSString *> *testDeviceIdentifiersToSet;
-@property (nonatomic, strong, nullable) NSNumber *verboseLoggingEnabledToSet;
-@property (nonatomic, strong, nullable) NSNumber *creativeDebuggerEnabledToSet;
-@property (nonatomic, strong, nullable) NSNumber *mutedToSet;
-
-@property (nonatomic, strong, nullable) NSNumber *termsAndPrivacyPolicyFlowEnabledToSet;
-@property (nonatomic, strong, nullable) NSURL *privacyPolicyURLToSet;
-@property (nonatomic, strong, nullable) NSURL *termsOfServiceURLToSet;
-@property (nonatomic, strong, nullable) NSString *userGeographyStringToSet;
+@property (nonatomic, strong, nullable) NSArray<NSString *> *testDeviceAdvertisingIdentifiersToSet;
 
 // Fullscreen Ad Fields
 @property (nonatomic, strong) NSMutableDictionary<NSString *, MAInterstitialAd *> *interstitials;
@@ -62,7 +53,7 @@
 @property (nonatomic, strong) UIView *safeAreaBackground;
 @property (nonatomic, strong, nullable) UIColor *publisherBannerBackgroundColor;
 
-@property (nonatomic, weak) UIView *unrealMainView;
+@property (nonatomic, weak, nullable) UIView *unrealMainView;
 @property (nonatomic, assign) UnrealEventCallback eventCallback;
 
 @end
@@ -78,6 +69,9 @@ static NSString *const TAG = @"MAUnrealPlugin";
     self = [super init];
     if ( self )
     {
+        self.pluginInitialized = [[ALAtomicBoolean alloc] init];
+        self.sdkInitialized = [[ALAtomicBoolean alloc] init];
+        
         self.interstitials = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.rewardedAds = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adViews = [NSMutableDictionary dictionaryWithCapacity: 2];
@@ -86,10 +80,14 @@ static NSString *const TAG = @"MAUnrealPlugin";
         self.adViewPositions = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adViewConstraints = [NSMutableDictionary dictionaryWithCapacity: 2];
         self.adUnitIdentifiersToShowAfterCreate = [NSMutableArray arrayWithCapacity: 2];
+        
         self.unrealMainView = mainView;
         self.eventCallback = eventCallback;
         
+        self.sdk = [ALSdk shared];
+        
         dispatchOnMainQueue(^{
+            
             self.safeAreaBackground = [[UIView alloc] init];
             self.safeAreaBackground.hidden = YES;
             self.safeAreaBackground.backgroundColor = UIColor.clearColor;
@@ -98,6 +96,44 @@ static NSString *const TAG = @"MAUnrealPlugin";
             
             [self.unrealMainView addSubview: self.safeAreaBackground];
         });
+    }
+    return self;
+}
+
+- (void)initialize:(NSString *)pluginVersion sdkKey:(NSString *)sdkKey
+{
+    // Guard against running init logic multiple times
+    if ( [self.pluginInitialized compareAndSet: NO update: YES] )
+    {
+        [self sendInitializationEvent];
+        return;
+    }
+    
+    [self d: @"Initializing AppLovin MAX Unreal v%@...", pluginVersion];
+    
+    if ( ![sdkKey al_isValidString] )
+    {
+        [NSException raise: NSInternalInconsistencyException
+                    format: @"Unable to initialize AppLovin MAX Unreal Plugin - no SDK key provided"];
+    }
+    
+    // Create initialization configuration
+    ALSdkInitializationConfiguration *initConfiguration = [ALSdkInitializationConfiguration configurationWithSdkKey: sdkKey
+                                                                                                              builderBlock:^(ALSdkInitializationConfigurationBuilder *builder) {
+        builder.mediationProvider = ALMediationProviderMAX;
+        builder.pluginVersion = [@"Unreal-" stringByAppendingString: pluginVersion];
+        
+        if ( !self.testDeviceAdvertisingIdentifiersToSet )
+        {
+            builder.testDeviceAdvertisingIdentifiers = self.testDeviceAdvertisingIdentifiersToSet;
+        }
+    }];
+    
+    // Initialize SDK
+    [self.sdk initializeWithConfiguration: initConfiguration completionHandler:^(ALSdkConfiguration * _Nonnull sdkConfiguration) {
+        
+        self.sdkConfiguration = sdkConfiguration;
+        [self.sdkInitialized set: YES];
         
         // Enable orientation change listener, so that the position can be updated for vertical banners.
         [[NSNotificationCenter defaultCenter] addObserverForName: UIDeviceOrientationDidChangeNotification
@@ -110,133 +146,33 @@ static NSString *const TAG = @"MAUnrealPlugin";
                 [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: self.verticalAdViewFormats[adUnitIdentifier]];
             }
         }];
-    }
-    return self;
-}
-
-- (void)initialize:(NSString *)pluginVersion sdkKey:(NSString *)sdkKey
-{
-    // Guard against running init logic multiple times
-    if ( [self isPluginInitialized] )
-    {
-        [self sendUnrealEventWithName: @"OnSdkInitializedEvent" parameters: [self initializationMessage]];
-        return;
-    }
-    
-    self.pluginInitialized = YES;
-    
-    [self log: @"Initializing AppLovin MAX Unreal v%@...", pluginVersion];
-    
-    // If SDK key passed in is empty, check Info.plist
-    if ( ![sdkKey al_isValidString] )
-    {
-        if ( [[NSBundle mainBundle].infoDictionary al_containsValueForKey: @"AppLovinSdkKey"] )
-        {
-            sdkKey = [NSBundle mainBundle].infoDictionary[@"AppLovinSdkKey"];
-        }
-        else
-        {
-            [NSException raise: NSInternalInconsistencyException
-                        format: @"Unable to initialize AppLovin SDK - no SDK key provided and not found in Info.plist!"];
-        }
-    }
-    
-    // Initialize SDK
-    self.sdk = [ALSdk sharedWithKey: sdkKey];
-    [self.sdk setPluginVersion: [@"Unreal-" stringByAppendingString: pluginVersion]];
-    [self.sdk setMediationProvider: ALMediationProviderMAX];
-    
-    // Update SDK settings
-    
-    if ( [self.userIdentifierToSet al_isValidString] )
-    {
-        self.sdk.userIdentifier = self.userIdentifierToSet;
-        self.userIdentifierToSet = nil;
-    }
-    
-    if ( self.testDeviceIdentifiersToSet )
-    {
-        self.sdk.settings.testDeviceAdvertisingIdentifiers = self.testDeviceIdentifiersToSet;
-        self.testDeviceIdentifiersToSet = nil;
-    }
-    
-    if ( self.verboseLoggingEnabledToSet )
-    {
-        self.sdk.settings.verboseLoggingEnabled = self.verboseLoggingEnabledToSet.boolValue;
-        self.verboseLoggingEnabledToSet = nil;
-    }
-    
-    if ( self.creativeDebuggerEnabledToSet )
-    {
-        self.sdk.settings.creativeDebuggerEnabled = self.creativeDebuggerEnabledToSet.boolValue;
-        self.creativeDebuggerEnabledToSet = nil;
-    }
-    
-    if ( self.mutedToSet )
-    {
-        self.sdk.settings.muted = self.mutedToSet.boolValue;
-        self.mutedToSet = nil;
-    }
-    
-    if ( self.termsAndPrivacyPolicyFlowEnabledToSet )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = self.termsAndPrivacyPolicyFlowEnabledToSet.boolValue;
-        self.termsAndPrivacyPolicyFlowEnabledToSet = nil;
-    }
-    
-    if ( self.privacyPolicyURLToSet )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = self.privacyPolicyURLToSet;
-        self.privacyPolicyURLToSet = nil;
-    }
-    
-    if ( self.termsOfServiceURLToSet )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = self.termsOfServiceURLToSet;
-        self.termsOfServiceURLToSet = nil;
-    }
-    
-    if ( [self.userGeographyStringToSet al_isValidString] )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: self.userGeographyStringToSet];
-        self.userGeographyStringToSet = nil;
-    }
- 
-    [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
-        [self log: @"SDK initialized"];
-        
-        self.sdkConfiguration = configuration;
-        self.sdkInitialized = YES;
-        
-        [self sendUnrealEventWithName: @"OnSdkInitializedEvent" parameters: [self initializationMessage]];
     }];
 }
 
-- (NSDictionary<NSString *, id> *)initializationMessage
+- (void)sendInitializationEvent
 {
-    NSMutableDictionary<NSString *, id> *message = [NSMutableDictionary dictionaryWithCapacity: 6];
+    NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionaryWithCapacity: 6];
     
     if ( self.sdkConfiguration )
     {
         // Unreal blueprints only support uint8 enums. Since ALAppTrackingTransparencyStatusUnavailable = -1,
         // increment app tracking status values by 1 to make them all unsigned
-        message[@"appTrackingStatus"] = @(self.sdkConfiguration.appTrackingTransparencyStatus + 1);
-        message[@"consentFlowUserGeography"] = @(self.sdkConfiguration.consentFlowUserGeography);
-        message[@"countryCode"] = self.sdkConfiguration.countryCode;
+        parameters[@"appTrackingStatus"] = @(self.sdkConfiguration.appTrackingTransparencyStatus + 1);
+        parameters[@"consentFlowUserGeography"] = @(self.sdkConfiguration.consentFlowUserGeography);
+        parameters[@"countryCode"] = self.sdkConfiguration.countryCode;
     }
     
-    message[@"hasUserConsent"] = @([ALPrivacySettings hasUserConsent]);
-    message[@"isAgeRestrictedUser"] = @([ALPrivacySettings isAgeRestrictedUser]);
-    message[@"isDoNotSell"] = @([ALPrivacySettings isDoNotSell]);
-    message[@"isTablet"] = @([self isTablet]);
+    parameters[@"hasUserConsent"] = @([ALPrivacySettings hasUserConsent]);
+    parameters[@"isAgeRestrictedUser"] = @([ALPrivacySettings isAgeRestrictedUser]);
+    parameters[@"isDoNotSell"] = @([ALPrivacySettings isDoNotSell]);
+    parameters[@"isTablet"] = @([self isTablet]);
     
-    return message;
-
+    [self sendUnrealEventWithName: @"OnSdkInitializedEvent" parameters: parameters];
 }
 
 - (BOOL)isInitialized
 {
-    return [self isPluginInitialized] && [self isSDKInitialized];
+    return [self.pluginInitialized get] && [self.sdkInitialized get];
 }
 
 #pragma mark - Privacy
@@ -275,79 +211,49 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setTermsAndPrivacyPolicyFlowEnabled:(BOOL)enabled
 {
-    if ( self.sdk )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = enabled;
-        self.termsAndPrivacyPolicyFlowEnabledToSet = nil;
-    }
-    else
-    {
-        self.termsAndPrivacyPolicyFlowEnabledToSet = @(enabled);
-    }
+    self.sdk.settings.termsAndPrivacyPolicyFlowSettings.enabled = enabled;
 }
 
 - (void)setPrivacyPolicyURL:(NSString *)urlString
 {
-    if ( self.sdk )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = [NSURL URLWithString: urlString];
-        self.privacyPolicyURLToSet = nil;
-    }
-    else
-    {
-        self.privacyPolicyURLToSet = [NSURL URLWithString: urlString];
-    }
+    self.sdk.settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyURL = [NSURL URLWithString: urlString];
 }
 
 - (void)setTermsOfServiceURL:(NSString *)urlString
 {
-    if ( self.sdk )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = [NSURL URLWithString: urlString];
-        self.termsOfServiceURLToSet = nil;
-    }
-    else
-    {
-        self.termsOfServiceURLToSet = [NSURL URLWithString: urlString];
-    }
+    self.sdk.settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceURL = [NSURL URLWithString: urlString];
 }
 
 - (void)setConsentFlowDebugUserGeography:(NSString *)userGeographyString
 {
-    if ( self.sdk )
-    {
-        self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: userGeographyString];
-        self.userGeographyStringToSet = nil;
-    }
-    else
-    {
-        self.userGeographyStringToSet = userGeographyString;
-    }
+    self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: userGeographyString];
 }
 
 - (void)showCMPForExistingUser
 {
-    if ( self.sdk )
+    if ( ![self isInitialized] )
     {
-        [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
-            NSDictionary <NSString *, id> *parameters = @{};
-            if ( error )
-            {
-                parameters = @{@"code" : @(error.code),
-                               @"message" : error.message ?: @"",
-                               @"cmpCode" : @(error.cmpCode) ?: @(-1),
-                               @"cmpMessage" : error.cmpMessage ?: @""};
-            }
-            
-            [self sendUnrealEventWithName: @"OnCmpCompletedEvent" parameters: parameters];
-        }];
+        [self logUninitializedError: @"Failed to show CMP flow"];
+        return;
     }
+        
+    [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
+        
+        NSDictionary <NSString *, id> *parameters = @{};
+        if ( error )
+        {
+            parameters = @{@"code" : @(error.code),
+                           @"message" : error.message ?: @"",
+                           @"cmpCode" : @(error.cmpCode),
+                           @"cmpMessage" : error.cmpMessage ?: @""};
+        }
+        
+        [self sendUnrealEventWithName: @"OnCmpCompletedEvent" parameters: parameters];
+    }];
 }
 
 - (BOOL)hasSupportedCMP
 {
-    if ( !self.sdk ) return false;
-    
     return [self.sdk.cmpService hasSupportedCMP];
 }
 
@@ -360,9 +266,9 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)showMediationDebugger
 {
-    if ( !self.sdk )
+    if ( ![self isInitialized] )
     {
-        [self log: @"Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize(...);'!"];
+        [self logUninitializedError: @"Failed to show mediation debugger"];
         return;
     }
     
@@ -371,95 +277,56 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)setUserId:(NSString *)userId
 {
-    if ( self.sdk )
-    {
-        self.sdk.userIdentifier = userId;
-        self.userIdentifierToSet = nil;
-    }
-    else
-    {
-        self.userIdentifierToSet = userId;
-    }
+    self.sdk.settings.userIdentifier = userId;
 }
 
 - (void)setMuted:(BOOL)muted
 {
-    if ( self.sdk )
-    {
-        self.sdk.settings.muted = muted;
-        self.mutedToSet = nil;
-    }
-    else
-    {
-        self.mutedToSet = @(muted);
-    }
+    self.sdk.settings.muted = muted;
 }
 
 - (BOOL)isMuted
 {
-    if ( self.mutedToSet ) return self.mutedToSet.boolValue;
-    if ( !self.sdk ) return false;
-    
     return self.sdk.settings.muted;
 }
 
 - (void)setVerboseLoggingEnabled:(BOOL)enabled
 {
-    if ( self.sdk )
-    {
-        self.sdk.settings.verboseLoggingEnabled = enabled;
-        self.verboseLoggingEnabledToSet = nil;
-    }
-    else
-    {
-        self.verboseLoggingEnabledToSet = @(enabled);
-    }
+    self.sdk.settings.verboseLoggingEnabled = enabled;
 }
 
 - (BOOL)isVerboseLoggingEnabled
 {
-    if ( self.sdk )
-    {
-        return [self.sdk.settings isVerboseLoggingEnabled];
-    }
-    else if ( self.verboseLoggingEnabledToSet )
-    {
-        return self.verboseLoggingEnabledToSet.boolValue;
-    }
-    
-    return false;
+    return [self.sdk.settings isVerboseLoggingEnabled];
 }
 
 - (void)setCreativeDebuggerEnabled:(BOOL)enabled
 {
-    if ( self.sdk )
-    {
-        self.sdk.settings.creativeDebuggerEnabled = enabled;
-        self.creativeDebuggerEnabledToSet = nil;
-    }
-    else
-    {
-        self.creativeDebuggerEnabledToSet = @(enabled);
-    }
+    self.sdk.settings.creativeDebuggerEnabled = enabled;
 }
 
 - (void)setTestDeviceAdvertisingIds:(NSArray<NSString *> *)testDeviceAdvertisingIds
 {
-    if ( self.sdk )
+    if ( [self isInitialized] )
     {
-        self.sdk.settings.testDeviceAdvertisingIdentifiers = testDeviceAdvertisingIds;
-        self.testDeviceIdentifiersToSet = nil;
+        [self e: @"Failed to set test device advertising IDs. Please set your test device advertising IDs before initializing the plugin."];
+        return;
     }
-    else
-    {
-        self.testDeviceIdentifiersToSet = testDeviceAdvertisingIds;
-    }
+
+    self.testDeviceAdvertisingIdentifiersToSet = testDeviceAdvertisingIds;
 }
 
 #pragma mark - Event Tracking
 
 - (void)trackEvent:(NSString *)event parameters:(NSDictionary<NSString *, NSString *> *)parameters
 {
+    if ( ![self isInitialized] )
+    {
+        NSString *message = [NSString stringWithFormat: @"Failed to track event (%@)", event];
+        [self logUninitializedError: message];
+        return;
+    }
+    
     [self.sdk.eventService trackEvent: event parameters: parameters];
 }
 
@@ -598,15 +465,19 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)didLoadAd:(MAAd *)ad
 {
-    NSString *name;
     MAAdFormat *adFormat = ad.format;
-    if ( MAAdFormat.banner == adFormat || MAAdFormat.leader == adFormat || MAAdFormat.mrec == adFormat )
+    if ( [self isInvalidAdFormat: adFormat] )
+    {
+        [self logInvalidAdFormat: adFormat];
+        return;
+    }
+    
+    if ( [adFormat isAdViewAd] )
     {
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: ad.adUnitIdentifier adFormat: adFormat];
         // An ad is now being shown, enable user interaction.
         adView.userInteractionEnabled = YES;
         
-        name = ( MAAdFormat.mrec == adFormat ) ? @"OnMRecAdLoadedEvent" : @"OnBannerAdLoadedEvent";
         [self positionAdViewForAd: ad];
         
         // Do not auto-refresh by default if the ad view is not showing yet (e.g. first load during app launch and publisher does not automatically show banner upon load success)
@@ -616,20 +487,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
             [adView stopAutoRefresh];
         }
     }
-    else if ( MAAdFormat.interstitial == adFormat )
-    {
-        name = @"OnInterstitialAdLoadedEvent";
-    }
-    else if ( MAAdFormat.rewarded == adFormat )
-    {
-        name = @"OnRewardedAdLoadedEvent";
-    }
-    else
-    {
-        [self logInvalidAdFormat: adFormat];
-        return;
-    }
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"Loaded"];
     [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
@@ -637,29 +496,32 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     if ( !adUnitIdentifier )
     {
-        [self log: @"adUnitIdentifier cannot be nil from %@", [NSThread callStackSymbols]];
+        [self logStackTrace: @"Ad unit ID cannot be nil"];
         return;
     }
     
-    NSString *name;
-    if ( self.adViews[adUnitIdentifier] )
+    // Determine ad format
+    MAAdFormat *adFormat;
+    if ( [self.adViews al_containsValueForKey: adUnitIdentifier] )
     {
-        name = ( MAAdFormat.mrec == self.adViewAdFormats[adUnitIdentifier] ) ? @"OnMRecAdLoadFailedEvent" : @"OnBannerAdLoadFailedEvent";
+        adFormat = self.adViewAdFormats[adUnitIdentifier];
     }
-    else if ( self.interstitials[adUnitIdentifier] )
+    else if ( [self.interstitials al_containsValueForKey: adUnitIdentifier] )
     {
-        name = @"OnInterstitialAdLoadFailedEvent";
+        adFormat = MAAdFormat.interstitial;
     }
-    else if ( self.rewardedAds[adUnitIdentifier] )
+    else if ( [self.rewardedAds al_containsValueForKey: adUnitIdentifier] )
     {
-        name = @"OnRewardedAdLoadFailedEvent";
+        adFormat = MAAdFormat.rewarded;
     }
     else
     {
-        [self log: @"invalid adUnitId from %@", [NSThread callStackSymbols]];
+        NSString *message = [NSString stringWithFormat: @"Invalid ad unit ID: %@", adUnitIdentifier];
+        [self logStackTrace: message];
         return;
     }
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"LoadFailed"];
     NSMutableDictionary *parameters = [[self errorInfoForError: error] mutableCopy];
     parameters[@"adUnitIdentifier"] = adUnitIdentifier;
     
@@ -668,30 +530,14 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)didClickAd:(MAAd *)ad
 {
-    NSString *name;
     MAAdFormat *adFormat = ad.format;
-    if ( MAAdFormat.banner == adFormat || MAAdFormat.leader == adFormat )
-    {
-        name = @"OnBannerAdClickedEvent";
-    }
-    else if ( MAAdFormat.mrec == adFormat )
-    {
-        name = @"OnMRecAdClickedEvent";
-    }
-    else if ( MAAdFormat.interstitial == adFormat )
-    {
-        name = @"OnInterstitialAdClickedEvent";
-    }
-    else if ( MAAdFormat.rewarded == adFormat )
-    {
-        name = @"OnRewardedAdClickedEvent";
-    }
-    else
+    if ( [self isInvalidAdFormat: adFormat] )
     {
         [self logInvalidAdFormat: adFormat];
         return;
     }
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"Clicked"];
     [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
@@ -699,18 +545,13 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     // BMLs do not support [DISPLAY] events
     MAAdFormat *adFormat = ad.format;
-    if ( adFormat != MAAdFormat.interstitial && adFormat != MAAdFormat.rewarded ) return;
-    
-    NSString *name;
-    if ( MAAdFormat.interstitial == adFormat )
+    if ( [adFormat isAdViewAd] )
     {
-        name = @"OnInterstitialAdDisplayedEvent";
-    }
-    else // REWARDED
-    {
-        name = @"OnRewardedAdDisplayedEvent";
+        [self logInvalidAdFormat: adFormat];
+        return;
     }
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"Displayed"];
     [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
@@ -718,21 +559,16 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     // BMLs do not support [DISPLAY] events
     MAAdFormat *adFormat = ad.format;
-    if ( adFormat != MAAdFormat.interstitial && adFormat != MAAdFormat.rewarded ) return;
-    
-    NSString *name;
-    if ( MAAdFormat.interstitial == adFormat )
+    if ( [adFormat isAdViewAd] )
     {
-        name = @"OnInterstitialAdDisplayFailedEvent";
-    }
-    else // REWARDED
-    {
-        name = @"OnRewardedAdDisplayFailedEvent";
+        [self logInvalidAdFormat: adFormat];
+        return;
     }
     
     NSMutableDictionary *parameters = [[self adInfoForAd: ad] mutableCopy];
     [parameters addEntriesFromDictionary: [self errorInfoForError: error]];
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"DisplayFailed"];
     [self sendUnrealEventWithName: name parameters: parameters];
 }
 
@@ -740,45 +576,40 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     // BMLs do not support [HIDDEN] events
     MAAdFormat *adFormat = ad.format;
-    if ( adFormat != MAAdFormat.interstitial && adFormat != MAAdFormat.rewarded ) return;
-    
-    NSString *name;
-    if ( MAAdFormat.interstitial == adFormat )
+    if ( [adFormat isAdViewAd] )
     {
-        name = @"OnInterstitialAdHiddenEvent";
-    }
-    else // REWARDED
-    {
-        name = @"OnRewardedAdHiddenEvent";
+        [self logInvalidAdFormat: adFormat];
+        return;
     }
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"Hidden"];
     [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
 - (void)didExpandAd:(MAAd *)ad
 {
     MAAdFormat *adFormat = ad.format;
-    if ( adFormat != MAAdFormat.banner && adFormat != MAAdFormat.leader && adFormat != MAAdFormat.mrec )
+    if ( ![adFormat isAdViewAd] )
     {
         [self logInvalidAdFormat: adFormat];
         return;
     }
     
-    [self sendUnrealEventWithName: ( MAAdFormat.mrec == adFormat ) ? @"OnMRecAdExpandedEvent" : @"OnBannerAdExpandedEvent"
-                       parameters: [self adInfoForAd: ad]];
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"Expanded"];
+    [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
 - (void)didCollapseAd:(MAAd *)ad
 {
     MAAdFormat *adFormat = ad.format;
-    if ( adFormat != MAAdFormat.banner && adFormat != MAAdFormat.leader && adFormat != MAAdFormat.mrec )
+    if ( ![adFormat isAdViewAd] )
     {
         [self logInvalidAdFormat: adFormat];
         return;
     }
     
-    [self sendUnrealEventWithName: ( MAAdFormat.mrec == adFormat ) ? @"OnMRecAdCollapsedEvent" : @"OnBannerAdCollapsedEvent"
-                       parameters: [self adInfoForAd: ad]];
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"Collapsed"];
+    [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
 - (void)didRewardUserForAd:(MAAd *)ad withReward:(MAReward *)reward
@@ -794,35 +625,20 @@ static NSString *const TAG = @"MAUnrealPlugin";
     parameters[@"label"] = reward ? reward.label : @"";
     parameters[@"amount"] = reward ? @(reward.amount) : @(0);
     
-    [self sendUnrealEventWithName: @"OnRewardedAdReceivedRewardEvent" parameters: parameters];
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"ReceivedReward"];
+    [self sendUnrealEventWithName: name parameters: parameters];
 }
 
 - (void)didPayRevenueForAd:(MAAd *)ad
 {
-    NSString *name;
     MAAdFormat *adFormat = ad.format;
-    if ( MAAdFormat.banner == adFormat || MAAdFormat.leader == adFormat )
-    {
-        name = @"OnBannerAdRevenuePaidEvent";
-    }
-    else if ( MAAdFormat.mrec == adFormat )
-    {
-        name = @"OnMRecAdRevenuePaidEvent";
-    }
-    else if ( MAAdFormat.interstitial == adFormat )
-    {
-        name = @"OnInterstitialAdRevenuePaidEvent";
-    }
-    else if ( MAAdFormat.rewarded == adFormat )
-    {
-        name = @"OnRewardedAdRevenuePaidEvent";
-    }
-    else
+    if ( [self isInvalidAdFormat: adFormat] )
     {
         [self logInvalidAdFormat: adFormat];
         return;
     }
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"AdRevenuePaid"];
     [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
@@ -831,7 +647,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)createAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat atPosition:(NSString *)adViewPosition
 {
     dispatchOnMainQueue(^{
-        [self log: @"Creating %@ with ad unit identifier \"%@\" and position: \"%@\"", adFormat, adUnitIdentifier, adViewPosition];
+        
+        [self d: @"Creating %@ with ad unit identifier \"%@\" and position: \"%@\"", adFormat, adUnitIdentifier, adViewPosition];
         
         // Retrieve ad view from the map
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat atPosition: adViewPosition];
@@ -856,7 +673,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)setAdViewBackgroundColorForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat hexColorCode:(NSString *)hexColorCode
 {
     dispatchOnMainQueue(^{
-        [self log: @"Setting %@ with ad unit identifier \"%@\" to color: \"%@\"", adFormat, adUnitIdentifier, hexColorCode];
+        
+        [self d: @"Setting %@ with ad unit identifier \"%@\" to color: \"%@\"", adFormat, adUnitIdentifier, hexColorCode];
         
         // In some cases, black color may get redrawn on each frame update, resulting in an undesired flicker
         NSString *hexColorCodeToUse = [hexColorCode containsString: @"FF000000"] ? @"FF000001" : hexColorCode;
@@ -871,7 +689,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)setAdViewPlacement:(nullable NSString *)placement forAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
-        [self log: @"Setting placement \"%@\" for \"%@\" with ad unit identifier \"%@\"", placement, adFormat, adUnitIdentifier];
+        
+        [self d: @"Setting placement \"%@\" for \"%@\" with ad unit identifier \"%@\"", placement, adFormat, adUnitIdentifier];
         
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         adView.placement = placement;
@@ -881,6 +700,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)updateAdViewPosition:(NSString *)adViewPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
+        
         // Check if the previous position is same as the new position. If so, no need to update the position again.
         NSString *previousPosition = self.adViewPositions[adUnitIdentifier];
         if ( !adViewPosition || [adViewPosition isEqualToString: previousPosition] ) return;
@@ -893,7 +713,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)setAdViewExtraParameterForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat key:(NSString *)key value:(nullable NSString *)value
 {
     dispatchOnMainQueue(^{
-        [self log: @"Setting %@ extra with key: \"%@\" value: \"%@\"", adFormat, key, value];
+        
+        [self d: @"Setting %@ extra with key: \"%@\" value: \"%@\"", adFormat, key, value];
         
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         [adView setExtraParameterForKey: key value: value];
@@ -922,12 +743,13 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)showAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
-        [self log: @"Showing %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
+        
+        [self d: @"Showing %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
         
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         if ( !view )
         {
-            [self log: @"%@ does not exist for ad unit identifier %@.", adFormat, adUnitIdentifier];
+            [self e: @"%@ does not exist for ad unit identifier %@.", adFormat, adUnitIdentifier];
             
             // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
             [self.adUnitIdentifiersToShowAfterCreate addObject: adUnitIdentifier];
@@ -943,7 +765,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)hideAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
-        [self log: @"Hiding %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
+        
+        [self d: @"Hiding %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
         [self.adUnitIdentifiersToShowAfterCreate removeObject: adUnitIdentifier];
         
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
@@ -957,7 +780,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)destroyAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
-        [self log: @"Destroying %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
+        
+        [self d: @"Destroying %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
         
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         view.delegate = nil;
@@ -969,21 +793,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
         [self.adViewAdFormats removeObjectForKey: adUnitIdentifier];
         [self.verticalAdViewFormats removeObjectForKey: adUnitIdentifier];
     });
-}
-
-- (void)logInvalidAdFormat:(MAAdFormat *)adFormat
-{
-    [self log: @"invalid ad format: %@, from %@", adFormat, [NSThread callStackSymbols]];
-}
-
-- (void)log:(NSString *)format, ...
-{
-    va_list valist;
-    va_start(valist, format);
-    NSString *message = [[NSString alloc] initWithFormat: format arguments: valist];
-    va_end(valist);
-    
-    NSLog(@"[%@] [%@] %@", SDK_TAG, TAG, message);
 }
 
 - (MAInterstitialAd *)retrieveInterstitialForAdUnitIdentifier:(NSString *)adUnitIdentifier
@@ -1068,7 +877,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     [NSLayoutConstraint deactivateConstraints: self.safeAreaBackground.constraints];
     self.safeAreaBackground.hidden = adView.hidden;
     
-    CGSize adViewSize = [[self class] adViewSizeForAdFormat: adFormat];
+    CGSize adViewSize = adFormat.size;
     
     // All positions have constant height
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray arrayWithObject: [adView.heightAnchor constraintEqualToConstant: adViewSize.height]];
@@ -1246,28 +1055,12 @@ static NSString *const TAG = @"MAUnrealPlugin";
     [NSLayoutConstraint activateConstraints: constraints];
 }
 
-+ (CGSize)adViewSizeForAdFormat:(MAAdFormat *)adFormat
-{
-    if ( MAAdFormat.leader == adFormat )
-    {
-        return CGSizeMake(728.0f, 90.0f);
-    }
-    else if ( MAAdFormat.banner == adFormat )
-    {
-        return CGSizeMake(320.0f, 50.0f);
-    }
-    else if ( MAAdFormat.mrec == adFormat )
-    {
-        return CGSizeMake(300.0f, 250.0f);
-    }
-    else
-    {
-        [NSException raise: NSInvalidArgumentException format: @"Invalid ad format"];
-        return CGSizeZero;
-    }
-}
-
 #pragma mark - Utility Methods
+
+- (BOOL)isInvalidAdFormat:(MAAdFormat *)adFormat
+{
+    return !adFormat || !( [adFormat isAdViewAd] || MAAdFormat.interstitial == adFormat || MAAdFormat.rewarded == adFormat );
+}
 
 - (NSDictionary<NSString *, id> *)adInfoForAd:(MAAd *)ad
 {
@@ -1283,6 +1076,32 @@ static NSString *const TAG = @"MAUnrealPlugin";
     return @{@"code" : @(error.code),
              @"message" : error.message ?: @"",
              @"waterfall" : error.waterfall.description ?: @""};
+}
+
+- (NSString *)eventNameForAdFormat:(MAAdFormat *)adFormat event:(NSString *)event
+{
+    if ( adFormat )
+    {
+        if ( [adFormat isAdViewAd] )
+        {
+            return [NSString stringWithFormat: @"OnBannerAd%@Event", event];
+        }
+        else if ( MAAdFormat.mrec == adFormat )
+        {
+            return [NSString stringWithFormat: @"OnMRecAd%@Event", event];
+        }
+        else if ( MAAdFormat.interstitial == adFormat )
+        {
+            return [NSString stringWithFormat: @"OnInterstitialAd%@Event", event];
+        }
+        else if ( MAAdFormat.rewarded == adFormat )
+        {
+            return [NSString stringWithFormat: @"OnRewardedAd%@Event", event];
+        }
+    }
+    
+    [NSException raise: NSInvalidArgumentException format: @"Invalid ad format"];
+    return @"";
 }
 
 - (ALConsentFlowUserGeography)userGeographyForString:(NSString *)userGeographyString
@@ -1301,18 +1120,56 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
 }
 
+#pragma mark - Logging
+
+- (void)d:(NSString *)format, ...
+{
+    va_list valist;
+    va_start(valist, format);
+    NSString *message = [[NSString alloc] initWithFormat: format arguments: valist];
+    va_end(valist);
+    
+    NSLog(@"DEBUG [%@] [%@] %@", SDK_TAG, TAG, message);
+}
+
+- (void)e:(NSString *)format, ...
+{
+    va_list valist;
+    va_start(valist, format);
+    NSString *message = [[NSString alloc] initWithFormat: format arguments: valist];
+    va_end(valist);
+    
+    NSLog(@"ERROR [%@] [%@] %@", SDK_TAG, TAG, message);
+}
+
+- (void)logInvalidAdFormat:(MAAdFormat *)adFormat
+{
+    NSString *message = [NSString stringWithFormat: @"Invalid ad format: %@", adFormat];
+    [self logStackTrace: message];
+}
+
+- (void)logStackTrace:(NSString *)message
+{
+    [self e: message];
+    [self e: @"%@", [NSThread callStackSymbols]];
+}
+
+- (void)logUninitializedError:(NSString *)message
+{
+    [self e: @"%@ - Please ensure the AppLovin MAX Unreal Plugin has been initialized by calling UAppLovinMAX::Initialize()", message];
+}
+
 #pragma mark - Unreal Bridge
 
 // NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so the keys must match with the corresponding UPROPERTY
 - (void)sendUnrealEventWithName:(NSString *)name parameters:(NSDictionary<NSString *, id> *)parameters
 {
-    if ( self.eventCallback )
-    {
-        NSData *data = [NSJSONSerialization dataWithJSONObject: parameters options: 0 error: nil];
-        NSString *serializedParameters = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
-        
-        self.eventCallback(name, serializedParameters);
-    }
+    if ( !self.eventCallback ) return;
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject: parameters options: 0 error: nil];
+    NSString *serializedParameters = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+    
+    self.eventCallback(name, serializedParameters);
 }
 
 @end
