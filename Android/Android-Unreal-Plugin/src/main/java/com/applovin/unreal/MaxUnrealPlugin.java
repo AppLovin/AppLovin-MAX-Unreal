@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.applovin.impl.sdk.utils.AndroidManifest;
 import com.applovin.impl.sdk.utils.JsonUtils;
 import com.applovin.impl.sdk.utils.StringUtils;
 import com.applovin.mediation.MaxAd;
@@ -34,7 +33,7 @@ import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
 import com.applovin.sdk.AppLovinSdkConfiguration.ConsentFlowUserGeography;
-import com.applovin.sdk.AppLovinSdkSettings;
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration;
 import com.applovin.sdk.AppLovinSdkUtils;
 
 import org.json.JSONObject;
@@ -46,9 +45,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
-import lombok.Data;
+import androidx.annotation.Nullable;
 import lombok.val;
 import lombok.var;
 
@@ -62,22 +62,16 @@ public class MaxUnrealPlugin
     private static final String TAG     = "MaxUnrealPlugin";
     private static final String SDK_TAG = "AppLovinSdk";
 
-    // Parent Fields
-    private AppLovinSdk              sdk;
-    private boolean                  isPluginInitialized = false;
-    private boolean                  isSdkInitialized    = false;
+    private final AppLovinSdk   sdk;
+    private final AtomicBoolean pluginInitialized = new AtomicBoolean();
+    private final AtomicBoolean sdkInitialized    = new AtomicBoolean();
+
+    @Nullable
     private AppLovinSdkConfiguration sdkConfiguration;
 
     // Store these values if pub sets before initializing
-    private String                   userIdToSet;
-    private List<String>             testDeviceAdvertisingIdsToSet;
-    private Boolean                  verboseLoggingEnabledToSet;
-    private Boolean                  creativeDebuggerEnabledToSet;
-    private Boolean                  mutedToSet;
-    private Boolean                  termsAndPrivacyPolicyFlowEnabledToSet;
-    private Uri                      privacyPolicyUriToSet;
-    private Uri                      termsOfServiceUriToSet;
-    private ConsentFlowUserGeography userGeographyToSet;
+    @Nullable
+    private List<String> testDeviceAdvertisingIdsToSet;
 
     // Fullscreen Ad Fields
     private final Map<String, MaxInterstitialAd> interstitials = new HashMap<>( 2 );
@@ -86,14 +80,22 @@ public class MaxUnrealPlugin
     // Banner Fields
     private final Map<String, MaxAdView>   adViews                    = new HashMap<>( 2 );
     private final Map<String, MaxAdFormat> adViewAdFormats            = new HashMap<>( 2 );
-    private final Map<String, String>      adViewPositions            = new HashMap<>( 2 );
     private final Map<String, MaxAdFormat> verticalAdViewFormats      = new HashMap<>( 2 );
+    private final Map<String, String>      adViewPositions            = new HashMap<>( 2 );
     private final List<String>             adUnitIdsToShowAfterCreate = new ArrayList<>( 2 );
 
-    private final WeakReference<Activity> gameActivity;
-    private       EventListener           eventListener;
+    private final WeakReference<Activity> gameActivityRef;
 
-    private Activity getGameActivity() { return gameActivity.get(); }
+    @Nullable
+    private EventListener eventListener;
+
+    private Activity getGameActivity() throws IllegalStateException
+    {
+        val gameActivity = gameActivityRef.get();
+        if ( gameActivity == null ) throw new IllegalStateException( "No Game Activity found" );
+
+        return gameActivityRef.get();
+    }
 
     /**
      * Interface for listening to events dispatched from the plugin. Used to forward events back to Unreal GameActivity.
@@ -106,19 +108,17 @@ public class MaxUnrealPlugin
     // region Initialization
     public MaxUnrealPlugin(final Activity activity)
     {
-        gameActivity = new WeakReference<>( activity );
+        gameActivityRef = new WeakReference<>( activity );
+        sdk = AppLovinSdk.getInstance( activity.getApplicationContext() );
     }
 
     public void initialize(final String pluginVersion, final String sdkKey, final EventListener listener)
     {
-        // Check if Activity is available
         val currentActivity = getGameActivity();
-        if ( currentActivity == null ) throw new IllegalStateException( "No Activity found" );
-
         val context = currentActivity.getApplicationContext();
 
         // Guard against running init logic multiple times
-        if ( isPluginInitialized )
+        if ( pluginInitialized.compareAndSet( false, true ) )
         {
             sendInitializationEvent( context );
             return;
@@ -126,33 +126,30 @@ public class MaxUnrealPlugin
 
         d( "Initializing AppLovin MAX Unreal v" + pluginVersion + "..." );
 
-        isPluginInitialized = true;
         eventListener = listener;
 
-        // If SDK key passed in is empty, check Android Manifest
-        val sdkKeyToUse = TextUtils.isEmpty( sdkKey )
-                ? AndroidManifest.getManifest( context ).getMetaDataString( "applovin.sdk.key" )
-                : sdkKey;
-
-        if ( TextUtils.isEmpty( sdkKeyToUse ) )
+        if ( TextUtils.isEmpty( sdkKey ) )
         {
-            throw new IllegalStateException( "Unable to initialize AppLovin SDK - no SDK key provided and not found in Android Manifest!" );
+            throw new IllegalStateException( "Unable to initialize AppLovin MAX Unreal Plugin - no SDK key provided" );
         }
 
-        sdk = AppLovinSdk.getInstance( sdkKeyToUse, generateSdkSettings( context ), currentActivity );
-        sdk.setPluginVersion( "Unreal-" + pluginVersion );
-        sdk.setMediationProvider( AppLovinMediationProvider.MAX );
+        // Create initialization configuration
+        val initConfigurationBuilder = AppLovinSdkInitializationConfiguration.builder( sdkKey, context )
+                .setMediationProvider( AppLovinMediationProvider.MAX )
+                .setPluginVersion( "Unreal-" + pluginVersion );
 
-        // Set targeting data
-        if ( !TextUtils.isEmpty( userIdToSet ) )
+        if ( testDeviceAdvertisingIdsToSet != null )
         {
-            sdk.setUserIdentifier( userIdToSet );
-            userIdToSet = null;
+            initConfigurationBuilder.setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
         }
 
-        sdk.initializeSdk( configuration -> {
-            sdkConfiguration = configuration;
-            isSdkInitialized = true;
+        val initConfiguration = initConfigurationBuilder.build();
+
+        // Initialize SDK
+        sdk.initialize( initConfiguration, sdkConfiguration -> {
+
+            this.sdkConfiguration = sdkConfiguration;
+            sdkInitialized.set( true );
 
             // Enable orientation change listener, so that the ad view positions can be updated when the device is rotated.
             val rootView = getGameActivity().getWindow().getDecorView().getRootView();
@@ -168,63 +165,6 @@ public class MaxUnrealPlugin
 
             sendInitializationEvent( context );
         } );
-    }
-
-    private AppLovinSdkSettings generateSdkSettings(Context context)
-    {
-        val settings = new AppLovinSdkSettings( context );
-
-        if ( testDeviceAdvertisingIdsToSet != null )
-        {
-            settings.setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
-            testDeviceAdvertisingIdsToSet = null;
-        }
-
-        if ( verboseLoggingEnabledToSet != null )
-        {
-            settings.setVerboseLogging( verboseLoggingEnabledToSet );
-            verboseLoggingEnabledToSet = null;
-        }
-
-        if ( creativeDebuggerEnabledToSet != null )
-        {
-            settings.setCreativeDebuggerEnabled( creativeDebuggerEnabledToSet );
-            creativeDebuggerEnabledToSet = null;
-        }
-
-        if ( mutedToSet != null )
-        {
-            settings.setMuted( mutedToSet );
-            mutedToSet = null;
-        }
-
-        val termsAndPrivacyPolicyFlowSettings = settings.getTermsAndPrivacyPolicyFlowSettings();
-
-        if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
-        {
-            termsAndPrivacyPolicyFlowSettings.setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
-            termsAndPrivacyPolicyFlowEnabledToSet = null;
-        }
-
-        if ( privacyPolicyUriToSet != null )
-        {
-            termsAndPrivacyPolicyFlowSettings.setPrivacyPolicyUri( privacyPolicyUriToSet );
-            privacyPolicyUriToSet = null;
-        }
-
-        if ( termsOfServiceUriToSet != null )
-        {
-            termsAndPrivacyPolicyFlowSettings.setTermsOfServiceUri( termsOfServiceUriToSet );
-            termsOfServiceUriToSet = null;
-        }
-
-        if ( userGeographyToSet != null )
-        {
-            termsAndPrivacyPolicyFlowSettings.setDebugUserGeography( userGeographyToSet );
-            userGeographyToSet = null;
-        }
-
-        return settings;
     }
 
     private void sendInitializationEvent(final Context context)
@@ -247,18 +187,7 @@ public class MaxUnrealPlugin
 
     public boolean isInitialized()
     {
-        return isPluginInitialized && isSdkInitialized;
-    }
-
-    public void showMediationDebugger()
-    {
-        if ( sdk == null )
-        {
-            e( "Failed to show mediation debugger - please ensure the AppLovin MAX Unreal Plugin has been initialized by calling 'UAppLovinMAX::Initialize()'!" );
-            return;
-        }
-
-        sdk.showMediationDebugger();
+        return pluginInitialized.get() && sdkInitialized.get();
     }
     // endregion
 
@@ -297,71 +226,40 @@ public class MaxUnrealPlugin
     // region Terms and Privacy Policy Flow
     public void setTermsAndPrivacyPolicyFlowEnabled(final boolean enabled)
     {
-        if ( sdk != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( enabled );
-            termsAndPrivacyPolicyFlowEnabledToSet = null;
-        }
-        else
-        {
-            termsAndPrivacyPolicyFlowEnabledToSet = enabled;
-        }
+        sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( enabled );
     }
 
     public void setPrivacyPolicyUrl(final String uriString)
     {
         val uri = Uri.parse( uriString );
-        if ( sdk != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( uri );
-            privacyPolicyUriToSet = null;
-        }
-        else
-        {
-            privacyPolicyUriToSet = uri;
-        }
+        sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( uri );
     }
 
     public void setTermsOfServiceUrl(final String uriString)
     {
         val uri = Uri.parse( uriString );
-        if ( sdk != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( uri );
-            termsOfServiceUriToSet = null;
-        }
-        else
-        {
-            termsOfServiceUriToSet = uri;
-        }
+        sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( uri );
     }
 
     public void setConsentFlowDebugUserGeography(final String userGeographyString)
     {
         val userGeography = ConsentFlowUserGeography.valueOf( userGeographyString );
-        if ( sdk != null )
-        {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeography );
-            userGeographyToSet = null;
-        }
-        else
-        {
-            userGeographyToSet = userGeography;
-        }
+        sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeography );
     }
 
     public void showCmpForExistingUser()
     {
-        if ( sdk != null )
+        if ( !isInitialized() )
         {
-            sdk.getCmpService().showCmpForExistingUser( getGameActivity(), this );
+            logUninitializedError( "Failed to show CMP flow" );
+            return;
         }
+
+        sdk.getCmpService().showCmpForExistingUser( getGameActivity(), this );
     }
 
     public boolean hasSupportedCmp()
     {
-        if ( sdk == null ) return false;
-
         return sdk.getCmpService().hasSupportedCmp();
     }
 
@@ -387,106 +285,67 @@ public class MaxUnrealPlugin
         return AppLovinSdkUtils.isTablet( getGameActivity() );
     }
 
+    public void showMediationDebugger()
+    {
+        if ( !isInitialized() )
+        {
+            logUninitializedError( "Failed to show mediation debugger" );
+            return;
+        }
+
+        sdk.showMediationDebugger();
+    }
+
     public void setUserId(String userId)
     {
-        if ( sdk != null )
-        {
-            sdk.setUserIdentifier( userId );
-            userIdToSet = null;
-        }
-        else
-        {
-            userIdToSet = userId;
-        }
+        sdk.getSettings().setUserIdentifier( userId );
     }
 
     public void setMuted(final boolean muted)
     {
-        if ( sdk != null )
-        {
-            sdk.getSettings().setMuted( muted );
-        }
-        else
-        {
-            mutedToSet = muted;
-        }
-        if ( sdk != null )
-        {
-            sdk.getSettings().setMuted( muted );
-            mutedToSet = null;
-        }
-        else
-        {
-            mutedToSet = muted;
-        }
+        sdk.getSettings().setMuted( muted );
     }
 
     public boolean isMuted()
     {
-        if ( !isPluginInitialized ) return false;
-        if ( mutedToSet != null ) return mutedToSet;
-
         return sdk.getSettings().isMuted();
     }
 
     public void setVerboseLoggingEnabled(final boolean enabled)
     {
-        if ( sdk != null )
-        {
-            sdk.getSettings().setVerboseLogging( enabled );
-            verboseLoggingEnabledToSet = null;
-        }
-        else
-        {
-            verboseLoggingEnabledToSet = enabled;
-        }
+        sdk.getSettings().setVerboseLogging( enabled );
     }
 
     public boolean isVerboseLoggingEnabled()
     {
-        if ( sdk != null )
-        {
-            return sdk.getSettings().isVerboseLoggingEnabled();
-        }
-        else if ( verboseLoggingEnabledToSet != null )
-        {
-            return verboseLoggingEnabledToSet;
-        }
-
-        return false;
+        return sdk.getSettings().isVerboseLoggingEnabled();
     }
 
     public void setCreativeDebuggerEnabled(final boolean enabled)
     {
-        if ( sdk != null )
-        {
-            sdk.getSettings().setCreativeDebuggerEnabled( enabled );
-            creativeDebuggerEnabledToSet = null;
-        }
-        else
-        {
-            creativeDebuggerEnabledToSet = enabled;
-        }
+        sdk.getSettings().setCreativeDebuggerEnabled( enabled );
     }
 
     public void setTestDeviceAdvertisingIds(final String[] advertisingIds)
     {
-        if ( sdk != null )
+        if ( isInitialized() )
         {
-            sdk.getSettings().setTestDeviceAdvertisingIds( Arrays.asList( advertisingIds ) );
-            testDeviceAdvertisingIdsToSet = null;
+            e( "Failed to set test device advertising IDs. Please set your test device advertising IDs before initializing the plugin." );
+            return;
         }
-        else
-        {
-            testDeviceAdvertisingIdsToSet = Arrays.asList( advertisingIds );
-        }
+
+        testDeviceAdvertisingIdsToSet = Arrays.asList( advertisingIds );
     }
     // endregion
 
     // region Event Tracking
     public void trackEvent(final String event, final String parameters)
     {
-        if ( sdk == null ) return;
+        if ( !isInitialized() )
+        {
+            logUninitializedError( "Failed to track event (" + event + ")" );
+            return;
+        }
 
         val deserialized = deserialize( parameters );
         sdk.getEventService().trackEvent( event, deserialized );
@@ -588,7 +447,7 @@ public class MaxUnrealPlugin
     public void showInterstitial(final String adUnitId, final String placement)
     {
         val interstitial = retrieveInterstitial( adUnitId );
-        interstitial.showAd( placement );
+        interstitial.showAd( placement, getGameActivity() );
     }
 
     public void setInterstitialExtraParameter(final String adUnitId, final String key, final String value)
@@ -614,7 +473,7 @@ public class MaxUnrealPlugin
     public void showRewardedAd(final String adUnitId, final String placement)
     {
         val rewardedAd = retrieveRewardedAd( adUnitId );
-        rewardedAd.showAd( placement );
+        rewardedAd.showAd( placement, getGameActivity() );
     }
 
     public void setRewardedAdExtraParameter(final String adUnitId, final String key, final String value)
@@ -667,18 +526,18 @@ public class MaxUnrealPlugin
         }
 
         // Determine ad format
-        final MaxAdFormat format;
+        final MaxAdFormat adFormat;
         if ( adViews.containsKey( adUnitId ) )
         {
-            format = adViewAdFormats.get( adUnitId );
+            adFormat = adViewAdFormats.get( adUnitId );
         }
         else if ( interstitials.containsKey( adUnitId ) )
         {
-            format = MaxAdFormat.INTERSTITIAL;
+            adFormat = MaxAdFormat.INTERSTITIAL;
         }
         else if ( rewardedAds.containsKey( adUnitId ) )
         {
-            format = MaxAdFormat.REWARDED;
+            adFormat = MaxAdFormat.REWARDED;
         }
         else
         {
@@ -686,7 +545,7 @@ public class MaxUnrealPlugin
             return;
         }
 
-        val name = getEventName( format, "LoadFailed" );
+        val name = getEventName( adFormat, "LoadFailed" );
         val params = getErrorInfo( error );
         JsonUtils.putString( params, "adUnitIdentifier", adUnitId );
 
@@ -712,7 +571,7 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
-        if ( isInterstitialOrRewardedAd( adFormat ) )
+        if ( adFormat.isAdViewAd() )
         {
             logInvalidAdFormat( adFormat );
             return;
@@ -727,7 +586,7 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
-        if ( !isInterstitialOrRewardedAd( adFormat ) )
+        if ( adFormat.isAdViewAd() )
         {
             logInvalidAdFormat( adFormat );
             return;
@@ -745,7 +604,7 @@ public class MaxUnrealPlugin
     {
         // BMLs do not support [HIDDEN] events
         val adFormat = ad.getFormat();
-        if ( !isInterstitialOrRewardedAd( adFormat ) )
+        if ( adFormat.isAdViewAd() )
         {
             logInvalidAdFormat( adFormat );
             return;
@@ -781,18 +640,6 @@ public class MaxUnrealPlugin
 
         val name = getEventName( adFormat, "Collapsed" );
         sendUnrealEvent( name, getAdInfo( ad ) );
-    }
-
-    @Override
-    public void onRewardedVideoCompleted(@NonNull final MaxAd ad)
-    {
-        // This event is not forwarded
-    }
-
-    @Override
-    public void onRewardedVideoStarted(@NonNull final MaxAd ad)
-    {
-        // This event is not forwarded
     }
 
     @Override
@@ -1015,26 +862,6 @@ public class MaxUnrealPlugin
         } );
     }
 
-    private void logInvalidAdFormat(MaxAdFormat adFormat)
-    {
-        logStackTrace( new IllegalStateException( "Invalid ad format: " + adFormat ) );
-    }
-
-    private void logStackTrace(Exception e)
-    {
-        e( Log.getStackTraceString( e ) );
-    }
-
-    public static void d(final String message)
-    {
-        Log.d( SDK_TAG, "[" + TAG + "] " + message );
-    }
-
-    public static void e(final String message)
-    {
-        Log.e( SDK_TAG, "[" + TAG + "] " + message );
-    }
-
     private MaxInterstitialAd retrieveInterstitial(String adUnitId)
     {
         var result = interstitials.get( adUnitId );
@@ -1107,9 +934,9 @@ public class MaxUnrealPlugin
 
         // Size the ad
         val adViewPosition = adViewPositions.get( adUnitId );
-        val adViewSize = getAdViewSize( adFormat );
-        val width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.widthDp );
-        val height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.heightDp );
+        val adViewSize = adFormat.getSize();
+        val width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.getWidth() );
+        val height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.getHeight() );
 
         val params = (RelativeLayout.LayoutParams) adView.getLayoutParams();
         params.height = height;
@@ -1240,41 +1067,9 @@ public class MaxUnrealPlugin
         return AppLovinSdkUtils.isTablet( context ) ? MaxAdFormat.LEADER : MaxAdFormat.BANNER;
     }
 
-    @Data
-    protected static class AdViewSize
-    {
-        public final int widthDp;
-        public final int heightDp;
-    }
-
-    public static AdViewSize getAdViewSize(final MaxAdFormat format)
-    {
-        if ( MaxAdFormat.LEADER == format )
-        {
-            return new AdViewSize( 728, 90 );
-        }
-        else if ( MaxAdFormat.BANNER == format )
-        {
-            return new AdViewSize( 320, 50 );
-        }
-        else if ( MaxAdFormat.MREC == format )
-        {
-            return new AdViewSize( 300, 250 );
-        }
-        else
-        {
-            throw new IllegalArgumentException( "Invalid ad format" );
-        }
-    }
-
-    private boolean isInterstitialOrRewardedAd(final MaxAdFormat adFormat)
-    {
-        return MaxAdFormat.INTERSTITIAL == adFormat || MaxAdFormat.REWARDED == adFormat;
-    }
-
     private boolean isInvalidAdFormat(final MaxAdFormat adFormat)
     {
-        return adFormat == null || ( !adFormat.isAdViewAd() && !isInterstitialOrRewardedAd( adFormat ) );
+        return adFormat == null || !( adFormat.isAdViewAd() || MaxAdFormat.INTERSTITIAL == adFormat || MaxAdFormat.REWARDED == adFormat );
     }
 
     private JSONObject getAdInfo(final MaxAd ad)
@@ -1285,7 +1080,7 @@ public class MaxUnrealPlugin
         JsonUtils.putString( adInfo, "creativeIdentifier", StringUtils.emptyIfNull( ad.getCreativeId() ) );
         JsonUtils.putString( adInfo, "networkName", ad.getNetworkName() );
         JsonUtils.putString( adInfo, "placement", StringUtils.emptyIfNull( ad.getPlacement() ) );
-        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue());
+        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue() );
 
         return adInfo;
     }
@@ -1344,11 +1139,39 @@ public class MaxUnrealPlugin
     }
     // endregion
 
+    //region Logging
+    public static void d(final String message)
+    {
+        Log.d( SDK_TAG, "[" + TAG + "] " + message );
+    }
+
+    public static void e(final String message)
+    {
+        Log.e( SDK_TAG, "[" + TAG + "] " + message );
+    }
+
+    private void logInvalidAdFormat(MaxAdFormat adFormat)
+    {
+        logStackTrace( new IllegalStateException( "Invalid ad format: " + adFormat ) );
+    }
+
+    private void logStackTrace(Exception e)
+    {
+        e( Log.getStackTraceString( e ) );
+    }
+
+    private void logUninitializedError(String message)
+    {
+        e( message + " - " + "Please ensure the AppLovin MAX Unreal Plugin has been initialized by calling UAppLovinMAX::Initialize()" );
+    }
+    //endregion
+
     // region Unreal Bridge
 
     // NOTE: Unreal deserializes to the relevant USTRUCT based on the JSON keys, so the keys must match with the corresponding UPROPERTY
     private void sendUnrealEvent(final String name, final JSONObject params)
     {
+        if ( eventListener == null ) return;
         eventListener.onReceivedEvent( name, params.toString() );
     }
     // endregion
