@@ -53,6 +53,12 @@ dependencies {
     {
         compileOnly("com.applovin:applovin-sdk:+@aar")
     }
+
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
+    api(libs.androidx.annotation)
+    compileOnly(files("libs/android-sdk-1.0.jar"))
 }
 
 repositories {

@@ -2,22 +2,18 @@ package com.applovin.unreal;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.applovin.impl.sdk.utils.AndroidManifest;
 import com.applovin.impl.sdk.utils.JsonUtils;
 import com.applovin.impl.sdk.utils.StringUtils;
 import com.applovin.mediation.MaxAd;
@@ -51,6 +47,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import lombok.Data;
+import lombok.val;
+import lombok.var;
+
 /**
  * Created by Ritam Sarmah on May 5 2021
  */
@@ -68,27 +69,26 @@ public class MaxUnrealPlugin
     private AppLovinSdkConfiguration sdkConfiguration;
 
     // Store these values if pub sets before initializing
-    private String       userIdToSet;
-    private List<String> testDeviceAdvertisingIdsToSet;
-    private Boolean      verboseLoggingToSet;
-    private Boolean      creativeDebuggerEnabledToSet;
-    private Boolean      mutedToSet;
-
+    private String                   userIdToSet;
+    private List<String>             testDeviceAdvertisingIdsToSet;
+    private Boolean                  verboseLoggingEnabledToSet;
+    private Boolean                  creativeDebuggerEnabledToSet;
+    private Boolean                  mutedToSet;
     private Boolean                  termsAndPrivacyPolicyFlowEnabledToSet;
     private Uri                      privacyPolicyUriToSet;
     private Uri                      termsOfServiceUriToSet;
     private ConsentFlowUserGeography userGeographyToSet;
 
     // Fullscreen Ad Fields
-    private final Map<String, MaxInterstitialAd> mInterstitials = new HashMap<>( 2 );
-    private final Map<String, MaxRewardedAd>     mRewardedAds   = new HashMap<>( 2 );
+    private final Map<String, MaxInterstitialAd> interstitials = new HashMap<>( 2 );
+    private final Map<String, MaxRewardedAd>     rewardedAds   = new HashMap<>( 2 );
 
     // Banner Fields
-    private final Map<String, MaxAdView>   mAdViews                    = new HashMap<>( 2 );
-    private final Map<String, MaxAdFormat> mAdViewAdFormats            = new HashMap<>( 2 );
-    private final Map<String, String>      mAdViewPositions            = new HashMap<>( 2 );
-    private final Map<String, MaxAdFormat> mVerticalAdViewFormats      = new HashMap<>( 2 );
-    private final List<String>             mAdUnitIdsToShowAfterCreate = new ArrayList<>( 2 );
+    private final Map<String, MaxAdView>   adViews                    = new HashMap<>( 2 );
+    private final Map<String, MaxAdFormat> adViewAdFormats            = new HashMap<>( 2 );
+    private final Map<String, String>      adViewPositions            = new HashMap<>( 2 );
+    private final Map<String, MaxAdFormat> verticalAdViewFormats      = new HashMap<>( 2 );
+    private final List<String>             adUnitIdsToShowAfterCreate = new ArrayList<>( 2 );
 
     private final WeakReference<Activity> gameActivity;
     private       EventListener           eventListener;
@@ -112,152 +112,137 @@ public class MaxUnrealPlugin
     public void initialize(final String pluginVersion, final String sdkKey, final EventListener listener)
     {
         // Check if Activity is available
-        Activity currentActivity = getGameActivity();
+        val currentActivity = getGameActivity();
         if ( currentActivity == null ) throw new IllegalStateException( "No Activity found" );
 
-        final Context context = currentActivity.getApplicationContext();
+        val context = currentActivity.getApplicationContext();
 
         // Guard against running init logic multiple times
         if ( isPluginInitialized )
         {
-            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
+            sendInitializationEvent( context );
             return;
         }
 
-        isPluginInitialized = true;
-
         d( "Initializing AppLovin MAX Unreal v" + pluginVersion + "..." );
 
-        // Set listener
+        isPluginInitialized = true;
         eventListener = listener;
 
         // If SDK key passed in is empty, check Android Manifest
-        String sdkKeyToUse = sdkKey;
-        if ( TextUtils.isEmpty( sdkKey ) )
+        val sdkKeyToUse = TextUtils.isEmpty( sdkKey )
+                ? AndroidManifest.getManifest( context ).getMetaDataString( "applovin.sdk.key" )
+                : sdkKey;
+
+        if ( TextUtils.isEmpty( sdkKeyToUse ) )
         {
-            try
-            {
-                PackageManager packageManager = context.getPackageManager();
-                String packageName = context.getPackageName();
-                ApplicationInfo applicationInfo = packageManager.getApplicationInfo( packageName, PackageManager.GET_META_DATA );
-                Bundle metaData = applicationInfo.metaData;
-
-                sdkKeyToUse = metaData.getString( "applovin.sdk.key", "" );
-            }
-            catch ( Throwable th )
-            {
-                e( "Unable to retrieve SDK key from Android Manifest: " + th );
-            }
-
-            if ( TextUtils.isEmpty( sdkKeyToUse ) )
-            {
-                throw new IllegalStateException( "Unable to initialize AppLovin SDK - no SDK key provided and not found in Android Manifest!" );
-            }
+            throw new IllegalStateException( "Unable to initialize AppLovin SDK - no SDK key provided and not found in Android Manifest!" );
         }
 
-        sdk = AppLovinSdk.getInstance( sdkKeyToUse, new AppLovinSdkSettings( context ), currentActivity );
+        sdk = AppLovinSdk.getInstance( sdkKeyToUse, generateSdkSettings( context ), currentActivity );
         sdk.setPluginVersion( "Unreal-" + pluginVersion );
         sdk.setMediationProvider( AppLovinMediationProvider.MAX );
 
+        // Set targeting data
         if ( !TextUtils.isEmpty( userIdToSet ) )
         {
             sdk.setUserIdentifier( userIdToSet );
             userIdToSet = null;
         }
 
+        sdk.initializeSdk( configuration -> {
+            sdkConfiguration = configuration;
+            isSdkInitialized = true;
+
+            // Enable orientation change listener, so that the ad view positions can be updated when the device is rotated.
+            val rootView = getGameActivity().getWindow().getDecorView().getRootView();
+            rootView.addOnLayoutChangeListener( (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                val viewBoundsChanged = left != oldLeft || right != oldRight || bottom != oldBottom || top != oldTop;
+                if ( !viewBoundsChanged ) return;
+
+                for ( val adUnitFormats : verticalAdViewFormats.entrySet() )
+                {
+                    positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
+                }
+            } );
+
+            sendInitializationEvent( context );
+        } );
+    }
+
+    private AppLovinSdkSettings generateSdkSettings(Context context)
+    {
+        val settings = new AppLovinSdkSettings( context );
+
         if ( testDeviceAdvertisingIdsToSet != null )
         {
-            sdk.getSettings().setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
+            settings.setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
             testDeviceAdvertisingIdsToSet = null;
         }
 
-        if ( verboseLoggingToSet != null )
+        if ( verboseLoggingEnabledToSet != null )
         {
-            sdk.getSettings().setVerboseLogging( verboseLoggingToSet );
-            verboseLoggingToSet = null;
+            settings.setVerboseLogging( verboseLoggingEnabledToSet );
+            verboseLoggingEnabledToSet = null;
         }
 
         if ( creativeDebuggerEnabledToSet != null )
         {
-            sdk.getSettings().setCreativeDebuggerEnabled( creativeDebuggerEnabledToSet );
+            settings.setCreativeDebuggerEnabled( creativeDebuggerEnabledToSet );
             creativeDebuggerEnabledToSet = null;
         }
 
         if ( mutedToSet != null )
         {
-            sdk.getSettings().setMuted( mutedToSet );
+            settings.setMuted( mutedToSet );
             mutedToSet = null;
         }
 
+        val termsAndPrivacyPolicyFlowSettings = settings.getTermsAndPrivacyPolicyFlowSettings();
+
         if ( termsAndPrivacyPolicyFlowEnabledToSet != null )
         {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
+            termsAndPrivacyPolicyFlowSettings.setEnabled( termsAndPrivacyPolicyFlowEnabledToSet );
             termsAndPrivacyPolicyFlowEnabledToSet = null;
         }
 
         if ( privacyPolicyUriToSet != null )
         {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( privacyPolicyUriToSet );
+            termsAndPrivacyPolicyFlowSettings.setPrivacyPolicyUri( privacyPolicyUriToSet );
             privacyPolicyUriToSet = null;
         }
 
         if ( termsOfServiceUriToSet != null )
         {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( termsOfServiceUriToSet );
+            termsAndPrivacyPolicyFlowSettings.setTermsOfServiceUri( termsOfServiceUriToSet );
             termsOfServiceUriToSet = null;
         }
 
         if ( userGeographyToSet != null )
         {
-            sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeographyToSet );
+            termsAndPrivacyPolicyFlowSettings.setDebugUserGeography( userGeographyToSet );
             userGeographyToSet = null;
         }
 
-        sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener()
-        {
-            @Override
-            public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
-            {
-
-                d( "SDK initialized" );
-
-                sdkConfiguration = configuration;
-                isSdkInitialized = true;
-
-                // Enable orientation change listener, so that the position can be updated for vertical banners.
-                new OrientationEventListener( context )
-                {
-                    @Override
-                    public void onOrientationChanged(final int orientation)
-                    {
-                        for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : mVerticalAdViewFormats.entrySet() )
-                        {
-                            positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
-                        }
-                    }
-                }.enable();
-
-                sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
-            }
-        } );
+        return settings;
     }
 
-    private JSONObject getInitializationMessage(final Context context)
+    private void sendInitializationEvent(final Context context)
     {
-        JSONObject message = new JSONObject();
+        val params = new JSONObject();
 
         if ( sdkConfiguration != null )
         {
-            JsonUtils.putInt( message, "consentFlowUserGeography", sdkConfiguration.getConsentFlowUserGeography().ordinal() );
-            JsonUtils.putString( message, "countryCode", sdkConfiguration.getCountryCode() );
+            JsonUtils.putInt( params, "consentFlowUserGeography", sdkConfiguration.getConsentFlowUserGeography().ordinal() );
+            JsonUtils.putString( params, "countryCode", sdkConfiguration.getCountryCode() );
         }
 
-        JsonUtils.putBoolean( message, "hasUserConsent", AppLovinPrivacySettings.hasUserConsent( context ) );
-        JsonUtils.putBoolean( message, "isAgeRestrictedUser", AppLovinPrivacySettings.isAgeRestrictedUser( context ) );
-        JsonUtils.putBoolean( message, "isDoNotSell", AppLovinPrivacySettings.isDoNotSell( context ) );
-        JsonUtils.putBoolean( message, "isTablet", AppLovinSdkUtils.isTablet( context ) );
+        JsonUtils.putBoolean( params, "hasUserConsent", AppLovinPrivacySettings.hasUserConsent( context ) );
+        JsonUtils.putBoolean( params, "isAgeRestrictedUser", AppLovinPrivacySettings.isAgeRestrictedUser( context ) );
+        JsonUtils.putBoolean( params, "isDoNotSell", AppLovinPrivacySettings.isDoNotSell( context ) );
+        JsonUtils.putBoolean( params, "isTablet", AppLovinSdkUtils.isTablet( context ) );
 
-        return message;
+        sendUnrealEvent( "OnSdkInitializedEvent", params );
     }
 
     public boolean isInitialized()
@@ -325,7 +310,7 @@ public class MaxUnrealPlugin
 
     public void setPrivacyPolicyUrl(final String uriString)
     {
-        Uri uri = Uri.parse( uriString );
+        val uri = Uri.parse( uriString );
         if ( sdk != null )
         {
             sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri( uri );
@@ -339,7 +324,7 @@ public class MaxUnrealPlugin
 
     public void setTermsOfServiceUrl(final String uriString)
     {
-        Uri uri = Uri.parse( uriString );
+        val uri = Uri.parse( uriString );
         if ( sdk != null )
         {
             sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri( uri );
@@ -353,7 +338,7 @@ public class MaxUnrealPlugin
 
     public void setConsentFlowDebugUserGeography(final String userGeographyString)
     {
-        ConsentFlowUserGeography userGeography = ConsentFlowUserGeography.valueOf( userGeographyString );
+        val userGeography = ConsentFlowUserGeography.valueOf( userGeographyString );
         if ( sdk != null )
         {
             sdk.getSettings().getTermsAndPrivacyPolicyFlowSettings().setDebugUserGeography( userGeography );
@@ -383,7 +368,7 @@ public class MaxUnrealPlugin
     @Override
     public void onCompleted(final AppLovinCmpError error)
     {
-        JSONObject params = new JSONObject();
+        val params = new JSONObject();
         if ( error != null )
         {
             JsonUtils.putInt( params, "code", error.getCode().getValue() );
@@ -420,6 +405,14 @@ public class MaxUnrealPlugin
         if ( sdk != null )
         {
             sdk.getSettings().setMuted( muted );
+        }
+        else
+        {
+            mutedToSet = muted;
+        }
+        if ( sdk != null )
+        {
+            sdk.getSettings().setMuted( muted );
             mutedToSet = null;
         }
         else
@@ -430,8 +423,8 @@ public class MaxUnrealPlugin
 
     public boolean isMuted()
     {
+        if ( !isPluginInitialized ) return false;
         if ( mutedToSet != null ) return mutedToSet;
-        if ( sdk == null ) return false;
 
         return sdk.getSettings().isMuted();
     }
@@ -441,11 +434,11 @@ public class MaxUnrealPlugin
         if ( sdk != null )
         {
             sdk.getSettings().setVerboseLogging( enabled );
-            verboseLoggingToSet = null;
+            verboseLoggingEnabledToSet = null;
         }
         else
         {
-            verboseLoggingToSet = enabled;
+            verboseLoggingEnabledToSet = enabled;
         }
     }
 
@@ -455,9 +448,9 @@ public class MaxUnrealPlugin
         {
             return sdk.getSettings().isVerboseLoggingEnabled();
         }
-        else if ( verboseLoggingToSet != null )
+        else if ( verboseLoggingEnabledToSet != null )
         {
-            return verboseLoggingToSet;
+            return verboseLoggingEnabledToSet;
         }
 
         return false;
@@ -495,7 +488,7 @@ public class MaxUnrealPlugin
     {
         if ( sdk == null ) return;
 
-        final Map<String, String> deserialized = deserialize( parameters );
+        val deserialized = deserialize( parameters );
         sdk.getEventService().trackEvent( event, deserialized );
     }
     // endregion
@@ -582,25 +575,25 @@ public class MaxUnrealPlugin
     // region Interstitials
     public void loadInterstitial(final String adUnitId)
     {
-        MaxInterstitialAd interstitial = retrieveInterstitial( adUnitId );
+        val interstitial = retrieveInterstitial( adUnitId );
         interstitial.loadAd();
     }
 
     public boolean isInterstitialReady(String adUnitId)
     {
-        MaxInterstitialAd interstitial = retrieveInterstitial( adUnitId );
+        val interstitial = retrieveInterstitial( adUnitId );
         return interstitial.isReady();
     }
 
     public void showInterstitial(final String adUnitId, final String placement)
     {
-        MaxInterstitialAd interstitial = retrieveInterstitial( adUnitId );
+        val interstitial = retrieveInterstitial( adUnitId );
         interstitial.showAd( placement );
     }
 
     public void setInterstitialExtraParameter(final String adUnitId, final String key, final String value)
     {
-        MaxInterstitialAd interstitial = retrieveInterstitial( adUnitId );
+        val interstitial = retrieveInterstitial( adUnitId );
         interstitial.setExtraParameter( key, value );
     }
     // endregion
@@ -608,40 +601,43 @@ public class MaxUnrealPlugin
     // region Rewarded
     public void loadRewardedAd(final String adUnitId)
     {
-        MaxRewardedAd rewardedAd = retrieveRewardedAd( adUnitId );
+        val rewardedAd = retrieveRewardedAd( adUnitId );
         rewardedAd.loadAd();
     }
 
     public boolean isRewardedAdReady(final String adUnitId)
     {
-        MaxRewardedAd rewardedAd = retrieveRewardedAd( adUnitId );
+        val rewardedAd = retrieveRewardedAd( adUnitId );
         return rewardedAd.isReady();
     }
 
     public void showRewardedAd(final String adUnitId, final String placement)
     {
-        MaxRewardedAd rewardedAd = retrieveRewardedAd( adUnitId );
+        val rewardedAd = retrieveRewardedAd( adUnitId );
         rewardedAd.showAd( placement );
     }
 
     public void setRewardedAdExtraParameter(final String adUnitId, final String key, final String value)
     {
-        MaxRewardedAd rewardedAd = retrieveRewardedAd( adUnitId );
+        val rewardedAd = retrieveRewardedAd( adUnitId );
         rewardedAd.setExtraParameter( key, value );
     }
     // endregion
 
     // region Ad Callbacks
     @Override
-    public void onAdLoaded(MaxAd ad)
+    public void onAdLoaded(@NonNull MaxAd ad)
     {
-        String name;
-        MaxAdFormat adFormat = ad.getFormat();
-        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat || MaxAdFormat.MREC == adFormat )
+        val adFormat = ad.getFormat();
+        if ( isInvalidAdFormat( adFormat ) )
         {
-            name = ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdLoadedEvent" : "OnBannerAdLoadedEvent";
+            logInvalidAdFormat( adFormat );
+            return;
+        }
 
-            String adViewPosition = mAdViewPositions.get( ad.getAdUnitId() );
+        if ( adFormat.isAdViewAd() )
+        {
+            val adViewPosition = adViewPositions.get( ad.getAdUnitId() );
             if ( !TextUtils.isEmpty( adViewPosition ) )
             {
                 // Only position ad if not native UI component
@@ -650,238 +646,184 @@ public class MaxUnrealPlugin
 
             // Do not auto-refresh by default if the ad view is not showing yet (e.g. first load during app launch and publisher does not automatically show banner upon load success)
             // We will resume auto-refresh in {@link #showBanner(String)}.
-            MaxAdView adView = retrieveAdView( ad.getAdUnitId(), adFormat );
+            val adView = retrieveAdView( ad.getAdUnitId(), adFormat );
             if ( adView != null && adView.getVisibility() != View.VISIBLE )
             {
                 adView.stopAutoRefresh();
             }
         }
-        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
-        {
-            name = "OnInterstitialAdLoadedEvent";
-        }
-        else if ( MaxAdFormat.REWARDED == adFormat )
-        {
-            name = "OnRewardedAdLoadedEvent";
-        }
-        else
-        {
-            logInvalidAdFormat( adFormat );
-            return;
-        }
 
+        val name = getEventName( adFormat, "Loaded" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
-    public void onAdLoadFailed(final String adUnitId, final MaxError error)
+    public void onAdLoadFailed(@NonNull final String adUnitId, @NonNull final MaxError error)
     {
         if ( TextUtils.isEmpty( adUnitId ) )
         {
-            logStackTrace( new IllegalArgumentException( "adUnitId cannot be null" ) );
+            logStackTrace( new IllegalArgumentException( "Ad unit ID cannot be null" ) );
             return;
         }
 
-        String name;
-        if ( mAdViews.containsKey( adUnitId ) )
+        // Determine ad format
+        final MaxAdFormat format;
+        if ( adViews.containsKey( adUnitId ) )
         {
-            name = ( MaxAdFormat.MREC == mAdViewAdFormats.get( adUnitId ) ) ? "OnMRecAdLoadFailedEvent" : "OnBannerAdLoadFailedEvent";
+            format = adViewAdFormats.get( adUnitId );
         }
-        else if ( mInterstitials.containsKey( adUnitId ) )
+        else if ( interstitials.containsKey( adUnitId ) )
         {
-            name = "OnInterstitialAdLoadFailedEvent";
+            format = MaxAdFormat.INTERSTITIAL;
         }
-        else if ( mRewardedAds.containsKey( adUnitId ) )
+        else if ( rewardedAds.containsKey( adUnitId ) )
         {
-            name = "OnRewardedAdLoadFailedEvent";
+            format = MaxAdFormat.REWARDED;
         }
         else
         {
-            logStackTrace( new IllegalStateException( "invalid adUnitId: " + adUnitId ) );
+            logStackTrace( new IllegalStateException( "Invalid ad unit ID: " + adUnitId ) );
             return;
         }
 
-        JSONObject params = getErrorInfo( error );
+        val name = getEventName( format, "LoadFailed" );
+        val params = getErrorInfo( error );
         JsonUtils.putString( params, "adUnitIdentifier", adUnitId );
 
         sendUnrealEvent( name, params );
     }
 
     @Override
-    public void onAdClicked(final MaxAd ad)
+    public void onAdClicked(@NonNull final MaxAd ad)
     {
-        final MaxAdFormat adFormat = ad.getFormat();
-        final String name;
-        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat )
-        {
-            name = "OnBannerAdClickedEvent";
-        }
-        else if ( MaxAdFormat.MREC == adFormat )
-        {
-            name = "OnMRecAdClickedEvent";
-        }
-        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
-        {
-            name = "OnInterstitialAdClickedEvent";
-        }
-        else if ( MaxAdFormat.REWARDED == adFormat )
-        {
-            name = "OnRewardedAdClickedEvent";
-        }
-        else
+        val adFormat = ad.getFormat();
+        if ( isInvalidAdFormat( adFormat ) )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
+        val name = getEventName( adFormat, "Clicked" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
-    public void onAdDisplayed(final MaxAd ad)
+    public void onAdDisplayed(@NonNull final MaxAd ad)
     {
         // BMLs do not support [DISPLAY] events
-        final MaxAdFormat adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
-
-        final String name;
-        if ( MaxAdFormat.INTERSTITIAL == adFormat )
+        val adFormat = ad.getFormat();
+        if ( isInterstitialOrRewardedAd( adFormat ) )
         {
-            name = "OnInterstitialAdDisplayedEvent";
-        }
-        else // REWARDED
-        {
-            name = "OnRewardedAdDisplayedEvent";
+            logInvalidAdFormat( adFormat );
+            return;
         }
 
+        val name = getEventName( adFormat, "Displayed" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
-    public void onAdDisplayFailed(final MaxAd ad, final MaxError error)
+    public void onAdDisplayFailed(@NonNull final MaxAd ad, @NonNull final MaxError error)
     {
         // BMLs do not support [DISPLAY] events
-        final MaxAdFormat adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
-
-        final String name;
-        if ( MaxAdFormat.INTERSTITIAL == adFormat )
+        val adFormat = ad.getFormat();
+        if ( !isInterstitialOrRewardedAd( adFormat ) )
         {
-            name = "OnInterstitialAdDisplayFailedEvent";
-        }
-        else // REWARDED
-        {
-            name = "OnRewardedAdDisplayFailedEvent";
+            logInvalidAdFormat( adFormat );
+            return;
         }
 
-        JSONObject params = getAdInfo( ad );
+        val params = getAdInfo( ad );
         JsonUtils.putAll( params, getErrorInfo( error ) );
 
+        val name = getEventName( adFormat, "DisplayFailed" );
         sendUnrealEvent( name, params );
     }
 
     @Override
-    public void onAdHidden(final MaxAd ad)
+    public void onAdHidden(@NonNull final MaxAd ad)
     {
         // BMLs do not support [HIDDEN] events
-        final MaxAdFormat adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.INTERSTITIAL && adFormat != MaxAdFormat.REWARDED ) return;
-
-        String name;
-        if ( MaxAdFormat.INTERSTITIAL == adFormat )
+        val adFormat = ad.getFormat();
+        if ( !isInterstitialOrRewardedAd( adFormat ) )
         {
-            name = "OnInterstitialAdHiddenEvent";
-        }
-        else // REWARDED
-        {
-            name = "OnRewardedAdHiddenEvent";
+            logInvalidAdFormat( adFormat );
+            return;
         }
 
+        val name = getEventName( adFormat, "Hidden" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
-    public void onAdExpanded(final MaxAd ad)
+    public void onAdExpanded(@NonNull final MaxAd ad)
     {
-        final MaxAdFormat adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
+        val adFormat = ad.getFormat();
+        if ( !adFormat.isAdViewAd() )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
-        sendUnrealEvent( ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdExpandedEvent" : "OnBannerAdExpandedEvent", getAdInfo( ad ) );
+        val name = getEventName( adFormat, "Expanded" );
+        sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
-    public void onAdCollapsed(final MaxAd ad)
+    public void onAdCollapsed(@NonNull final MaxAd ad)
     {
-        final MaxAdFormat adFormat = ad.getFormat();
-        if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
+        val adFormat = ad.getFormat();
+        if ( !adFormat.isAdViewAd() )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
-        sendUnrealEvent( ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdCollapsedEvent" : "OnBannerAdCollapsedEvent", getAdInfo( ad ) );
+        val name = getEventName( adFormat, "Collapsed" );
+        sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
     @Override
-    public void onRewardedVideoCompleted(final MaxAd ad)
+    public void onRewardedVideoCompleted(@NonNull final MaxAd ad)
     {
         // This event is not forwarded
     }
 
     @Override
-    public void onRewardedVideoStarted(final MaxAd ad)
+    public void onRewardedVideoStarted(@NonNull final MaxAd ad)
     {
         // This event is not forwarded
     }
 
     @Override
-    public void onUserRewarded(final MaxAd ad, final MaxReward reward)
+    public void onUserRewarded(@NonNull final MaxAd ad, @NonNull final MaxReward reward)
     {
-        final MaxAdFormat adFormat = ad.getFormat();
+        val adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.REWARDED )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
-        JSONObject params = getAdInfo( ad );
-        JsonUtils.putString( params, "label", reward != null ? reward.getLabel() : "" );
-        JsonUtils.putInt( params, "amount", reward != null ? reward.getAmount() : 0 );
+        val params = getAdInfo( ad );
+        JsonUtils.putString( params, "label", reward.getLabel() );
+        JsonUtils.putInt( params, "amount", reward.getAmount() );
 
-        sendUnrealEvent( "OnRewardedAdReceivedRewardEvent", params );
+        val name = getEventName( adFormat, "ReceivedReward" );
+        sendUnrealEvent( name, params );
     }
 
     @Override
-    public void onAdRevenuePaid(final MaxAd ad)
+    public void onAdRevenuePaid(@NonNull final MaxAd ad)
     {
-        final MaxAdFormat adFormat = ad.getFormat();
-        final String name;
-        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat )
-        {
-            name = "OnBannerAdRevenuePaidEvent";
-        }
-        else if ( MaxAdFormat.MREC == adFormat )
-        {
-            name = "OnMRecAdRevenuePaidEvent";
-        }
-        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
-        {
-            name = "OnInterstitialAdRevenuePaidEvent";
-        }
-        else if ( MaxAdFormat.REWARDED == adFormat )
-        {
-            name = "OnRewardedAdRevenuePaidEvent";
-        }
-        else
+        val adFormat = ad.getFormat();
+        if ( isInvalidAdFormat( adFormat ) )
         {
             logInvalidAdFormat( adFormat );
             return;
         }
 
+        val name = getEventName( adFormat, "AdRevenuePaid" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
@@ -889,242 +831,193 @@ public class MaxUnrealPlugin
     private void createAdView(final String adUnitId, final MaxAdFormat adFormat, final String adViewPosition)
     {
         // Run on main thread to ensure there are no concurrency issues with other ad view methods
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Creating " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" and position: \"" + adViewPosition + "\"" );
+
+            // Retrieve ad view from the map
+            val adView = retrieveAdView( adUnitId, adFormat, adViewPosition );
+            if ( adView == null )
             {
-                d( "Creating " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" and position: \"" + adViewPosition + "\"" );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
+            }
 
-                // Retrieve ad view from the map
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat, adViewPosition );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
+            adView.setVisibility( View.GONE );
 
-                adView.setVisibility( View.GONE );
+            if ( adView.getParent() == null )
+            {
+                val currentActivity = getGameActivity();
+                val relativeLayout = new RelativeLayout( currentActivity );
+                currentActivity.addContentView( relativeLayout, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                               LinearLayout.LayoutParams.MATCH_PARENT ) );
+                relativeLayout.addView( adView );
 
-                if ( adView.getParent() == null )
-                {
-                    final Activity currentActivity = getGameActivity();
-                    final RelativeLayout relativeLayout = new RelativeLayout( currentActivity );
-                    currentActivity.addContentView( relativeLayout, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                                                   LinearLayout.LayoutParams.MATCH_PARENT ) );
-                    relativeLayout.addView( adView );
+                // Position ad view immediately so if publisher sets color before ad loads, it will not be the size of the screen
+                adViewAdFormats.put( adUnitId, adFormat );
+                positionAdView( adUnitId, adFormat );
+            }
 
-                    // Position ad view immediately so if publisher sets color before ad loads, it will not be the size of the screen
-                    mAdViewAdFormats.put( adUnitId, adFormat );
-                    positionAdView( adUnitId, adFormat );
-                }
+            adView.loadAd();
 
-                adView.loadAd();
-
-                // The publisher may have requested to show the banner before it was created. Now that the banner is created, show it.
-                if ( mAdUnitIdsToShowAfterCreate.contains( adUnitId ) )
-                {
-                    showAdView( adUnitId, adFormat );
-                    mAdUnitIdsToShowAfterCreate.remove( adUnitId );
-                }
+            // The publisher may have requested to show the banner before it was created. Now that the banner is created, show it.
+            if ( adUnitIdsToShowAfterCreate.contains( adUnitId ) )
+            {
+                showAdView( adUnitId, adFormat );
+                adUnitIdsToShowAfterCreate.remove( adUnitId );
             }
         } );
     }
 
     private void setAdViewPlacement(final String adUnitId, final MaxAdFormat adFormat, final String placement)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Setting placement \"" + placement + "\" for " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Setting placement \"" + placement + "\" for " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
-
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                adView.setPlacement( placement );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            adView.setPlacement( placement );
         } );
     }
 
     private void updateAdViewPosition(final String adUnitId, final String adViewPosition, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Updating " + adFormat.getLabel() + " position to \"" + adViewPosition + "\" for ad unit id \"" + adUnitId + "\"" );
+
+            // Retrieve ad view from the map
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Updating " + adFormat.getLabel() + " position to \"" + adViewPosition + "\" for ad unit id \"" + adUnitId + "\"" );
-
-                // Retrieve ad view from the map
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                // Check if the previous position is same as the new position. If so, no need to update the position again.
-                final String previousPosition = mAdViewPositions.get( adUnitId );
-                if ( adViewPosition == null || adViewPosition.equals( previousPosition ) ) return;
-
-                mAdViewPositions.put( adUnitId, adViewPosition );
-                positionAdView( adUnitId, adFormat );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            // Check if the previous position is same as the new position. If so, no need to update the position again.
+            val previousPosition = adViewPositions.get( adUnitId );
+            if ( adViewPosition == null || adViewPosition.equals( previousPosition ) ) return;
+
+            adViewPositions.put( adUnitId, adViewPosition );
+            positionAdView( adUnitId, adFormat );
         } );
     }
 
     private void showAdView(final String adUnitId, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Showing " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Showing " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+                e( adFormat.getLabel() + " does not exist for ad unit id " + adUnitId );
 
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist for ad unit id " + adUnitId );
-
-                    // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
-                    mAdUnitIdsToShowAfterCreate.add( adUnitId );
-                    return;
-                }
-
-                adView.setVisibility( View.VISIBLE );
-                adView.startAutoRefresh();
+                // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
+                adUnitIdsToShowAfterCreate.add( adUnitId );
+                return;
             }
+
+            adView.setVisibility( View.VISIBLE );
+            adView.startAutoRefresh();
         } );
     }
 
     private void hideAdView(final String adUnitId, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Hiding " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+            adUnitIdsToShowAfterCreate.remove( adUnitId );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Hiding " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
-                mAdUnitIdsToShowAfterCreate.remove( adUnitId );
-
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                adView.setVisibility( View.GONE );
-                adView.stopAutoRefresh();
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            adView.setVisibility( View.GONE );
+            adView.stopAutoRefresh();
         } );
     }
 
     private void destroyAdView(final String adUnitId, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Destroying " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Destroying " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
-
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                final ViewParent parent = adView.getParent();
-                if ( parent instanceof ViewGroup )
-                {
-                    ( (ViewGroup) parent ).removeView( adView );
-                }
-
-                adView.setListener( null );
-                adView.destroy();
-
-                mAdViews.remove( adUnitId );
-                mAdViewAdFormats.remove( adUnitId );
-                mAdViewPositions.remove( adUnitId );
-                mVerticalAdViewFormats.remove( adUnitId );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            val parent = adView.getParent();
+            if ( parent instanceof ViewGroup )
+            {
+                ( (ViewGroup) parent ).removeView( adView );
+            }
+
+            adView.setListener( null );
+            adView.destroy();
+
+            adViews.remove( adUnitId );
+            adViewAdFormats.remove( adUnitId );
+            adViewPositions.remove( adUnitId );
+            verticalAdViewFormats.remove( adUnitId );
         } );
     }
 
     private void setAdViewBackgroundColor(final String adUnitId, final MaxAdFormat adFormat, final String hexColorCode)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Setting " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" to color: " + hexColorCode );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Setting " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" to color: " + hexColorCode );
-
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                adView.setBackgroundColor( Color.parseColor( hexColorCode ) );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            adView.setBackgroundColor( Color.parseColor( hexColorCode ) );
         } );
     }
 
     private void setAdViewExtraParameters(final String adUnitId, final MaxAdFormat adFormat, final String key, final String value)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+            d( "Setting " + adFormat.getLabel() + " extra with key: \"" + key + "\" value: " + value );
+
+            // Retrieve ad view from the map
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Setting " + adFormat.getLabel() + " extra with key: \"" + key + "\" value: " + value );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
+            }
 
-                // Retrieve ad view from the map
-                final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
+            adView.setExtraParameter( key, value );
 
-                adView.setExtraParameter( key, value );
+            // Handle local changes as needed
+            if ( "force_banner".equalsIgnoreCase( key ) && MaxAdFormat.MREC != adFormat )
+            {
+                val shouldForceBanner = Boolean.parseBoolean( value );
+                val forcedAdFormat = shouldForceBanner ? MaxAdFormat.BANNER : getDeviceSpecificBannerAdViewAdFormat();
 
-                // Handle local changes as needed
-                if ( "force_banner".equalsIgnoreCase( key ) && MaxAdFormat.MREC != adFormat )
-                {
-                    final MaxAdFormat forcedAdFormat;
-
-                    boolean shouldForceBanner = Boolean.parseBoolean( value );
-                    if ( shouldForceBanner )
-                    {
-                        forcedAdFormat = MaxAdFormat.BANNER;
-                    }
-                    else
-                    {
-                        forcedAdFormat = getDeviceSpecificBannerAdViewAdFormat();
-                    }
-
-                    mAdViewAdFormats.put( adUnitId, forcedAdFormat );
-                    positionAdView( adUnitId, forcedAdFormat );
-                }
+                adViewAdFormats.put( adUnitId, forcedAdFormat );
+                positionAdView( adUnitId, forcedAdFormat );
             }
         } );
     }
 
     private void logInvalidAdFormat(MaxAdFormat adFormat)
     {
-        logStackTrace( new IllegalStateException( "invalid ad format: " + adFormat ) );
+        logStackTrace( new IllegalStateException( "Invalid ad format: " + adFormat ) );
     }
 
     private void logStackTrace(Exception e)
@@ -1134,25 +1027,23 @@ public class MaxUnrealPlugin
 
     public static void d(final String message)
     {
-        final String fullMessage = "[" + TAG + "] " + message;
-        Log.d( SDK_TAG, fullMessage );
+        Log.d( SDK_TAG, "[" + TAG + "] " + message );
     }
 
     public static void e(final String message)
     {
-        final String fullMessage = "[" + TAG + "] " + message;
-        Log.e( SDK_TAG, fullMessage );
+        Log.e( SDK_TAG, "[" + TAG + "] " + message );
     }
 
     private MaxInterstitialAd retrieveInterstitial(String adUnitId)
     {
-        MaxInterstitialAd result = mInterstitials.get( adUnitId );
+        var result = interstitials.get( adUnitId );
         if ( result == null )
         {
             result = new MaxInterstitialAd( adUnitId, sdk, getGameActivity() );
             result.setListener( this );
 
-            mInterstitials.put( adUnitId, result );
+            interstitials.put( adUnitId, result );
         }
 
         return result;
@@ -1160,13 +1051,13 @@ public class MaxUnrealPlugin
 
     private MaxRewardedAd retrieveRewardedAd(String adUnitId)
     {
-        MaxRewardedAd result = mRewardedAds.get( adUnitId );
+        var result = rewardedAds.get( adUnitId );
         if ( result == null )
         {
             result = MaxRewardedAd.getInstance( adUnitId, sdk, getGameActivity() );
             result.setListener( this );
 
-            mRewardedAds.put( adUnitId, result );
+            rewardedAds.put( adUnitId, result );
         }
 
         return result;
@@ -1179,15 +1070,15 @@ public class MaxUnrealPlugin
 
     public MaxAdView retrieveAdView(String adUnitId, MaxAdFormat adFormat, String adViewPosition)
     {
-        MaxAdView result = mAdViews.get( adUnitId );
+        var result = adViews.get( adUnitId );
         if ( result == null && adViewPosition != null )
         {
             // Must explicitly cast the GameActivity to Context to avoid a crash from NoSuchMethodError
             result = new MaxAdView( adUnitId, adFormat, sdk, (Context) getGameActivity() );
             result.setListener( this );
 
-            mAdViews.put( adUnitId, result );
-            mAdViewPositions.put( adUnitId, adViewPosition );
+            adViews.put( adUnitId, result );
+            adViewPositions.put( adUnitId, adViewPosition );
         }
 
         return result;
@@ -1200,14 +1091,14 @@ public class MaxUnrealPlugin
 
     private void positionAdView(String adUnitId, MaxAdFormat adFormat)
     {
-        final MaxAdView adView = retrieveAdView( adUnitId, adFormat );
+        val adView = retrieveAdView( adUnitId, adFormat );
         if ( adView == null )
         {
             e( adFormat.getLabel() + " does not exist" );
             return;
         }
 
-        final RelativeLayout relativeLayout = (RelativeLayout) adView.getParent();
+        val relativeLayout = (RelativeLayout) adView.getParent();
         if ( relativeLayout == null )
         {
             e( adFormat.getLabel() + "'s parent does not exist" );
@@ -1215,23 +1106,23 @@ public class MaxUnrealPlugin
         }
 
         // Size the ad
-        final String adViewPosition = mAdViewPositions.get( adUnitId );
-        final AdViewSize adViewSize = getAdViewSize( adFormat );
-        final int width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.widthDp );
-        final int height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.heightDp );
+        val adViewPosition = adViewPositions.get( adUnitId );
+        val adViewSize = getAdViewSize( adFormat );
+        val width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.widthDp );
+        val height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.heightDp );
 
-        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) adView.getLayoutParams();
+        val params = (RelativeLayout.LayoutParams) adView.getLayoutParams();
         params.height = height;
         adView.setLayoutParams( params );
 
         // Parse gravity
-        int gravity = 0;
+        var gravity = 0;
 
         // Reset rotation, translation and margins so that the banner can be positioned again
         adView.setRotation( 0 );
         adView.setTranslationX( 0 );
         params.setMargins( 0, 0, 0, 0 );
-        mVerticalAdViewFormats.remove( adUnitId );
+        verticalAdViewFormats.remove( adUnitId );
 
         if ( "centered".equalsIgnoreCase( adViewPosition ) )
         {
@@ -1261,8 +1152,8 @@ public class MaxUnrealPlugin
                 params.width = ( MaxAdFormat.MREC == adFormat ) ? width : RelativeLayout.LayoutParams.MATCH_PARENT; // Stretch width if banner
 
                 // Check if the publisher wants the ad view to be vertical and update the position accordingly ('CenterLeft' or 'CenterRight').
-                final boolean containsLeft = adViewPosition.contains( "left" );
-                final boolean containsRight = adViewPosition.contains( "right" );
+                val containsLeft = adViewPosition.contains( "left" );
+                val containsRight = adViewPosition.contains( "right" );
                 if ( containsLeft || containsRight )
                 {
                     // First, center the ad view in the view.
@@ -1296,26 +1187,26 @@ public class MaxUnrealPlugin
                          *                  |   |           |
                          *                  +---+-----------+
                          */
-                        final Rect windowRect = new Rect();
+                        val windowRect = new Rect();
                         relativeLayout.getWindowVisibleDisplayFrame( windowRect );
 
-                        final int windowWidth = windowRect.width();
-                        final int windowHeight = windowRect.height();
-                        final int longSide = Math.max( windowWidth, windowHeight );
-                        final int shortSide = Math.min( windowWidth, windowHeight );
-                        final int margin = ( longSide - shortSide ) / 2;
+                        val windowWidth = windowRect.width();
+                        val windowHeight = windowRect.height();
+                        val longSide = Math.max( windowWidth, windowHeight );
+                        val shortSide = Math.min( windowWidth, windowHeight );
+                        val margin = ( longSide - shortSide ) / 2;
                         params.setMargins( -margin, 0, -margin, 0 );
 
                         // The view is now at the center of the screen and so is it's pivot point. Move its center such that when rotated, it snaps into the vertical position we need.
-                        final int translationRaw = ( windowWidth / 2 ) - ( height / 2 );
-                        final int translationX = containsLeft ? -translationRaw : translationRaw;
+                        val translationRaw = ( windowWidth / 2 ) - ( height / 2 );
+                        val translationX = containsLeft ? -translationRaw : translationRaw;
                         adView.setTranslationX( translationX );
 
                         // We have the view's center in the correct position. Now rotate it to snap into place.
                         adView.setRotation( 270 );
 
                         // Store the ad view with format, so that it can be updated when the orientation changes.
-                        mVerticalAdViewFormats.put( adUnitId, adFormat );
+                        verticalAdViewFormats.put( adUnitId, adFormat );
                     }
                 }
             }
@@ -1349,16 +1240,11 @@ public class MaxUnrealPlugin
         return AppLovinSdkUtils.isTablet( context ) ? MaxAdFormat.LEADER : MaxAdFormat.BANNER;
     }
 
+    @Data
     protected static class AdViewSize
     {
         public final int widthDp;
         public final int heightDp;
-
-        private AdViewSize(final int widthDp, final int heightDp)
-        {
-            this.widthDp = widthDp;
-            this.heightDp = heightDp;
-        }
     }
 
     public static AdViewSize getAdViewSize(final MaxAdFormat format)
@@ -1381,9 +1267,19 @@ public class MaxUnrealPlugin
         }
     }
 
+    private boolean isInterstitialOrRewardedAd(final MaxAdFormat adFormat)
+    {
+        return MaxAdFormat.INTERSTITIAL == adFormat || MaxAdFormat.REWARDED == adFormat;
+    }
+
+    private boolean isInvalidAdFormat(final MaxAdFormat adFormat)
+    {
+        return adFormat == null || ( !adFormat.isAdViewAd() && !isInterstitialOrRewardedAd( adFormat ) );
+    }
+
     private JSONObject getAdInfo(final MaxAd ad)
     {
-        JSONObject adInfo = new JSONObject();
+        val adInfo = new JSONObject();
 
         JsonUtils.putString( adInfo, "adUnitIdentifier", ad.getAdUnitId() );
         JsonUtils.putString( adInfo, "creativeIdentifier", StringUtils.emptyIfNull( ad.getCreativeId() ) );
@@ -1396,13 +1292,38 @@ public class MaxUnrealPlugin
 
     private JSONObject getErrorInfo(final MaxError error)
     {
-        JSONObject errorInfo = new JSONObject();
+        val errorInfo = new JSONObject();
 
         JsonUtils.putInt( errorInfo, "code", error.getCode() );
         JsonUtils.putString( errorInfo, "message", error.getMessage() );
         JsonUtils.putString( errorInfo, "waterfall", error.getWaterfall() != null ? error.getWaterfall().toString() : "" );
 
         return errorInfo;
+    }
+
+    private String getEventName(final MaxAdFormat adFormat, final String event)
+    {
+        if ( adFormat != null )
+        {
+            if ( adFormat.isBannerOrLeaderAd() )
+            {
+                return "OnBannerAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.MREC == adFormat )
+            {
+                return "OnMRecAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.INTERSTITIAL == adFormat )
+            {
+                return "OnInterstitialAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.REWARDED == adFormat )
+            {
+                return "OnRewardedAd" + event + "Event";
+            }
+        }
+
+        throw new IllegalArgumentException( "Invalid ad format" );
     }
 
     private static Map<String, String> deserialize(final String serialized)
