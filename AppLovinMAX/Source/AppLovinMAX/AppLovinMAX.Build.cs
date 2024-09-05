@@ -46,11 +46,11 @@ public class AppLovinMAX : ModuleRules
 	private void InstallIOS()
 	{
 		var AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
-		var AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDK.embeddedframework.zip" );
+		var AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDK.xcframework" );
         var AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "AppLovin", "MAX_Unreal_Plugin.embeddedframework.zip" );
 		var AppLovinPodsPath = Path.Combine( AppLovinIOSPath, "Pods" );
 
-		if ( !File.Exists( AppLovinSDKPath ) || !File.Exists( AppLovinPluginPath ) )
+		if ( !Directory.Exists( AppLovinSDKPath ) || !File.Exists( AppLovinPluginPath ) )
 		{
 			System.Console.WriteLine( "AppLovin IOS Plugin not found" );
 			PublicDefinitions.Add( "WITH_APPLOVIN=0" );
@@ -72,7 +72,8 @@ public class AppLovinMAX : ModuleRules
 			new Framework(
 				"AppLovinSDK",
 				AppLovinSDKPath,
-				"Resources/AppLovinSDKResources.bundle"
+				null,
+				true
 			)
 		);
 
