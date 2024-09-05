@@ -1275,7 +1275,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
              @"creativeIdentifier" : ad.creativeIdentifier ?: @"",
              @"networkName" : ad.networkName,
              @"placement" : ad.placement ?: @"",
-             @"revenue" : ad.revenue == 0 ? @(ad.revenue) : @(-1)};
+             @"revenue" : @(ad.revenue)};
 }
 
 - (NSDictionary<NSString *, id> *)errorInfoForError:(MAError *)error
