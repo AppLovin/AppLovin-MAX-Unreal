@@ -226,7 +226,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     
     message[@"hasUserConsent"] = @([ALPrivacySettings hasUserConsent]);
-    message[@"isAgeRestrictedUser"] = @([ALPrivacySettings isAgeRestrictedUser]);
     message[@"isDoNotSell"] = @([ALPrivacySettings isDoNotSell]);
     message[@"isTablet"] = @([self isTablet]);
     
@@ -249,16 +248,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (BOOL)hasUserConsent
 {
     return [ALPrivacySettings hasUserConsent];
-}
-
-- (void)setIsAgeRestrictedUser:(BOOL)isAgeRestrictedUser
-{
-    [ALPrivacySettings setIsAgeRestrictedUser: isAgeRestrictedUser];
-}
-
-- (BOOL)isAgeRestrictedUser
-{
-    return [ALPrivacySettings isAgeRestrictedUser];
 }
 
 - (void)setDoNotSell:(BOOL)doNotSell

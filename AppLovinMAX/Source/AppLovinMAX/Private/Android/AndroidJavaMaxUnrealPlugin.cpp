@@ -13,8 +13,6 @@ FJavaAndroidMaxUnrealPlugin::FJavaAndroidMaxUnrealPlugin()
       IsInitializedMethod(GetClassMethod("isInitialized", "()Z")),
       SetHasUserConsentMethod(GetClassMethod("setHasUserConsent", "(Z)V")),
       HasUserConsentMethod(GetClassMethod("hasUserConsent", "()Z")),
-      SetIsAgeRestrictedUserMethod(GetClassMethod("setIsAgeRestrictedUser", "(Z)V")),
-      IsAgeRestrictedUserMethod(GetClassMethod("isAgeRestrictedUser", "()Z")),
       SetDoNotSellMethod(GetClassMethod("setDoNotSell", "(Z)V")),
       IsDoNotSellMethod(GetClassMethod("isDoNotSell", "()Z")),
       SetTermsAndPrivacyPolicyFlowEnabledMethod(GetClassMethod("setTermsAndPrivacyPolicyFlowEnabled", "(Z)V")),
@@ -92,16 +90,6 @@ void FJavaAndroidMaxUnrealPlugin::SetHasUserConsent(bool bHasUserConsent)
 bool FJavaAndroidMaxUnrealPlugin::HasUserConsent()
 {
     return CallMethod<bool>(HasUserConsentMethod);
-}
-
-void FJavaAndroidMaxUnrealPlugin::SetIsAgeRestrictedUser(bool bIsAgeRestrictedUser)
-{
-    CallMethod<void>(SetIsAgeRestrictedUserMethod, bIsAgeRestrictedUser);
-}
-
-bool FJavaAndroidMaxUnrealPlugin::IsAgeRestrictedUser()
-{
-    return CallMethod<bool>(IsAgeRestrictedUserMethod);
 }
 
 void FJavaAndroidMaxUnrealPlugin::SetDoNotSell(bool bDoNotSell)

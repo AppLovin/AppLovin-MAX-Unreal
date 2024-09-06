@@ -79,20 +79,6 @@ public:
     static bool HasUserConsent();
 
     /**
-     * Mark user as age restricted (i.e., under 16).
-     * @param bIsAgeRestrictedUser - True if the user is age restricted (i.e., under 16)
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static void SetIsAgeRestrictedUser(bool bIsAgeRestrictedUser);
-
-    /**
-     * Check if user is age restricted.
-     * @return True if user is age restricted
-     */
-    UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
-    static bool IsAgeRestrictedUser();
-
-    /**
      * Set whether or not user has opted out of the sale of their personal information.
      * @param bDoNotSell - True if the user has opted out of the sale of their personal information
      */

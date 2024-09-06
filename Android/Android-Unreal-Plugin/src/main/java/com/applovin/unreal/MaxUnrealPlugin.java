@@ -253,7 +253,6 @@ public class MaxUnrealPlugin
         }
 
         JsonUtils.putBoolean( message, "hasUserConsent", AppLovinPrivacySettings.hasUserConsent( context ) );
-        JsonUtils.putBoolean( message, "isAgeRestrictedUser", AppLovinPrivacySettings.isAgeRestrictedUser( context ) );
         JsonUtils.putBoolean( message, "isDoNotSell", AppLovinPrivacySettings.isDoNotSell( context ) );
         JsonUtils.putBoolean( message, "isTablet", AppLovinSdkUtils.isTablet( context ) );
 
@@ -286,16 +285,6 @@ public class MaxUnrealPlugin
     public boolean hasUserConsent()
     {
         return AppLovinPrivacySettings.hasUserConsent( getGameActivity() );
-    }
-
-    public void setIsAgeRestrictedUser(final boolean isAgeRestrictedUser)
-    {
-        AppLovinPrivacySettings.setIsAgeRestrictedUser( isAgeRestrictedUser, getGameActivity() );
-    }
-
-    public boolean isAgeRestrictedUser()
-    {
-        return AppLovinPrivacySettings.isAgeRestrictedUser( getGameActivity() );
     }
 
     public void setDoNotSell(final boolean doNotSell)

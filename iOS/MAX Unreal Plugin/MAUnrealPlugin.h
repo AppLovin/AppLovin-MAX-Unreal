@@ -25,8 +25,6 @@ typedef void(*UnrealEventCallback)(NSString *name, NSString *body);
 
 - (void)setHasUserConsent:(BOOL)hasUserConsent;
 - (BOOL)hasUserConsent;
-- (void)setIsAgeRestrictedUser:(BOOL)isAgeRestrictedUser;
-- (BOOL)isAgeRestrictedUser;
 - (void)setDoNotSell:(BOOL)doNotSell;
 - (BOOL)isDoNotSell;
 
