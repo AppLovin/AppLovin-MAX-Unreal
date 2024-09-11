@@ -827,18 +827,6 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onRewardedVideoCompleted(final MaxAd ad)
-    {
-        // This event is not forwarded
-    }
-
-    @Override
-    public void onRewardedVideoStarted(final MaxAd ad)
-    {
-        // This event is not forwarded
-    }
-
-    @Override
     public void onUserRewarded(final MaxAd ad, final MaxReward reward)
     {
         final MaxAdFormat adFormat = ad.getFormat();
@@ -1389,7 +1377,7 @@ public class MaxUnrealPlugin
         JsonUtils.putString( adInfo, "creativeIdentifier", StringUtils.emptyIfNull( ad.getCreativeId() ) );
         JsonUtils.putString( adInfo, "networkName", ad.getNetworkName() );
         JsonUtils.putString( adInfo, "placement", StringUtils.emptyIfNull( ad.getPlacement() ) );
-        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue());
+        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue() );
 
         return adInfo;
     }
