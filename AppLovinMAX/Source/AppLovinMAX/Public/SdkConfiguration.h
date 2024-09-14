@@ -46,10 +46,6 @@ struct APPLOVINMAX_API FSdkConfiguration
     UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     bool HasUserConsent = false;
 
-    /** True if the user is age restricted. */
-    UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
-    bool IsAgeRestrictedUser = false;
-
     /** True if the user has opted out of the sale of their personal information. */
     UPROPERTY(BlueprintReadOnly, Category = "AppLovinMAX")
     bool IsDoNotSell = false;

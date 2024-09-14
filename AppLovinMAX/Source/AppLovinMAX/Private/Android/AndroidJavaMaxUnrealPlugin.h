@@ -21,8 +21,6 @@ public:
     // MARK: Privacy
     void SetHasUserConsent(bool bHasUserConsent);
     bool HasUserConsent();
-    void SetIsAgeRestrictedUser(bool bIsAgeRestrictedUser);
-    bool IsAgeRestrictedUser();
     void SetDoNotSell(bool bDoNotSell);
     bool IsDoNotSell();
 

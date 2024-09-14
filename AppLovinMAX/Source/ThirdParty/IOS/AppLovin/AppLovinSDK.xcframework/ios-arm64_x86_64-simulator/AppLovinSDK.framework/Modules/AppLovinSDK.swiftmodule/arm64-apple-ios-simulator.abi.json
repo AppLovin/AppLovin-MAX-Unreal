@@ -1,0 +1,4808 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "TopLevel",
+    "printedName": "TopLevel",
+    "children": [
+      {
+        "kind": "TypeDecl",
+        "name": "AdapterDelegate",
+        "printedName": "AdapterDelegate",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "adapter",
+            "printedName": "adapter",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UnownedStorage",
+                "printedName": "τ_0_0"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC7adapterxvp",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC7adapterxvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "ReferenceOwnership",
+              "AccessControl"
+            ],
+            "ownership": 2,
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC7adapterxvg",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC7adapterxvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "unownedAdapter",
+            "printedName": "unownedAdapter",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ALUnowned",
+                "printedName": "AppLovinSDK.ALUnowned<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "c:objc(cs)ALUnowned"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC07unownedD0So9ALUnownedCyxGvp",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC07unownedD0So9ALUnownedCyxGvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ALUnowned",
+                    "printedName": "AppLovinSDK.ALUnowned<τ_0_0>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_0_0"
+                      }
+                    ],
+                    "usr": "c:objc(cs)ALUnowned"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC07unownedD0So9ALUnownedCyxGvg",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC07unownedD0So9ALUnownedCyxGvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "delegate",
+            "printedName": "delegate",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "τ_0_1?"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC8delegateq_Sgvp",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC8delegateq_Sgvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "ReferenceOwnership",
+              "AccessControl"
+            ],
+            "ownership": 1,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "τ_0_1?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_0_1"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC8delegateq_Sgvg",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC8delegateq_Sgvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "τ_0_1?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_0_1"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC8delegateq_Sgvs",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC8delegateq_Sgvs",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC8delegateq_SgvM",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC8delegateq_SgvM",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "adFormat",
+            "printedName": "adFormat",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdFormat",
+                "printedName": "AppLovinSDK.MAAdFormat",
+                "usr": "c:objc(cs)MAAdFormat"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC8adFormatSo04MAAdG0Cvp",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC8adFormatSo04MAAdG0Cvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MAAdFormat",
+                    "printedName": "AppLovinSDK.MAAdFormat",
+                    "usr": "c:objc(cs)MAAdFormat"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC8adFormatSo04MAAdG0Cvg",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC8adFormatSo04MAAdG0Cvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "parameters",
+            "printedName": "parameters",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC10parametersSo27MAAdapterResponseParameters_pvp",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC10parametersSo27MAAdapterResponseParameters_pvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MAAdapterResponseParameters",
+                    "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                    "usr": "c:objc(pl)MAAdapterResponseParameters"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC10parametersSo27MAAdapterResponseParameters_pvg",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC10parametersSo27MAAdapterResponseParameters_pvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "adIdentifier",
+            "printedName": "adIdentifier",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC12adIdentifierSSvp",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC12adIdentifierSSvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK15AdapterDelegateC12adIdentifierSSvg",
+                "mangledName": "$s11AppLovinSDK15AdapterDelegateC12adIdentifierSSvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+                "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "log",
+            "printedName": "log(adEvent:id:appending:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Ad",
+                "printedName": "AppLovinSDK.LogEvent.Ad",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "hasDefaultArg": true,
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC3log7adEvent2id9appendingyAA03LogH0V2AdO_SSSgSStF",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC3log7adEvent2id9appendingyAA03LogH0V2AdO_SSSgSStF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "log",
+            "printedName": "log(adEvent:appending:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Ad",
+                "printedName": "AppLovinSDK.LogEvent.Ad",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "hasDefaultArg": true,
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC3log7adEvent9appendingyAA03LogH0V2AdO_SStF",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC3log7adEvent9appendingyAA03LogH0V2AdO_SStF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "logDebug",
+            "printedName": "logDebug(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC8logDebugyySSF",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC8logDebugyySSF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "logInfo",
+            "printedName": "logInfo(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC7logInfoyySSF",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC7logInfoyySSF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "logWarn",
+            "printedName": "logWarn(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC7logWarnyySSF",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC7logWarnyySSF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "logError",
+            "printedName": "logError(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC8logErroryySSF",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC8logErroryySSF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "logUserError",
+            "printedName": "logUserError(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK15AdapterDelegateC12logUserErroryySSF",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateC12logUserErroryySSF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AdapterDelegate",
+                "printedName": "AppLovinSDK.AdapterDelegate<τ_0_0, τ_0_1>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_1"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK15AdapterDelegateC"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK15AdapterDelegateCACyxq_Gycfc",
+            "mangledName": "$s11AppLovinSDK15AdapterDelegateCACyxq_Gycfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+            "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+            "overriding": true,
+            "implicit": true,
+            "objc_name": "init",
+            "declAttributes": [
+              "Dynamic",
+              "ObjC",
+              "Override"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK15AdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK15AdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : AppLovinSDK.ALMediationAdapter, τ_0_1 : AppLovinSDK.MAAdapterDelegate>",
+        "sugared_genericSig": "<T, U where T : AppLovinSDK.ALMediationAdapter, U : AppLovinSDK.MAAdapterDelegate>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "hasMissingDesignatedInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "InterstitialAdapterDelegate",
+        "printedName": "InterstitialAdapterDelegate",
+        "children": [
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(adapter:delegate:parameters:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "InterstitialAdapterDelegate",
+                "printedName": "AppLovinSDK.InterstitialAdapterDelegate<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK27InterstitialAdapterDelegateC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAInterstitialAdapterDelegate",
+                "printedName": "AppLovinSDK.MAInterstitialAdapterDelegate",
+                "usr": "c:objc(pl)MAInterstitialAdapterDelegate"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK27InterstitialAdapterDelegateC7adapter8delegate10parametersACyxGx_So014MAInterstitialeF0_pSo27MAAdapterResponseParameters_ptcfc",
+            "mangledName": "$s11AppLovinSDK27InterstitialAdapterDelegateC7adapter8delegate10parametersACyxGx_So014MAInterstitialeF0_pSo27MAAdapterResponseParameters_ptcfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK27InterstitialAdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK27InterstitialAdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+        "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:11AppLovinSDK15AdapterDelegateC",
+        "hasMissingDesignatedInitializers": true,
+        "superclassNames": [
+          "AppLovinSDK.AdapterDelegate<τ_0_0, AppLovinSDK.MAInterstitialAdapterDelegate>",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AppOpenAdapterDelegate",
+        "printedName": "AppOpenAdapterDelegate",
+        "children": [
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(adapter:delegate:parameters:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AppOpenAdapterDelegate",
+                "printedName": "AppLovinSDK.AppOpenAdapterDelegate<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK0A19OpenAdapterDelegateC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAppOpenAdapterDelegate",
+                "printedName": "AppLovinSDK.MAAppOpenAdapterDelegate",
+                "usr": "c:objc(pl)MAAppOpenAdapterDelegate"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK0A19OpenAdapterDelegateC7adapter8delegate10parametersACyxGx_So05MAAppdeF0_pSo27MAAdapterResponseParameters_ptcfc",
+            "mangledName": "$s11AppLovinSDK0A19OpenAdapterDelegateC7adapter8delegate10parametersACyxGx_So05MAAppdeF0_pSo27MAAdapterResponseParameters_ptcfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK0A19OpenAdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK0A19OpenAdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+        "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:11AppLovinSDK15AdapterDelegateC",
+        "hasMissingDesignatedInitializers": true,
+        "superclassNames": [
+          "AppLovinSDK.AdapterDelegate<τ_0_0, AppLovinSDK.MAAppOpenAdapterDelegate>",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "RewardedAdapterDelegate",
+        "printedName": "RewardedAdapterDelegate",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "hasGrantedReward",
+            "printedName": "hasGrantedReward",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK23RewardedAdapterDelegateC16hasGrantedRewardSbvp",
+            "mangledName": "$s11AppLovinSDK23RewardedAdapterDelegateC16hasGrantedRewardSbvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "SetterAccess",
+              "AccessControl"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK23RewardedAdapterDelegateC16hasGrantedRewardSbvg",
+                "mangledName": "$s11AppLovinSDK23RewardedAdapterDelegateC16hasGrantedRewardSbvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+                "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(adapter:delegate:parameters:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RewardedAdapterDelegate",
+                "printedName": "AppLovinSDK.RewardedAdapterDelegate<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK23RewardedAdapterDelegateC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MARewardedAdapterDelegate",
+                "printedName": "AppLovinSDK.MARewardedAdapterDelegate",
+                "usr": "c:objc(pl)MARewardedAdapterDelegate"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK23RewardedAdapterDelegateC7adapter8delegate10parametersACyxGx_So010MARewardedeF0_pSo27MAAdapterResponseParameters_ptcfc",
+            "mangledName": "$s11AppLovinSDK23RewardedAdapterDelegateC7adapter8delegate10parametersACyxGx_So010MARewardedeF0_pSo27MAAdapterResponseParameters_ptcfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "setGrantedReward",
+            "printedName": "setGrantedReward()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK23RewardedAdapterDelegateC16setGrantedRewardyyF",
+            "mangledName": "$s11AppLovinSDK23RewardedAdapterDelegateC16setGrantedRewardyyF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK23RewardedAdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK23RewardedAdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+        "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:11AppLovinSDK15AdapterDelegateC",
+        "hasMissingDesignatedInitializers": true,
+        "superclassNames": [
+          "AppLovinSDK.AdapterDelegate<τ_0_0, AppLovinSDK.MARewardedAdapterDelegate>",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "RewardedInterstitialAdapterDelegate",
+        "printedName": "RewardedInterstitialAdapterDelegate",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "hasGrantedReward",
+            "printedName": "hasGrantedReward",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK35RewardedInterstitialAdapterDelegateC16hasGrantedRewardSbvp",
+            "mangledName": "$s11AppLovinSDK35RewardedInterstitialAdapterDelegateC16hasGrantedRewardSbvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "SetterAccess",
+              "AccessControl"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK35RewardedInterstitialAdapterDelegateC16hasGrantedRewardSbvg",
+                "mangledName": "$s11AppLovinSDK35RewardedInterstitialAdapterDelegateC16hasGrantedRewardSbvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+                "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(adapter:delegate:parameters:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RewardedInterstitialAdapterDelegate",
+                "printedName": "AppLovinSDK.RewardedInterstitialAdapterDelegate<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK35RewardedInterstitialAdapterDelegateC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MARewardedInterstitialAdapterDelegate",
+                "printedName": "AppLovinSDK.MARewardedInterstitialAdapterDelegate",
+                "usr": "c:objc(pl)MARewardedInterstitialAdapterDelegate"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK35RewardedInterstitialAdapterDelegateC7adapter8delegate10parametersACyxGx_So010MARewardedefG0_pSo27MAAdapterResponseParameters_ptcfc",
+            "mangledName": "$s11AppLovinSDK35RewardedInterstitialAdapterDelegateC7adapter8delegate10parametersACyxGx_So010MARewardedefG0_pSo27MAAdapterResponseParameters_ptcfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Function",
+            "name": "setGrantedReward",
+            "printedName": "setGrantedReward()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:11AppLovinSDK35RewardedInterstitialAdapterDelegateC16setGrantedRewardyyF",
+            "mangledName": "$s11AppLovinSDK35RewardedInterstitialAdapterDelegateC16setGrantedRewardyyF",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK35RewardedInterstitialAdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK35RewardedInterstitialAdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+        "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:11AppLovinSDK15AdapterDelegateC",
+        "hasMissingDesignatedInitializers": true,
+        "superclassNames": [
+          "AppLovinSDK.AdapterDelegate<τ_0_0, AppLovinSDK.MARewardedInterstitialAdapterDelegate>",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AdViewAdapterDelegate",
+        "printedName": "AdViewAdapterDelegate",
+        "children": [
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(adapter:delegate:adFormat:parameters:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AdViewAdapterDelegate",
+                "printedName": "AppLovinSDK.AdViewAdapterDelegate<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK21AdViewAdapterDelegateC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdViewAdapterDelegate",
+                "printedName": "AppLovinSDK.MAAdViewAdapterDelegate",
+                "usr": "c:objc(pl)MAAdViewAdapterDelegate"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdFormat",
+                "printedName": "AppLovinSDK.MAAdFormat",
+                "usr": "c:objc(cs)MAAdFormat"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK21AdViewAdapterDelegateC7adapter8delegate8adFormat10parametersACyxGx_So04MAAdefG0_pSo0mK0CSo27MAAdapterResponseParameters_ptcfc",
+            "mangledName": "$s11AppLovinSDK21AdViewAdapterDelegateC7adapter8delegate8adFormat10parametersACyxGx_So04MAAdefG0_pSo0mK0CSo27MAAdapterResponseParameters_ptcfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "overriding": true,
+            "declAttributes": [
+              "AccessControl",
+              "Override"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK21AdViewAdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK21AdViewAdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+        "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:11AppLovinSDK15AdapterDelegateC",
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "AppLovinSDK.AdapterDelegate<τ_0_0, AppLovinSDK.MAAdViewAdapterDelegate>",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "NativeAdViewAdapterDelegate",
+        "printedName": "NativeAdViewAdapterDelegate",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "templateName",
+            "printedName": "templateName",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK27NativeAdViewAdapterDelegateC12templateNameSSSgvp",
+            "mangledName": "$s11AppLovinSDK27NativeAdViewAdapterDelegateC12templateNameSSSgvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK27NativeAdViewAdapterDelegateC12templateNameSSSgvg",
+                "mangledName": "$s11AppLovinSDK27NativeAdViewAdapterDelegateC12templateNameSSSgvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+                "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(adapter:delegate:adFormat:parameters:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NativeAdViewAdapterDelegate",
+                "printedName": "AppLovinSDK.NativeAdViewAdapterDelegate<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK27NativeAdViewAdapterDelegateC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdViewAdapterDelegate",
+                "printedName": "AppLovinSDK.MAAdViewAdapterDelegate",
+                "usr": "c:objc(pl)MAAdViewAdapterDelegate"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdFormat",
+                "printedName": "AppLovinSDK.MAAdFormat",
+                "usr": "c:objc(cs)MAAdFormat"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK27NativeAdViewAdapterDelegateC7adapter8delegate8adFormat10parametersACyxGx_So04MAAdfgH0_pSo0nL0CSo27MAAdapterResponseParameters_ptcfc",
+            "mangledName": "$s11AppLovinSDK27NativeAdViewAdapterDelegateC7adapter8delegate8adFormat10parametersACyxGx_So04MAAdfgH0_pSo0nL0CSo27MAAdapterResponseParameters_ptcfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "overriding": true,
+            "declAttributes": [
+              "AccessControl",
+              "Override"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK27NativeAdViewAdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK27NativeAdViewAdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+        "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:11AppLovinSDK21AdViewAdapterDelegateC",
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "AppLovinSDK.AdViewAdapterDelegate<τ_0_0>",
+          "AppLovinSDK.AdapterDelegate<τ_0_0, AppLovinSDK.MAAdViewAdapterDelegate>",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "NativeAdAdapterDelegate",
+        "printedName": "NativeAdAdapterDelegate",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "templateName",
+            "printedName": "templateName",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:11AppLovinSDK23NativeAdAdapterDelegateC12templateNameSSSgvp",
+            "mangledName": "$s11AppLovinSDK23NativeAdAdapterDelegateC12templateNameSSSgvp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "Final",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:11AppLovinSDK23NativeAdAdapterDelegateC12templateNameSSSgvg",
+                "mangledName": "$s11AppLovinSDK23NativeAdAdapterDelegateC12templateNameSSSgvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+                "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(adapter:delegate:parameters:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NativeAdAdapterDelegate",
+                "printedName": "AppLovinSDK.NativeAdAdapterDelegate<τ_0_0>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ],
+                "usr": "s:11AppLovinSDK23NativeAdAdapterDelegateC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "τ_0_0"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MANativeAdAdapterDelegate",
+                "printedName": "AppLovinSDK.MANativeAdAdapterDelegate",
+                "usr": "c:objc(pl)MANativeAdAdapterDelegate"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:11AppLovinSDK23NativeAdAdapterDelegateC7adapter8delegate10parametersACyxGx_So08MANativeefG0_pSo27MAAdapterResponseParameters_ptcfc",
+            "mangledName": "$s11AppLovinSDK23NativeAdAdapterDelegateC7adapter8delegate10parametersACyxGx_So08MANativeefG0_pSo27MAAdapterResponseParameters_ptcfc",
+            "moduleName": "AppLovinSDK",
+            "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+            "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:11AppLovinSDK23NativeAdAdapterDelegateC",
+        "mangledName": "$s11AppLovinSDK23NativeAdAdapterDelegateC",
+        "moduleName": "AppLovinSDK",
+        "genericSig": "<τ_0_0 where τ_0_0 : AppLovinSDK.ALMediationAdapter>",
+        "sugared_genericSig": "<T where T : AppLovinSDK.ALMediationAdapter>",
+        "isOpen": true,
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "superclassUsr": "s:11AppLovinSDK15AdapterDelegateC",
+        "hasMissingDesignatedInitializers": true,
+        "superclassNames": [
+          "AppLovinSDK.AdapterDelegate<τ_0_0, AppLovinSDK.MANativeAdAdapterDelegate>",
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AppLovinSDK",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "LogEvent",
+        "printedName": "LogEvent",
+        "children": [
+          {
+            "kind": "TypeDecl",
+            "name": "Lifecycle",
+            "printedName": "Lifecycle",
+            "children": [
+              {
+                "kind": "Var",
+                "name": "initializing",
+                "printedName": "initializing",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Lifecycle.Type) -> ([Swift.String : Any]?) -> AppLovinSDK.LogEvent.Lifecycle",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "([Swift.String : Any]?) -> AppLovinSDK.LogEvent.Lifecycle",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(parameters: [Swift.String : Any]?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "[Swift.String : Any]?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "Dictionary",
+                                    "printedName": "[Swift.String : Any]",
+                                    "children": [
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "String",
+                                        "printedName": "Swift.String",
+                                        "usr": "s:SS"
+                                      },
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "ProtocolComposition",
+                                        "printedName": "Any"
+                                      }
+                                    ],
+                                    "usr": "s:SD"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Lifecycle.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV9LifecycleO12initializingyAESDySSypGSg_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV9LifecycleO12initializingyAESDySSypGSg_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "initializeSuccess",
+                "printedName": "initializeSuccess",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Lifecycle.Type) -> ([Swift.String : Any]?) -> AppLovinSDK.LogEvent.Lifecycle",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "([Swift.String : Any]?) -> AppLovinSDK.LogEvent.Lifecycle",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(parameters: [Swift.String : Any]?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "[Swift.String : Any]?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "Dictionary",
+                                    "printedName": "[Swift.String : Any]",
+                                    "children": [
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "String",
+                                        "printedName": "Swift.String",
+                                        "usr": "s:SS"
+                                      },
+                                      {
+                                        "kind": "TypeNominal",
+                                        "name": "ProtocolComposition",
+                                        "printedName": "Any"
+                                      }
+                                    ],
+                                    "usr": "s:SD"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Lifecycle.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV9LifecycleO17initializeSuccessyAESDySSypGSg_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV9LifecycleO17initializeSuccessyAESDySSypGSg_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "initializeFailure",
+                "printedName": "initializeFailure",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Lifecycle.Type) -> (Swift.String?) -> AppLovinSDK.LogEvent.Lifecycle",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.String?) -> AppLovinSDK.LogEvent.Lifecycle",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(description: Swift.String?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "Swift.String?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "String",
+                                    "printedName": "Swift.String",
+                                    "usr": "s:SS"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Lifecycle.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV9LifecycleO17initializeFailureyAESSSg_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV9LifecycleO17initializeFailureyAESSSg_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "alreadyInitialized",
+                "printedName": "alreadyInitialized",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Lifecycle.Type) -> AppLovinSDK.LogEvent.Lifecycle",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Lifecycle",
+                        "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                        "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Lifecycle.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV9LifecycleO18alreadyInitializedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV9LifecycleO18alreadyInitializedyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "destroy",
+                "printedName": "destroy",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Lifecycle.Type) -> AppLovinSDK.LogEvent.Lifecycle",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Lifecycle",
+                        "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                        "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Lifecycle.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Lifecycle",
+                            "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV9LifecycleO7destroyyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV9LifecycleO7destroyyA2EmF",
+                "moduleName": "AppLovinSDK"
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:11AppLovinSDK8LogEventV9LifecycleO",
+            "mangledName": "$s11AppLovinSDK8LogEventV9LifecycleO",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "AccessControl"
+            ]
+          },
+          {
+            "kind": "TypeDecl",
+            "name": "Signal",
+            "printedName": "Signal",
+            "children": [
+              {
+                "kind": "Var",
+                "name": "collecting",
+                "printedName": "collecting",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Signal.Type) -> AppLovinSDK.LogEvent.Signal",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Signal",
+                        "printedName": "AppLovinSDK.LogEvent.Signal",
+                        "usr": "s:11AppLovinSDK8LogEventV6SignalO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Signal.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Signal",
+                            "printedName": "AppLovinSDK.LogEvent.Signal",
+                            "usr": "s:11AppLovinSDK8LogEventV6SignalO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV6SignalO10collectingyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV6SignalO10collectingyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "collectionSuccess",
+                "printedName": "collectionSuccess",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Signal.Type) -> AppLovinSDK.LogEvent.Signal",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Signal",
+                        "printedName": "AppLovinSDK.LogEvent.Signal",
+                        "usr": "s:11AppLovinSDK8LogEventV6SignalO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Signal.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Signal",
+                            "printedName": "AppLovinSDK.LogEvent.Signal",
+                            "usr": "s:11AppLovinSDK8LogEventV6SignalO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV6SignalO17collectionSuccessyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV6SignalO17collectionSuccessyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "collectionFailed",
+                "printedName": "collectionFailed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Signal.Type) -> (Swift.String?) -> AppLovinSDK.LogEvent.Signal",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.String?) -> AppLovinSDK.LogEvent.Signal",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Signal",
+                            "printedName": "AppLovinSDK.LogEvent.Signal",
+                            "usr": "s:11AppLovinSDK8LogEventV6SignalO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(description: Swift.String?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "Swift.String?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "String",
+                                    "printedName": "Swift.String",
+                                    "usr": "s:SS"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Signal.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Signal",
+                            "printedName": "AppLovinSDK.LogEvent.Signal",
+                            "usr": "s:11AppLovinSDK8LogEventV6SignalO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV6SignalO16collectionFailedyAESSSg_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV6SignalO16collectionFailedyAESSSg_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:11AppLovinSDK8LogEventV6SignalO",
+            "mangledName": "$s11AppLovinSDK8LogEventV6SignalO",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "AccessControl"
+            ]
+          },
+          {
+            "kind": "TypeDecl",
+            "name": "Ad",
+            "printedName": "Ad",
+            "children": [
+              {
+                "kind": "Var",
+                "name": "loading",
+                "printedName": "loading",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> (Swift.Bool) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Bool) -> AppLovinSDK.LogEvent.Ad",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(isBidding: Swift.Bool)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Bool",
+                                "printedName": "Swift.Bool",
+                                "usr": "s:Sb"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO7loadingyAESb_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO7loadingyAESb_tcAEmF",
+                "moduleName": "AppLovinSDK",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "loaded",
+                "printedName": "loaded",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO6loadedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO6loadedyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "loadFailed",
+                "printedName": "loadFailed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> (AppLovinSDK.MAAdapterError?) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(AppLovinSDK.MAAdapterError?) -> AppLovinSDK.LogEvent.Ad",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(error: AppLovinSDK.MAAdapterError?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "AppLovinSDK.MAAdapterError?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "MAAdapterError",
+                                    "printedName": "AppLovinSDK.MAAdapterError",
+                                    "usr": "c:objc(cs)MAAdapterError"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO10loadFailedyAESo14MAAdapterErrorCSg_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO10loadFailedyAESo14MAAdapterErrorCSg_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "expired",
+                "printedName": "expired",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO7expiredyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO7expiredyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "notReady",
+                "printedName": "notReady",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO8notReadyyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO8notReadyyA2EmF",
+                "moduleName": "AppLovinSDK",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "willShow",
+                "printedName": "willShow",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO8willShowyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO8willShowyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "showing",
+                "printedName": "showing",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO7showingyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO7showingyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "impression",
+                "printedName": "impression",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO10impressionyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO10impressionyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "displayed",
+                "printedName": "displayed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO9displayedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO9displayedyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "displayFailed",
+                "printedName": "displayFailed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> (AppLovinSDK.MAAdapterError?) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(AppLovinSDK.MAAdapterError?) -> AppLovinSDK.LogEvent.Ad",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(error: AppLovinSDK.MAAdapterError?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "AppLovinSDK.MAAdapterError?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "MAAdapterError",
+                                    "printedName": "AppLovinSDK.MAAdapterError",
+                                    "usr": "c:objc(cs)MAAdapterError"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO13displayFailedyAESo14MAAdapterErrorCSg_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO13displayFailedyAESo14MAAdapterErrorCSg_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "clicked",
+                "printedName": "clicked",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO7clickedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO7clickedyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "hidden",
+                "printedName": "hidden",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO6hiddenyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO6hiddenyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "videoStarted",
+                "printedName": "videoStarted",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO12videoStartedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO12videoStartedyA2EmF",
+                "moduleName": "AppLovinSDK",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "videoPaused",
+                "printedName": "videoPaused",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO11videoPausedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO11videoPausedyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "videoCompleted",
+                "printedName": "videoCompleted",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO14videoCompletedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO14videoCompletedyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "grantedReward",
+                "printedName": "grantedReward",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO13grantedRewardyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO13grantedRewardyA2EmF",
+                "moduleName": "AppLovinSDK",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "userRewarded",
+                "printedName": "userRewarded",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> (AppLovinSDK.MAReward) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(AppLovinSDK.MAReward) -> AppLovinSDK.LogEvent.Ad",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(reward: AppLovinSDK.MAReward)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "MAReward",
+                                "printedName": "AppLovinSDK.MAReward",
+                                "usr": "c:objc(cs)MAReward"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO12userRewardedyAESo8MARewardC_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO12userRewardedyAESo8MARewardC_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "expanded",
+                "printedName": "expanded",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO8expandedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO8expandedyA2EmF",
+                "moduleName": "AppLovinSDK",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "collapsed",
+                "printedName": "collapsed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO9collapsedyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO9collapsedyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "willLeaveApplication",
+                "printedName": "willLeaveApplication",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO20willLeaveApplicationyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO20willLeaveApplicationyA2EmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "missingRequiredAssets",
+                "printedName": "missingRequiredAssets",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Ad",
+                        "printedName": "AppLovinSDK.LogEvent.Ad",
+                        "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO21missingRequiredAssetsyA2EmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO21missingRequiredAssetsyA2EmF",
+                "moduleName": "AppLovinSDK",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "registerAdViewsFailed",
+                "printedName": "registerAdViewsFailed",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> (Swift.String?) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.String?) -> AppLovinSDK.LogEvent.Ad",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(description: Swift.String?)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Optional",
+                                "printedName": "Swift.String?",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "String",
+                                    "printedName": "Swift.String",
+                                    "usr": "s:SS"
+                                  }
+                                ],
+                                "usr": "s:Sq"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO08registerF11ViewsFailedyAESSSg_tcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO08registerF11ViewsFailedyAESSSg_tcAEmF",
+                "moduleName": "AppLovinSDK"
+              },
+              {
+                "kind": "Var",
+                "name": "preparingViewsForInteraction",
+                "printedName": "preparingViewsForInteraction",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AppLovinSDK.LogEvent.Ad.Type) -> ([UIKit.UIView], UIKit.UIView) -> AppLovinSDK.LogEvent.Ad",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "([UIKit.UIView], UIKit.UIView) -> AppLovinSDK.LogEvent.Ad",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Tuple",
+                            "printedName": "(views: [UIKit.UIView], container: UIKit.UIView)",
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Array",
+                                "printedName": "[UIKit.UIView]",
+                                "children": [
+                                  {
+                                    "kind": "TypeNominal",
+                                    "name": "UIView",
+                                    "printedName": "UIKit.UIView",
+                                    "usr": "c:objc(cs)UIView"
+                                  }
+                                ],
+                                "usr": "s:Sa"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "UIView",
+                                "printedName": "UIKit.UIView",
+                                "usr": "c:objc(cs)UIView"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AppLovinSDK.LogEvent.Ad.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Ad",
+                            "printedName": "AppLovinSDK.LogEvent.Ad",
+                            "usr": "s:11AppLovinSDK8LogEventV2AdO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO28preparingViewsForInteractionyAESaySo6UIViewCG_AHtcAEmF",
+                "mangledName": "$s11AppLovinSDK8LogEventV2AdO28preparingViewsForInteractionyAESaySo6UIViewCG_AHtcAEmF",
+                "moduleName": "AppLovinSDK"
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:11AppLovinSDK8LogEventV2AdO",
+            "mangledName": "$s11AppLovinSDK8LogEventV2AdO",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "AccessControl"
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:11AppLovinSDK8LogEventV",
+        "mangledName": "$s11AppLovinSDK8LogEventV",
+        "moduleName": "AppLovinSDK",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "ALMediationAdapter",
+        "printedName": "ALMediationAdapter",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "presentingViewController",
+            "printedName": "presentingViewController(for:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "UIViewController",
+                "printedName": "UIKit.UIViewController",
+                "usr": "c:objc(cs)UIViewController"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdapterResponseParameters",
+                "printedName": "AppLovinSDK.MAAdapterResponseParameters",
+                "usr": "c:objc(pl)MAAdapterResponseParameters"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So18ALMediationAdapterC11AppLovinSDKE24presentingViewController3forSo06UIViewH0CSo27MAAdapterResponseParameters_p_tF",
+            "mangledName": "$sSo18ALMediationAdapterC11AppLovinSDKE24presentingViewController3forSo06UIViewH0CSo27MAAdapterResponseParameters_p_tF",
+            "moduleName": "AppLovinSDK",
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Var",
+            "name": "thirdPartySdkName",
+            "printedName": "thirdPartySdkName",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@CM@AppLovinSDK@@objc(cs)ALMediationAdapter(py)thirdPartySdkName",
+            "mangledName": "$sSo18ALMediationAdapterC11AppLovinSDKE17thirdPartySdkNameSSvp",
+            "moduleName": "AppLovinSDK",
+            "isOpen": true,
+            "declAttributes": [
+              "Dynamic",
+              "AccessControl",
+              "ObjC"
+            ],
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@CM@AppLovinSDK@@objc(cs)ALMediationAdapter(im)thirdPartySdkName",
+                "mangledName": "$sSo18ALMediationAdapterC11AppLovinSDKE17thirdPartySdkNameSSvg",
+                "moduleName": "AppLovinSDK",
+                "isOpen": true,
+                "declAttributes": [
+                  "Dynamic",
+                  "ObjC"
+                ],
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "log",
+            "printedName": "log(lifecycleEvent:appending:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Lifecycle",
+                "printedName": "AppLovinSDK.LogEvent.Lifecycle",
+                "usr": "s:11AppLovinSDK8LogEventV9LifecycleO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "hasDefaultArg": true,
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So18ALMediationAdapterC11AppLovinSDKE3log14lifecycleEvent9appendingyAC03LogH0V9LifecycleO_SStF",
+            "mangledName": "$sSo18ALMediationAdapterC11AppLovinSDKE3log14lifecycleEvent9appendingyAC03LogH0V9LifecycleO_SStF",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "log",
+            "printedName": "log(signalEvent:appending:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Signal",
+                "printedName": "AppLovinSDK.LogEvent.Signal",
+                "usr": "s:11AppLovinSDK8LogEventV6SignalO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "hasDefaultArg": true,
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So18ALMediationAdapterC11AppLovinSDKE3log11signalEvent9appendingyAC03LogH0V6SignalO_SStF",
+            "mangledName": "$sSo18ALMediationAdapterC11AppLovinSDKE3log11signalEvent9appendingyAC03LogH0V6SignalO_SStF",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "log",
+            "printedName": "log(adEvent:id:adFormat:appending:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Ad",
+                "printedName": "AppLovinSDK.LogEvent.Ad",
+                "usr": "s:11AppLovinSDK8LogEventV2AdO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MAAdFormat",
+                "printedName": "AppLovinSDK.MAAdFormat",
+                "usr": "c:objc(cs)MAAdFormat"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "hasDefaultArg": true,
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So18ALMediationAdapterC11AppLovinSDKE3log7adEvent2id0G6Format9appendingyAC03LogH0V2AdO_SSSgSo04MAAdJ0CSStF",
+            "mangledName": "$sSo18ALMediationAdapterC11AppLovinSDKE3log7adEvent2id0G6Format9appendingyAC03LogH0V2AdO_SSSgSo04MAAdJ0CSStF",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:objc(cs)ALMediationAdapter",
+        "moduleName": "AppLovinSDK",
+        "isOpen": true,
+        "objc_name": "ALMediationAdapter",
+        "declAttributes": [
+          "ObjC",
+          "Dynamic"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "isExternal": true,
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "String",
+        "printedName": "String",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "formattedValueLog",
+            "printedName": "formattedValueLog",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:SS11AppLovinSDKE17formattedValueLogSSvp",
+            "mangledName": "$sSS11AppLovinSDKE17formattedValueLogSSvp",
+            "moduleName": "AppLovinSDK",
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:SS11AppLovinSDKE17formattedValueLogSSvg",
+                "mangledName": "$sSS11AppLovinSDKE17formattedValueLogSSvg",
+                "moduleName": "AppLovinSDK",
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "formattedErrorLog",
+            "printedName": "formattedErrorLog",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:SS11AppLovinSDKE17formattedErrorLogSSvp",
+            "mangledName": "$sSS11AppLovinSDKE17formattedErrorLogSSvp",
+            "moduleName": "AppLovinSDK",
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:SS11AppLovinSDKE17formattedErrorLogSSvg",
+                "mangledName": "$sSS11AppLovinSDKE17formattedErrorLogSSvg",
+                "moduleName": "AppLovinSDK",
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:SS",
+        "mangledName": "$sSS",
+        "moduleName": "Swift",
+        "declAttributes": [
+          "Frozen"
+        ],
+        "isExternal": true,
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se",
+            "mangledName": "$sSe"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE",
+            "mangledName": "$sSE"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CodingKeyRepresentable",
+            "printedName": "CodingKeyRepresentable",
+            "usr": "s:s22CodingKeyRepresentableP",
+            "mangledName": "$ss22CodingKeyRepresentableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_HasContiguousBytes",
+            "printedName": "_HasContiguousBytes",
+            "usr": "s:s19_HasContiguousBytesP",
+            "mangledName": "$ss19_HasContiguousBytesP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomReflectable",
+            "printedName": "CustomReflectable",
+            "usr": "s:s17CustomReflectableP",
+            "mangledName": "$ss17CustomReflectableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_CustomPlaygroundQuickLookable",
+            "printedName": "_CustomPlaygroundQuickLookable",
+            "usr": "s:s30_CustomPlaygroundQuickLookableP",
+            "mangledName": "$ss30_CustomPlaygroundQuickLookableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "TextOutputStream",
+            "printedName": "TextOutputStream",
+            "usr": "s:s16TextOutputStreamP",
+            "mangledName": "$ss16TextOutputStreamP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "TextOutputStreamable",
+            "printedName": "TextOutputStreamable",
+            "usr": "s:s20TextOutputStreamableP",
+            "mangledName": "$ss20TextOutputStreamableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_ExpressibleByBuiltinUnicodeScalarLiteral",
+            "printedName": "_ExpressibleByBuiltinUnicodeScalarLiteral",
+            "usr": "s:s41_ExpressibleByBuiltinUnicodeScalarLiteralP",
+            "mangledName": "$ss41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_ExpressibleByBuiltinExtendedGraphemeClusterLiteral",
+            "printedName": "_ExpressibleByBuiltinExtendedGraphemeClusterLiteral",
+            "usr": "s:s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP",
+            "mangledName": "$ss51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_ExpressibleByBuiltinStringLiteral",
+            "printedName": "_ExpressibleByBuiltinStringLiteral",
+            "usr": "s:s34_ExpressibleByBuiltinStringLiteralP",
+            "mangledName": "$ss34_ExpressibleByBuiltinStringLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ExpressibleByStringLiteral",
+            "printedName": "ExpressibleByStringLiteral",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "StringLiteralType",
+                "printedName": "StringLiteralType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s26ExpressibleByStringLiteralP",
+            "mangledName": "$ss26ExpressibleByStringLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ExpressibleByExtendedGraphemeClusterLiteral",
+            "printedName": "ExpressibleByExtendedGraphemeClusterLiteral",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "ExtendedGraphemeClusterLiteralType",
+                "printedName": "ExtendedGraphemeClusterLiteralType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s43ExpressibleByExtendedGraphemeClusterLiteralP",
+            "mangledName": "$ss43ExpressibleByExtendedGraphemeClusterLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ExpressibleByUnicodeScalarLiteral",
+            "printedName": "ExpressibleByUnicodeScalarLiteral",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "UnicodeScalarLiteralType",
+                "printedName": "UnicodeScalarLiteralType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s33ExpressibleByUnicodeScalarLiteralP",
+            "mangledName": "$ss33ExpressibleByUnicodeScalarLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "BidirectionalCollection",
+            "printedName": "BidirectionalCollection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Character",
+                    "printedName": "Swift.Character",
+                    "usr": "s:SJ"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Substring",
+                    "printedName": "Swift.Substring",
+                    "usr": "s:Ss"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DefaultIndices",
+                    "printedName": "Swift.DefaultIndices<Swift.String>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:SI"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:SK",
+            "mangledName": "$sSK"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Collection",
+            "printedName": "Collection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Character",
+                    "printedName": "Swift.Character",
+                    "usr": "s:SJ"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.String.Index",
+                    "usr": "s:SS5IndexV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Swift.String.Iterator",
+                    "usr": "s:SS8IteratorV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Substring",
+                    "printedName": "Swift.Substring",
+                    "usr": "s:Ss"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DefaultIndices",
+                    "printedName": "Swift.DefaultIndices<Swift.String>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:SI"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:Sl",
+            "mangledName": "$sSl"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sequence",
+            "printedName": "Sequence",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Character",
+                    "printedName": "Swift.Character",
+                    "usr": "s:SJ"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Swift.String.Iterator",
+                    "usr": "s:SS8IteratorV"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:ST",
+            "mangledName": "$sST"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Comparable",
+            "printedName": "Comparable",
+            "usr": "s:SL",
+            "mangledName": "$sSL"
+          },
+          {
+            "kind": "Conformance",
+            "name": "StringProtocol",
+            "printedName": "StringProtocol",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "UTF8View",
+                "printedName": "UTF8View",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UTF8View",
+                    "printedName": "Swift.String.UTF8View",
+                    "usr": "s:SS8UTF8ViewV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "UTF16View",
+                "printedName": "UTF16View",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UTF16View",
+                    "printedName": "Swift.String.UTF16View",
+                    "usr": "s:SS9UTF16ViewV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "UnicodeScalarView",
+                "printedName": "UnicodeScalarView",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UnicodeScalarView",
+                    "printedName": "Swift.String.UnicodeScalarView",
+                    "usr": "s:SS17UnicodeScalarViewV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Substring",
+                    "printedName": "Swift.Substring",
+                    "usr": "s:Ss"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:Sy",
+            "mangledName": "$sSy"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ExpressibleByStringInterpolation",
+            "printedName": "ExpressibleByStringInterpolation",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "StringInterpolation",
+                "printedName": "StringInterpolation",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DefaultStringInterpolation",
+                    "printedName": "Swift.DefaultStringInterpolation",
+                    "usr": "s:s26DefaultStringInterpolationV"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s32ExpressibleByStringInterpolationP",
+            "mangledName": "$ss32ExpressibleByStringInterpolationP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "LosslessStringConvertible",
+            "printedName": "LosslessStringConvertible",
+            "usr": "s:s25LosslessStringConvertibleP",
+            "mangledName": "$ss25LosslessStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "RangeReplaceableCollection",
+            "printedName": "RangeReplaceableCollection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Substring",
+                    "printedName": "Swift.Substring",
+                    "usr": "s:Ss"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:Sm",
+            "mangledName": "$sSm"
+          },
+          {
+            "kind": "Conformance",
+            "name": "MirrorPath",
+            "printedName": "MirrorPath",
+            "usr": "s:s10MirrorPathP",
+            "mangledName": "$ss10MirrorPathP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_ObjectiveCBridgeable",
+            "printedName": "_ObjectiveCBridgeable",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "_ObjectiveCType",
+                "printedName": "_ObjectiveCType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSString",
+                    "printedName": "Foundation.NSString",
+                    "usr": "c:objc(cs)NSString"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s21_ObjectiveCBridgeableP",
+            "mangledName": "$ss21_ObjectiveCBridgeableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "Dictionary",
+        "printedName": "Dictionary",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "formattedValueLog",
+            "printedName": "formattedValueLog",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:SD11AppLovinSDKSSRszypRs_rlE17formattedValueLogSSvp",
+            "mangledName": "$sSD11AppLovinSDKSSRszypRs_rlE17formattedValueLogSSvp",
+            "moduleName": "AppLovinSDK",
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:SD11AppLovinSDKSSRszypRs_rlE17formattedValueLogSSvg",
+                "mangledName": "$sSD11AppLovinSDKSSRszypRs_rlE17formattedValueLogSSvg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 == Swift.String, τ_0_1 == Any>",
+                "sugared_genericSig": "<Key, Value where Key == Swift.String, Value == Any>",
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:SD",
+        "mangledName": "$sSD",
+        "moduleName": "Swift",
+        "genericSig": "<τ_0_0, τ_0_1 where τ_0_0 : Swift.Hashable>",
+        "sugared_genericSig": "<Key, Value where Key : Swift.Hashable>",
+        "declAttributes": [
+          "Frozen"
+        ],
+        "isExternal": true,
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE",
+            "mangledName": "$sSE"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se",
+            "mangledName": "$sSe"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sequence",
+            "printedName": "Sequence",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(key: τ_0_0, value: τ_0_1)",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_0_0"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_0_1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Swift.Dictionary<τ_0_0, τ_0_1>.Iterator",
+                    "usr": "s:SD8IteratorV"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:ST",
+            "mangledName": "$sST"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Collection",
+            "printedName": "Collection",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Element",
+                "printedName": "Element",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(key: τ_0_0, value: τ_0_1)",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_0_0"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "GenericTypeParam",
+                        "printedName": "τ_0_1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Index",
+                "printedName": "Index",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Index",
+                    "printedName": "Swift.Dictionary<τ_0_0, τ_0_1>.Index",
+                    "usr": "s:SD5IndexV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Iterator",
+                "printedName": "Iterator",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Iterator",
+                    "printedName": "Swift.Dictionary<τ_0_0, τ_0_1>.Iterator",
+                    "usr": "s:SD8IteratorV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "SubSequence",
+                "printedName": "SubSequence",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Slice",
+                    "printedName": "Swift.Slice<[τ_0_0 : τ_0_1]>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[τ_0_0 : τ_0_1]",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "τ_0_0"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "τ_0_1"
+                          }
+                        ],
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "usr": "s:s5SliceV"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Indices",
+                "printedName": "Indices",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DefaultIndices",
+                    "printedName": "Swift.DefaultIndices<[τ_0_0 : τ_0_1]>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[τ_0_0 : τ_0_1]",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "τ_0_0"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "GenericTypeParam",
+                            "printedName": "τ_0_1"
+                          }
+                        ],
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "usr": "s:SI"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:Sl",
+            "mangledName": "$sSl"
+          },
+          {
+            "kind": "Conformance",
+            "name": "ExpressibleByDictionaryLiteral",
+            "printedName": "ExpressibleByDictionaryLiteral",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "Key",
+                "printedName": "Key",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_0"
+                  }
+                ]
+              },
+              {
+                "kind": "TypeWitness",
+                "name": "Value",
+                "printedName": "Value",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "τ_0_1"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s30ExpressibleByDictionaryLiteralP",
+            "mangledName": "$ss30ExpressibleByDictionaryLiteralP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_HasCustomAnyHashableRepresentation",
+            "printedName": "_HasCustomAnyHashableRepresentation",
+            "usr": "s:s35_HasCustomAnyHashableRepresentationP",
+            "mangledName": "$ss35_HasCustomAnyHashableRepresentationP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomReflectable",
+            "printedName": "CustomReflectable",
+            "usr": "s:s17CustomReflectableP",
+            "mangledName": "$ss17CustomReflectableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_ObjectiveCBridgeable",
+            "printedName": "_ObjectiveCBridgeable",
+            "children": [
+              {
+                "kind": "TypeWitness",
+                "name": "_ObjectiveCType",
+                "printedName": "_ObjectiveCType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSDictionary",
+                    "printedName": "Foundation.NSDictionary",
+                    "usr": "c:objc(cs)NSDictionary"
+                  }
+                ]
+              }
+            ],
+            "usr": "s:s21_ObjectiveCBridgeableP",
+            "mangledName": "$ss21_ObjectiveCBridgeableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "Error",
+        "printedName": "Error",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "code",
+            "printedName": "code",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:s5ErrorP11AppLovinSDKE4codeSivp",
+            "mangledName": "$ss5ErrorP11AppLovinSDKE4codeSivp",
+            "moduleName": "AppLovinSDK",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "isFromExtension": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:s5ErrorP11AppLovinSDKE4codeSivg",
+                "mangledName": "$ss5ErrorP11AppLovinSDKE4codeSivg",
+                "moduleName": "AppLovinSDK",
+                "genericSig": "<τ_0_0 where τ_0_0 : Swift.Error>",
+                "sugared_genericSig": "<Self where Self : Swift.Error>",
+                "isFromExtension": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "s:s5ErrorP",
+        "mangledName": "$ss5ErrorP",
+        "moduleName": "Swift",
+        "genericSig": "<τ_0_0 : Swift.Sendable>",
+        "sugared_genericSig": "<Self : Swift.Sendable>",
+        "isExternal": true,
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          }
+        ]
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 941,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 1164,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 115,
+      "length": 15,
+      "value": "\"AppLovinSDK.AdapterDelegate\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 1971,
+      "length": 27,
+      "value": "\"AppLovinSDK.InterstitialAdapterDelegate\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 2374,
+      "length": 22,
+      "value": "\"AppLovinSDK.AppOpenAdapterDelegate\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "BooleanLiteral",
+      "offset": 2900,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 2757,
+      "length": 23,
+      "value": "\"AppLovinSDK.RewardedAdapterDelegate\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "BooleanLiteral",
+      "offset": 3453,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 3286,
+      "length": 35,
+      "value": "\"AppLovinSDK.RewardedInterstitialAdapterDelegate\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "kind": "StringLiteral",
+      "offset": 4775,
+      "length": 23,
+      "value": "\"AppLovinSDK.NativeAdAdapterDelegate\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "kind": "BooleanLiteral",
+      "offset": 681,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "kind": "StringLiteral",
+      "offset": 1669,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "kind": "StringLiteral",
+      "offset": 1690,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "kind": "StringLiteral",
+      "offset": 2486,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "kind": "StringLiteral",
+      "offset": 3329,
+      "length": 2,
+      "value": "\"\""
+    },
+    {
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "kind": "StringLiteral",
+      "offset": 3938,
+      "length": 2,
+      "value": "\"\""
+    }
+  ]
+}

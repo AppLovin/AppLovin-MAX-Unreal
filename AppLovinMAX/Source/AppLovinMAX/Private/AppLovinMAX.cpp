@@ -73,26 +73,6 @@ bool UAppLovinMAX::HasUserConsent()
 #endif
 }
 
-void UAppLovinMAX::SetIsAgeRestrictedUser(bool bIsAgeRestrictedUser)
-{
-#if PLATFORM_IOS
-    [GetIOSPlugin() setIsAgeRestrictedUser:bIsAgeRestrictedUser];
-#elif PLATFORM_ANDROID
-    GetAndroidPlugin()->SetIsAgeRestrictedUser(bIsAgeRestrictedUser);
-#endif
-}
-
-bool UAppLovinMAX::IsAgeRestrictedUser()
-{
-#if PLATFORM_IOS
-    return [GetIOSPlugin() isAgeRestrictedUser];
-#elif PLATFORM_ANDROID
-    return GetAndroidPlugin()->IsAgeRestrictedUser();
-#else
-    return false;
-#endif
-}
-
 void UAppLovinMAX::SetDoNotSell(bool bDoNotSell)
 {
 #if PLATFORM_IOS
