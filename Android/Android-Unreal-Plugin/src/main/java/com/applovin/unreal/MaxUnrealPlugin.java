@@ -1366,7 +1366,7 @@ public class MaxUnrealPlugin
         JsonUtils.putString( adInfo, "creativeIdentifier", StringUtils.emptyIfNull( ad.getCreativeId() ) );
         JsonUtils.putString( adInfo, "networkName", ad.getNetworkName() );
         JsonUtils.putString( adInfo, "placement", StringUtils.emptyIfNull( ad.getPlacement() ) );
-        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue());
+        JsonUtils.putDouble( adInfo, "revenue", ad.getRevenue() );
 
         return adInfo;
     }
