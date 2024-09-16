@@ -4693,112 +4693,112 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 941,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 1164,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 115,
       "length": 15,
       "value": "\"AppLovinSDK.AdapterDelegate\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 1971,
       "length": 27,
       "value": "\"AppLovinSDK.InterstitialAdapterDelegate\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 2374,
       "length": 22,
       "value": "\"AppLovinSDK.AppOpenAdapterDelegate\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "BooleanLiteral",
       "offset": 2900,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 2757,
       "length": 23,
       "value": "\"AppLovinSDK.RewardedAdapterDelegate\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "BooleanLiteral",
       "offset": 3453,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 3286,
       "length": 35,
       "value": "\"AppLovinSDK.RewardedInterstitialAdapterDelegate\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/AdapterDelegate.swift",
       "kind": "StringLiteral",
       "offset": 4775,
       "length": 23,
       "value": "\"AppLovinSDK.NativeAdAdapterDelegate\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
       "kind": "BooleanLiteral",
       "offset": 681,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
       "kind": "StringLiteral",
       "offset": 1669,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
       "kind": "StringLiteral",
       "offset": 1690,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
       "kind": "StringLiteral",
       "offset": 2486,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
       "kind": "StringLiteral",
       "offset": 3329,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
+      "filePath": "\/usr\/local\/var\/jenkins\/workspace\/Mobile-iOS-SDK\/SDK-iOS\/iOS-SDK\/sdk\/Public\/ALMediationAdapter+Log.swift",
       "kind": "StringLiteral",
       "offset": 3938,
       "length": 2,

@@ -211,7 +211,7 @@
 		</dict>
 		<key>Headers/ALAd.h</key>
 		<data>
-		8pEoTqP3JSyx/PifZtsZr9etU0Y=
+		vpL84/ytIsYEjPQQEUsIldwFiz0=
 		</data>
 		<key>Headers/ALAdDisplayDelegate.h</key>
 		<data>
@@ -227,7 +227,7 @@
 		</data>
 		<key>Headers/ALAdService.h</key>
 		<data>
-		IUsmq0G+srSPWDW5EF3mcGfnzvM=
+		Qdt70Ct1oJ9NeXkQCYM5RQOLTfw=
 		</data>
 		<key>Headers/ALAdSize.h</key>
 		<data>
@@ -315,11 +315,11 @@
 		</data>
 		<key>Headers/ALMediationAdapter.h</key>
 		<data>
-		VwLYDzialHY0eyAlR3M8/Zlbuv4=
+		vvqTVNatU7gyEGo4qvXBsvbpAlg=
 		</data>
 		<key>Headers/ALMediationAdapterRouter.h</key>
 		<data>
-		7FdorOhyjviiPTzVrGNaiMnE4WE=
+		SAU0uo4Qo+99lMQZg7MemxntXfo=
 		</data>
 		<key>Headers/ALMediationProvider.h</key>
 		<data>
@@ -331,7 +331,7 @@
 		</data>
 		<key>Headers/ALPrivacySettings.h</key>
 		<data>
-		mVUhAMnpht5LBRug/MRuDz0z3dw=
+		vcX0ucy2a141QrZlQQ+IjfQ1DMs=
 		</data>
 		<key>Headers/ALSdk.h</key>
 		<data>
@@ -347,7 +347,7 @@
 		</data>
 		<key>Headers/ALSdkSettings.h</key>
 		<data>
-		8+PKIxVaJxo9rCEL3CgFzSW/VTc=
+		Ye+xwZjeD/Vy9Hy5mIkN1BB31Xc=
 		</data>
 		<key>Headers/ALTermsAndPrivacyPolicyFlowSettings.h</key>
 		<data>
@@ -359,7 +359,7 @@
 		</data>
 		<key>Headers/ALUtils.h</key>
 		<data>
-		u3t+ycoATnBWYOOD8ZcLSlyD9hg=
+		efcGTSk1ItIxvZrkzeuuMudXKGo=
 		</data>
 		<key>Headers/AppLovinSDK-Swift.h</key>
 		<data>
@@ -443,7 +443,7 @@
 		</data>
 		<key>Headers/MAAdapterParameters.h</key>
 		<data>
-		GqChq1prhzTSyVcdCqsKSt1NNEA=
+		vJEPrRiqhq0mJ6dOdh+RVMuXQJk=
 		</data>
 		<key>Headers/MAAdapterResponseParameters.h</key>
 		<data>
@@ -543,7 +543,7 @@
 		</data>
 		<key>Headers/MARewardedAdDelegate.h</key>
 		<data>
-		XJ/+pfHMYpf5q/tGfhOVf+RCyBo=
+		LvSmoSXrcKKe+8Sy2IP/v1bmiIQ=
 		</data>
 		<key>Headers/MARewardedAdapter.h</key>
 		<data>
@@ -551,7 +551,7 @@
 		</data>
 		<key>Headers/MARewardedAdapterDelegate.h</key>
 		<data>
-		FBgQdpT/RobCtCC6UX73UbyUQQA=
+		s/rpPmhwozQgVerDUf71ZTku27w=
 		</data>
 		<key>Headers/MARewardedInterstitialAd.h</key>
 		<data>
@@ -563,7 +563,7 @@
 		</data>
 		<key>Headers/MARewardedInterstitialAdapterDelegate.h</key>
 		<data>
-		2gVQzadvnm9a/tULCV2IwHQuImg=
+		RD4uM4S4808eaxejoF4zy3wDNjM=
 		</data>
 		<key>Headers/MASegment.h</key>
 		<data>
@@ -603,11 +603,11 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		gHas8heTCm3gau7OuBBVvB2uCwk=
+		JnoqThZXtfFgRjqUIpzfvJ3RydA=
 		</data>
 		<key>Modules/AppLovinSDK.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		4O56Ocx/H9uVfCBLaRPMpOKg3kg=
+		CbWcmMy9fQgqdt6XF8t7FdPmTTQ=
 		</data>
 		<key>Modules/AppLovinSDK.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -623,11 +623,11 @@
 		</data>
 		<key>Modules/AppLovinSDK.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		8uN8iUzEB03HHZV35jph7gLRGtY=
+		PT8uI5G1Pmfiu4JNO+TUZIRe1H4=
 		</data>
 		<key>Modules/AppLovinSDK.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		4O56Ocx/H9uVfCBLaRPMpOKg3kg=
+		CbWcmMy9fQgqdt6XF8t7FdPmTTQ=
 		</data>
 		<key>Modules/AppLovinSDK.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -643,7 +643,7 @@
 		</data>
 		<key>Modules/AppLovinSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		pt9mGrgKvcIPwG5Nlv/kTGzJWzM=
+		sCFYVIFHUiMug3N3g7OH8jDqiWw=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -652,10 +652,6 @@
 		<key>PrivacyInfo.xcprivacy</key>
 		<data>
 		jR5kks/wyXPVXeOvTLbLYPKn2g0=
-		</data>
-		<key>PrivateHeaders/ALPromise.h</key>
-		<data>
-		LZOzQydMIEo5Yk5LMYzsTW7oLqA=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -962,7 +958,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2L9PWIiVtTQWn6FIJTpIGeHHtY47SdOJTlYI9D4esfQ=
+			tP07cppNqyi40WLooidt5UsRtN56fDmWiBUOKCvUKpg=
 			</data>
 		</dict>
 		<key>Headers/ALAdDisplayDelegate.h</key>
@@ -990,7 +986,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ychv9+tZMVmu0qVLu1rQlQlmareuXyKoNdoG+rZ3y6o=
+			DDysHIaho3gby8geHvqhpKXOomgJpuRE6WVwNhOm5xs=
 			</data>
 		</dict>
 		<key>Headers/ALAdSize.h</key>
@@ -1144,14 +1140,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			4yf0vUmxw+jwJrJqTm/3jfLuDbl32KzmfO8VYGh4BTw=
+			INL8tbBtfeRzfxO3kRklAChm9GyFFZOm4BDU6ouzISk=
 			</data>
 		</dict>
 		<key>Headers/ALMediationAdapterRouter.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			hnNFkjBxLLlhYIV88xhwiqOR2jp6j3lZVWACDkRNZxg=
+			QXLr7gcjVQE93QMlkFvA+fd8Rj9tkAwcJwRApZj14/Y=
 			</data>
 		</dict>
 		<key>Headers/ALMediationProvider.h</key>
@@ -1172,7 +1168,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			yHwzKSfDy70oQ7No/LpmyMjmPPbkYtyF2EBswECr34I=
+			yUs7G0mwSBnVHshV5Lnk6T7DC7ItH8jq78uu3hH9rCE=
 			</data>
 		</dict>
 		<key>Headers/ALSdk.h</key>
@@ -1200,7 +1196,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Ry8FinyXdRqOKt+N9nUtqhLdLSf/Z0dS20+oip9I3PU=
+			hQzMSMuJ268G6XogCHuSn1ZmG2t6Jnn0ZyF+PgHX5bU=
 			</data>
 		</dict>
 		<key>Headers/ALTermsAndPrivacyPolicyFlowSettings.h</key>
@@ -1221,7 +1217,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			X7/uqCDWTG/jIvl52h19VYFjcjO3JsAmseJPFXqP2uQ=
+			I00Vvou9jNxOZL69DTwQsdTuC3XdjYamPcxf08rRqQg=
 			</data>
 		</dict>
 		<key>Headers/AppLovinSDK-Swift.h</key>
@@ -1368,7 +1364,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			/l/AxMEiH51HpNTrp7ppHKwpAK2fEMKKpQjDE4j08vI=
+			ta7QEEKxFUMnYiXfYVXb8ztszqY0orMTBuk2RhXz2wM=
 			</data>
 		</dict>
 		<key>Headers/MAAdapterResponseParameters.h</key>
@@ -1543,7 +1539,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			CFr8tRAxo8OSkqcXhgOukBXhqllOGoNe59487wUuamI=
+			qhYRapR+p+Daa9IrD8rTtI9GRtsiZMfxNMaspiOULI4=
 			</data>
 		</dict>
 		<key>Headers/MARewardedAdapter.h</key>
@@ -1557,7 +1553,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			BuvJjkq8CccNDDzqePgY6z2jjntR7xfdlkz4j4Q3bKI=
+			sfbms4J9CWidFcraewISmmSC/2gS7h7z09jyB+pU6bw=
 			</data>
 		</dict>
 		<key>Headers/MARewardedInterstitialAd.h</key>
@@ -1578,7 +1574,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			GGRu+ERf2ngNT+nmt/KZc/FgWwq3DGAbi/kZwGmb518=
+			5GR6ff9JKWtvOuQR4GM1PACglZ1BxTIlPQsiSdOB1EM=
 			</data>
 		</dict>
 		<key>Headers/MASegment.h</key>
@@ -1648,7 +1644,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			pIskBbfrfNCo5bdF6VWHsKfglBTwx7fEQIEcOeK66x8=
+			ZgpqzqD9+RudjS9jz16Hik/Eyh1g6Zf1b/aVq881GOM=
 			</data>
 		</dict>
 		<key>Modules/AppLovinSDK.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -1676,14 +1672,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			oRKbVU9VKZZ24SD/mdAyCF+BiXeMdl3EcD7kLyoEDK0=
+			Fm7/H2U5cNUCFp4ThJezJnjwd6gMdv3bC/DjudOmboI=
 			</data>
 		</dict>
 		<key>Modules/AppLovinSDK.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			pIskBbfrfNCo5bdF6VWHsKfglBTwx7fEQIEcOeK66x8=
+			ZgpqzqD9+RudjS9jz16Hik/Eyh1g6Zf1b/aVq881GOM=
 			</data>
 		</dict>
 		<key>Modules/AppLovinSDK.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
@@ -1711,7 +1707,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Rs/xzgxef26MKro7TRm5RhEA74WN3PyGq2cMAuonZA0=
+			sPczez+PQAWlwdrcQaNU25lglMG1VzD5KvUBqlIxwR4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -1726,13 +1722,6 @@
 			<key>hash2</key>
 			<data>
 			gOOIgdv7OxZfnvNc+kOyjqwA1bGAWKEnWIwpQZOEHJ8=
-			</data>
-		</dict>
-		<key>PrivateHeaders/ALPromise.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			R41FW3VDxWTzLEFIKXf0OP+qM2u3WGi3agv7gIRuiIU=
 			</data>
 		</dict>
 	</dict>

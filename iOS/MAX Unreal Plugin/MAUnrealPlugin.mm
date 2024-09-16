@@ -1,5 +1,5 @@
 //
-//  MAUnrealPlugin.m
+//  MAUnrealPlugin.mm
 //  MAX Unreal Plugin
 //
 //  Created by Ritam Sarmah on 5/9/21.
@@ -163,7 +163,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     
     parameters[@"hasUserConsent"] = @([ALPrivacySettings hasUserConsent]);
-    parameters[@"isAgeRestrictedUser"] = @([ALPrivacySettings isAgeRestrictedUser]);
     parameters[@"isDoNotSell"] = @([ALPrivacySettings isDoNotSell]);
     parameters[@"isTablet"] = @([self isTablet]);
     
@@ -185,16 +184,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (BOOL)hasUserConsent
 {
     return [ALPrivacySettings hasUserConsent];
-}
-
-- (void)setIsAgeRestrictedUser:(BOOL)isAgeRestrictedUser
-{
-    [ALPrivacySettings setIsAgeRestrictedUser: isAgeRestrictedUser];
-}
-
-- (BOOL)isAgeRestrictedUser
-{
-    return [ALPrivacySettings isAgeRestrictedUser];
 }
 
 - (void)setDoNotSell:(BOOL)doNotSell
