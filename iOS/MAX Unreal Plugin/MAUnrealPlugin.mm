@@ -146,7 +146,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
                 [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: self.verticalAdViewFormats[adUnitIdentifier]];
             }
         }];
-
+        
         [self sendInitializationEvent];
     }];
 }
@@ -227,7 +227,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         [self logUninitializedError: @"Failed to show CMP flow"];
         return;
     }
-        
+    
     [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
         
         NSDictionary<NSString *, id> *parameters = @{};
@@ -303,7 +303,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         [self e: @"Failed to set test device advertising IDs. Please set your test device advertising IDs before initializing the plugin."];
         return;
     }
-
+    
     self.testDeviceAdvertisingIdentifiersToSet = testDeviceAdvertisingIds;
 }
 
@@ -676,7 +676,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         // In some cases, black color may get redrawn on each frame update, resulting in an undesired flicker
         NSString *hexColorCodeToUse = [hexColorCode containsString: @"FF000000"] ? @"FF000001" : hexColorCode;
         UIColor *convertedColor = [UIColor al_colorWithHexString: hexColorCodeToUse];
-
+        
         self.publisherBannerBackgroundColor = convertedColor;
         self.safeAreaBackground.backgroundColor = adView.backgroundColor = convertedColor;
     });
@@ -687,7 +687,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     dispatchOnMainQueue(^{
         
         [self d: @"Setting placement \"%@\" for \"%@\" with ad unit identifier \"%@\"", placement, adFormat.label, adUnitIdentifier];
-
+        
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         if ( !adView )
         {
@@ -711,7 +711,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
             [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
             return;
         }
-
+        
         [adView setExtraParameterForKey: key value: value];
         
         // Handle local changes as needed
@@ -729,9 +729,9 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)updateAdViewPosition:(NSString *)adViewPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
-
+        
         [self d: @"Updating %@ position to \"%@\" for ad unit identifier \"%@\"", adFormat.label, adViewPosition, adUnitIdentifier];
-
+        
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         if ( !adView )
         {
@@ -758,7 +758,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         if ( !adView )
         {
             [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];            
-
+            
             // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
             [self.adUnitIdentifiersToShowAfterCreate addObject: adUnitIdentifier];
             return;
@@ -776,7 +776,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         
         [self d: @"Hiding %@ with ad unit identifier \"%@\"", adFormat.label, adUnitIdentifier];
         [self.adUnitIdentifiersToShowAfterCreate removeObject: adUnitIdentifier];
-
+        
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         if ( !adView )
         {
@@ -796,7 +796,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     dispatchOnMainQueue(^{
         
         [self d: @"Destroying %@ with ad unit identifier \"%@\"", adFormat.label, adUnitIdentifier];
-
+        
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         if ( !adView )
         {
@@ -883,7 +883,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     
     UIView *superview = adView.superview;
     if ( !superview ) return;
-
+    
     NSString *adViewPosition = self.adViewPositions[adUnitIdentifier];
     CGSize adViewSize = adFormat.size;
     

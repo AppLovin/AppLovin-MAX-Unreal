@@ -782,7 +782,7 @@ public class MaxUnrealPlugin
             val adView = retrieveAdView( adUnitId, adFormat );
             if ( adView == null )
             {
-                logInvalidAdUnitId( adUnitId, adUnitId );
+                logInvalidAdUnitId( adUnitId, adFormat );
 
                 // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
                 adUnitIdsToShowAfterCreate.add( adUnitId );
