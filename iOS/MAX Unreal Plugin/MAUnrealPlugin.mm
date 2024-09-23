@@ -119,7 +119,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     
     // Create initialization configuration
     ALSdkInitializationConfiguration *initConfiguration = [ALSdkInitializationConfiguration configurationWithSdkKey: sdkKey
-                                                                                                              builderBlock:^(ALSdkInitializationConfigurationBuilder *builder) {
+                                                                                                       builderBlock:^(ALSdkInitializationConfigurationBuilder *builder) {
         builder.mediationProvider = ALMediationProviderMAX;
         builder.pluginVersion = [@"Unreal-" stringByAppendingString: pluginVersion];
         
@@ -130,7 +130,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }];
     
     // Initialize SDK
-    [self.sdk initializeWithConfiguration: initConfiguration completionHandler:^(ALSdkConfiguration * _Nonnull sdkConfiguration) {
+    [self.sdk initializeWithConfiguration: initConfiguration completionHandler:^(ALSdkConfiguration *sdkConfiguration) {
         
         self.sdkConfiguration = sdkConfiguration;
         [self.sdkInitialized set: YES];
@@ -146,6 +146,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
                 [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: self.verticalAdViewFormats[adUnitIdentifier]];
             }
         }];
+
+        [self sendInitializationEvent];
     }];
 }
 
@@ -228,7 +230,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         
     [self.sdk.cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
         
-        NSDictionary <NSString *, id> *parameters = @{};
+        NSDictionary<NSString *, id> *parameters = @{};
         if ( error )
         {
             parameters = @{@"code" : @(error.code),
@@ -464,8 +466,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     if ( [adFormat isAdViewAd] )
     {
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: ad.adUnitIdentifier adFormat: adFormat];
-        // An ad is now being shown, enable user interaction.
-        adView.userInteractionEnabled = YES;
+        adView.userInteractionEnabled = YES; // An ad is now being shown, enable user interaction.
         
         [self positionAdViewForAd: ad];
         
@@ -483,12 +484,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)didFailToLoadAdForAdUnitIdentifier:(NSString *)adUnitIdentifier withError:(MAError *)error
 {
-    if ( !adUnitIdentifier )
-    {
-        [self logStackTrace: @"Ad unit ID cannot be nil"];
-        return;
-    }
-    
     // Determine ad format
     MAAdFormat *adFormat;
     if ( [self.adViews al_containsValueForKey: adUnitIdentifier] )
@@ -611,8 +606,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
     }
     
     NSMutableDictionary *parameters = [[self adInfoForAd: ad] mutableCopy];
-    parameters[@"label"] = reward ? reward.label : @"";
-    parameters[@"amount"] = reward ? @(reward.amount) : @(0);
+    parameters[@"label"] = reward.label;
+    parameters[@"amount"] = @(reward.amount);
     
     NSString *name = [self eventNameForAdFormat: adFormat event: @"ReceivedReward"];
     [self sendUnrealEventWithName: name parameters: parameters];
@@ -637,10 +632,16 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     dispatchOnMainQueue(^{
         
-        [self d: @"Creating %@ with ad unit identifier \"%@\" and position: \"%@\"", adFormat, adUnitIdentifier, adViewPosition];
+        [self d: @"Creating %@ with ad unit identifier \"%@\" and position: \"%@\"", adFormat.label, adUnitIdentifier, adViewPosition];
         
         // Retrieve ad view from the map
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat atPosition: adViewPosition];
+        if ( !adView )
+        {
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+            return;
+        }
+        
         adView.hidden = YES;
         self.safeAreaBackground.hidden = YES;
         
@@ -663,15 +664,21 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     dispatchOnMainQueue(^{
         
-        [self d: @"Setting %@ with ad unit identifier \"%@\" to color: \"%@\"", adFormat, adUnitIdentifier, hexColorCode];
+        [self d: @"Setting %@ with ad unit identifier \"%@\" to color: \"%@\"", adFormat.label, adUnitIdentifier, hexColorCode];
+        
+        MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+        if ( !adView )
+        {
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+            return;
+        }
         
         // In some cases, black color may get redrawn on each frame update, resulting in an undesired flicker
         NSString *hexColorCodeToUse = [hexColorCode containsString: @"FF000000"] ? @"FF000001" : hexColorCode;
         UIColor *convertedColor = [UIColor al_colorWithHexString: hexColorCodeToUse];
-        
-        MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+
         self.publisherBannerBackgroundColor = convertedColor;
-        self.safeAreaBackground.backgroundColor = view.backgroundColor = convertedColor;
+        self.safeAreaBackground.backgroundColor = adView.backgroundColor = convertedColor;
     });
 }
 
@@ -679,16 +686,58 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     dispatchOnMainQueue(^{
         
-        [self d: @"Setting placement \"%@\" for \"%@\" with ad unit identifier \"%@\"", placement, adFormat, adUnitIdentifier];
+        [self d: @"Setting placement \"%@\" for \"%@\" with ad unit identifier \"%@\"", placement, adFormat.label, adUnitIdentifier];
+
+        MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+        if ( !adView )
+        {
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+            return;
+        }
+        
+        adView.placement = placement;
+    });
+}
+
+- (void)setAdViewExtraParameterForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat key:(NSString *)key value:(nullable NSString *)value
+{
+    dispatchOnMainQueue(^{
+        
+        [self d: @"Setting %@ extra with key: \"%@\" value: \"%@\"", adFormat.label, key, value];
         
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
-        adView.placement = placement;
+        if ( !adView )
+        {
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+            return;
+        }
+
+        [adView setExtraParameterForKey: key value: value];
+        
+        // Handle local changes as needed
+        if ( [@"force_banner" al_isEqualToStringIgnoringCase: key] && MAAdFormat.mrec != adFormat )
+        {
+            BOOL shouldForceBanner = [NSNumber al_numberWithString: value].boolValue;
+            MAAdFormat *forcedAdFormat = shouldForceBanner ? MAAdFormat.banner : DEVICE_SPECIFIC_ADVIEW_AD_FORMAT;
+            
+            self.adViewAdFormats[adUnitIdentifier] = forcedAdFormat;
+            [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: forcedAdFormat];
+        }
     });
 }
 
 - (void)updateAdViewPosition:(NSString *)adViewPosition forAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
+
+        [self d: @"Updating %@ position to \"%@\" for ad unit identifier \"%@\"", adFormat.label, adViewPosition, adUnitIdentifier];
+
+        MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+        if ( !adView )
+        {
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+            return;
+        }
         
         // Check if the previous position is same as the new position. If so, no need to update the position again.
         NSString *previousPosition = self.adViewPositions[adUnitIdentifier];
@@ -699,55 +748,25 @@ static NSString *const TAG = @"MAUnrealPlugin";
     });
 }
 
-- (void)setAdViewExtraParameterForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat key:(NSString *)key value:(nullable NSString *)value
-{
-    dispatchOnMainQueue(^{
-        
-        [self d: @"Setting %@ extra with key: \"%@\" value: \"%@\"", adFormat, key, value];
-        
-        MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
-        [adView setExtraParameterForKey: key value: value];
-        
-        if (  [@"force_banner" isEqualToString: key] && MAAdFormat.mrec != adFormat )
-        {
-            // Handle local changes as needed
-            MAAdFormat *forcedAdFormat;
-            
-            BOOL shouldForceBanner = [NSNumber al_numberWithString: value].boolValue;
-            if ( shouldForceBanner )
-            {
-                forcedAdFormat = MAAdFormat.banner;
-            }
-            else
-            {
-                forcedAdFormat = DEVICE_SPECIFIC_ADVIEW_AD_FORMAT;
-            }
-            
-            self.adViewAdFormats[adUnitIdentifier] = forcedAdFormat;
-            [self positionAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: forcedAdFormat];
-        }
-    });
-}
-
 - (void)showAdViewWithAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     dispatchOnMainQueue(^{
         
-        [self d: @"Showing %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
+        [self d: @"Showing %@ with ad unit identifier \"%@\"", adFormat.label, adUnitIdentifier];
         
-        MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
-        if ( !view )
+        MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+        if ( !adView )
         {
-            [self e: @"%@ does not exist for ad unit identifier %@.", adFormat, adUnitIdentifier];
-            
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];            
+
             // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
             [self.adUnitIdentifiersToShowAfterCreate addObject: adUnitIdentifier];
+            return;
         }
         
         self.safeAreaBackground.hidden = NO;
-        view.hidden = NO;
-        
-        [view startAutoRefresh];
+        adView.hidden = NO;
+        [adView startAutoRefresh];
     });
 }
 
@@ -755,14 +774,20 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     dispatchOnMainQueue(^{
         
-        [self d: @"Hiding %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
+        [self d: @"Hiding %@ with ad unit identifier \"%@\"", adFormat.label, adUnitIdentifier];
         [self.adUnitIdentifiersToShowAfterCreate removeObject: adUnitIdentifier];
+
+        MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+        if ( !adView )
+        {
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+            return;
+        }
         
-        MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
-        view.hidden = YES;
+        adView.hidden = YES;
         self.safeAreaBackground.hidden = YES;
         
-        [view stopAutoRefresh];
+        [adView stopAutoRefresh];
     });
 }
 
@@ -770,46 +795,52 @@ static NSString *const TAG = @"MAUnrealPlugin";
 {
     dispatchOnMainQueue(^{
         
-        [self d: @"Destroying %@ with ad unit identifier \"%@\"", adFormat, adUnitIdentifier];
+        [self d: @"Destroying %@ with ad unit identifier \"%@\"", adFormat.label, adUnitIdentifier];
+
+        MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
+        if ( !adView )
+        {
+            [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+            return;
+        }
         
-        MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
-        view.delegate = nil;
+        adView.delegate = nil;
         
-        [view removeFromSuperview];
+        [adView removeFromSuperview];
         
         [self.adViews removeObjectForKey: adUnitIdentifier];
-        [self.adViewPositions removeObjectForKey: adUnitIdentifier];
         [self.adViewAdFormats removeObjectForKey: adUnitIdentifier];
         [self.verticalAdViewFormats removeObjectForKey: adUnitIdentifier];
+        [self.adViewPositions removeObjectForKey: adUnitIdentifier];
     });
 }
 
 - (MAInterstitialAd *)retrieveInterstitialForAdUnitIdentifier:(NSString *)adUnitIdentifier
 {
-    MAInterstitialAd *result = self.interstitials[adUnitIdentifier];
-    if ( !result )
+    MAInterstitialAd *interstitial = self.interstitials[adUnitIdentifier];
+    if ( !interstitial )
     {
-        result = [[MAInterstitialAd alloc] initWithAdUnitIdentifier: adUnitIdentifier sdk: self.sdk];
-        result.delegate = self;
+        interstitial = [[MAInterstitialAd alloc] initWithAdUnitIdentifier: adUnitIdentifier sdk: self.sdk];
+        interstitial.delegate = self;
         
-        self.interstitials[adUnitIdentifier] = result;
+        self.interstitials[adUnitIdentifier] = interstitial;
     }
     
-    return result;
+    return interstitial;
 }
 
 - (MARewardedAd *)retrieveRewardedAdForAdUnitIdentifier:(NSString *)adUnitIdentifier
 {
-    MARewardedAd *result = self.rewardedAds[adUnitIdentifier];
-    if ( !result )
+    MARewardedAd *rewardedAd = self.rewardedAds[adUnitIdentifier];
+    if ( !rewardedAd )
     {
-        result = [MARewardedAd sharedWithAdUnitIdentifier: adUnitIdentifier sdk: self.sdk];
-        result.delegate = self;
+        rewardedAd = [MARewardedAd sharedWithAdUnitIdentifier: adUnitIdentifier sdk: self.sdk];
+        rewardedAd.delegate = self;
         
-        self.rewardedAds[adUnitIdentifier] = result;
+        self.rewardedAds[adUnitIdentifier] = rewardedAd;
     }
     
-    return result;
+    return rewardedAd;
 }
 
 - (MAAdView *)retrieveAdViewForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
@@ -819,21 +850,21 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (MAAdView *)retrieveAdViewForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat atPosition:(NSString *)adViewPosition
 {
-    MAAdView *result = self.adViews[adUnitIdentifier];
-    if ( !result && adViewPosition )
+    MAAdView *adView = self.adViews[adUnitIdentifier];
+    if ( !adView && adViewPosition )
     {
-        result = [[MAAdView alloc] initWithAdUnitIdentifier: adUnitIdentifier adFormat: adFormat sdk: self.sdk];
-        result.delegate = self;
-        result.userInteractionEnabled = NO;
-        result.translatesAutoresizingMaskIntoConstraints = NO;
+        adView = [[MAAdView alloc] initWithAdUnitIdentifier: adUnitIdentifier adFormat: adFormat sdk: self.sdk];
+        adView.delegate = self;
+        adView.userInteractionEnabled = NO;
+        adView.translatesAutoresizingMaskIntoConstraints = NO;
         
-        self.adViews[adUnitIdentifier] = result;
+        self.adViews[adUnitIdentifier] = adView;
         
         self.adViewPositions[adUnitIdentifier] = adViewPosition;
-        [self.unrealMainView addSubview: result];
+        [self.unrealMainView addSubview: adView];
     }
     
-    return result;
+    return adView;
 }
 
 - (void)positionAdViewForAd:(MAAd *)ad
@@ -844,10 +875,17 @@ static NSString *const TAG = @"MAUnrealPlugin";
 - (void)positionAdViewForAdUnitIdentifier:(NSString *)adUnitIdentifier adFormat:(MAAdFormat *)adFormat
 {
     MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
-    NSString *adViewPosition = self.adViewPositions[adUnitIdentifier];
+    if ( !adView )
+    {
+        [self logInvalidAdUnitIdentifier: adUnitIdentifier forAdFormat: adFormat];
+        return;
+    }
     
     UIView *superview = adView.superview;
     if ( !superview ) return;
+
+    NSString *adViewPosition = self.adViewPositions[adUnitIdentifier];
+    CGSize adViewSize = adFormat.size;
     
     // Deactivate any previous constraints so that the banner can be positioned again.
     NSArray<NSLayoutConstraint *> *activeConstraints = self.adViewConstraints[adUnitIdentifier];
@@ -865,8 +903,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
     // Deactivate any previous constraints and reset visibility state so that the safe area background can be positioned again.
     [NSLayoutConstraint deactivateConstraints: self.safeAreaBackground.constraints];
     self.safeAreaBackground.hidden = adView.hidden;
-    
-    CGSize adViewSize = adFormat.size;
     
     // All positions have constant height
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray arrayWithObject: [adView.heightAnchor constraintEqualToConstant: adViewSize.height]];
@@ -1136,6 +1172,11 @@ static NSString *const TAG = @"MAUnrealPlugin";
     NSString *message = [NSString stringWithFormat: @"Invalid ad format: %@", adFormat];
     [self logStackTrace: message];
 }
+
+- (void)logInvalidAdUnitIdentifier:(NSString *)adUnitIdentifier forAdFormat:(MAAdFormat *)adFormat
+{
+    [self e: @"%@ does not exist for %@", adFormat.label, adUnitIdentifier];
+}                                                                  
 
 - (void)logStackTrace:(NSString *)message
 {
