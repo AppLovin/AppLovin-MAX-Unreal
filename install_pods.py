@@ -9,7 +9,6 @@
 
 import json
 import re
-import shutil
 import subprocess
 import tarfile
 
