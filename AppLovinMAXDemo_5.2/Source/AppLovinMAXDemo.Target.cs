@@ -9,7 +9,10 @@ public class AppLovinMAXDemoTarget : TargetRules
 	{
 		Type = TargetType.Game;
 
-#if UE_5_3_OR_LATER
+#if UE_5_4_OR_LATER
+		DefaultBuildSettings = BuildSettingsVersion.V5;
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
+#elif UE_5_3_OR_LATER
 		DefaultBuildSettings = BuildSettingsVersion.V4;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
 #elif UE_5_2_OR_LATER
