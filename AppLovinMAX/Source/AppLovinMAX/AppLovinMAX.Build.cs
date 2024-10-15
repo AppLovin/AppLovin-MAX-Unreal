@@ -139,13 +139,12 @@ public class AppLovinMAX : ModuleRules
 			{
                 var Name = Item.Element( "Name" ).Value;
 				var FrameworkPath = Path.Combine( AppLovinPodsPath, Item.Element( "Path" ).Value );
-				var Resources = Path.Combine( AppLovinPodsPath, Item.Element( "Resources" ).Value );
+				var Resources = Item.Element( "Resources" ).Value;
+				var ResourcesPath = Resources != "None" ? Path.Combine( AppLovinPodsPath, Resources ) : null;
 
 				System.Console.WriteLine( "Adding CocoaPod framework: " + Name + " (" + FrameworkPath + ")" );
 
-				var AdditionalFramework = Resources != "None"
-		            ? new Framework( Name, FrameworkPath, Resources )
-		            : new Framework( Name, FrameworkPath );
+				var AdditionalFramework = new Framework( Name, FrameworkPath, ResourcesPath, true );
 
 				PublicAdditionalFrameworks.Add( AdditionalFramework );
 			}

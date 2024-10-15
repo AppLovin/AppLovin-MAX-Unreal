@@ -72,26 +72,6 @@
               // You may add any additional repositories for other ad networks here
             }
           }
-
-          // Prefer newer versions of Play Services, particularly for below UE 5.2
-          dependencies {
-            implementation("com.google.android.gms:play-services-auth").version {
-              strictly("[16,19[")
-              prefer("16.0.1")
-            }
-            implementation("com.google.android.gms:play-services-games").version {
-              strictly("[17,19[")
-              prefer("17.0.0")
-            }
-            implementation("com.google.android.gms:play-services-nearby").version {
-              strictly("[16,19[")
-              prefer("16.0.0")
-            }
-            implementation("com.google.android.gms:play-services-plus").version {
-              strictly("[16,18[")
-              prefer("16.0.0")
-            }
-          }
         </insert>
       </true>
     </if>
