@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import lombok.val;
 import lombok.var;
 
@@ -629,12 +630,7 @@ public class MaxUnrealPlugin
 
         if ( adFormat.isAdViewAd() )
         {
-            val adViewPosition = adViewPositions.get( ad.getAdUnitId() );
-            if ( !TextUtils.isEmpty( adViewPosition ) )
-            {
-                // Only position ad if not native UI component
-                positionAdView( ad );
-            }
+            positionAdView( ad );
 
             // Do not auto-refresh by default if the ad view is not showing yet (e.g. first load during app launch and publisher does not automatically show banner upon load success)
             // We will resume auto-refresh in {@link #showBanner(String)}.
@@ -1279,6 +1275,11 @@ public class MaxUnrealPlugin
         return AppLovinSdkUtils.isTablet( context ) ? MaxAdFormat.LEADER : MaxAdFormat.BANNER;
     }
 
+    private boolean isInvalidAdFormat(@Nullable final MaxAdFormat adFormat)
+    {
+        return adFormat == null || !( adFormat.isAdViewAd() || MaxAdFormat.INTERSTITIAL == adFormat || MaxAdFormat.REWARDED == adFormat );
+    }
+
     private JSONObject getAdInfo(final MaxAd ad)
     {
         val adInfo = new JSONObject();
@@ -1301,6 +1302,31 @@ public class MaxUnrealPlugin
         JsonUtils.putString( errorInfo, "waterfall", error.getWaterfall() != null ? error.getWaterfall().toString() : "" );
 
         return errorInfo;
+    }
+
+    private String getEventName(final MaxAdFormat adFormat, final String event)
+    {
+        if ( adFormat != null )
+        {
+            if ( adFormat.isBannerOrLeaderAd() )
+            {
+                return "OnBannerAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.MREC == adFormat )
+            {
+                return "OnMRecAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.INTERSTITIAL == adFormat )
+            {
+                return "OnInterstitialAd" + event + "Event";
+            }
+            else if ( MaxAdFormat.REWARDED == adFormat )
+            {
+                return "OnRewardedAd" + event + "Event";
+            }
+        }
+
+        throw new IllegalArgumentException( "Invalid ad format" );
     }
 
     private static Map<String, String> deserialize(final String serialized)

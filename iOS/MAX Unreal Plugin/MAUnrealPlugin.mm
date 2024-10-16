@@ -587,15 +587,19 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 - (void)didLoadAd:(MAAd *)ad
 {
-    NSString *name;
     MAAdFormat *adFormat = ad.format;
-    if ( MAAdFormat.banner == adFormat || MAAdFormat.leader == adFormat || MAAdFormat.mrec == adFormat )
+    if ( [self isInvalidAdFormat: adFormat] )
+    {
+        [self logInvalidAdFormat: adFormat];
+        return;
+    }
+    
+    if ( [adFormat isAdViewAd] )
     {
         MAAdView *adView = [self retrieveAdViewForAdUnitIdentifier: ad.adUnitIdentifier adFormat: adFormat];
         // An ad is now being shown, enable user interaction.
         adView.userInteractionEnabled = YES;
         
-        name = ( MAAdFormat.mrec == adFormat ) ? @"OnMRecAdLoadedEvent" : @"OnBannerAdLoadedEvent";
         [self positionAdViewForAd: ad];
         
         // Do not auto-refresh by default if the ad view is not showing yet (e.g. first load during app launch and publisher does not automatically show banner upon load success)
@@ -605,20 +609,8 @@ static NSString *const TAG = @"MAUnrealPlugin";
             [adView stopAutoRefresh];
         }
     }
-    else if ( MAAdFormat.interstitial == adFormat )
-    {
-        name = @"OnInterstitialAdLoadedEvent";
-    }
-    else if ( MAAdFormat.rewarded == adFormat )
-    {
-        name = @"OnRewardedAdLoadedEvent";
-    }
-    else
-    {
-        [self logInvalidAdFormat: adFormat];
-        return;
-    }
     
+    NSString *name = [self eventNameForAdFormat: adFormat event: @"Loaded"];
     [self sendUnrealEventWithName: name parameters: [self adInfoForAd: ad]];
 }
 
