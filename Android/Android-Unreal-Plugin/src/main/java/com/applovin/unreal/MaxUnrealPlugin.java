@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import lombok.val;
 import lombok.var;
 
@@ -617,7 +618,7 @@ public class MaxUnrealPlugin
 
     // region Ad Callbacks
     @Override
-    public void onAdLoaded(MaxAd ad)
+    public void onAdLoaded(@NonNull MaxAd ad)
     {
         final String name;
         val adFormat = ad.getFormat();
@@ -658,7 +659,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdLoadFailed(final String adUnitId, final MaxError error)
+    public void onAdLoadFailed(@NonNull final String adUnitId, @NonNull final MaxError error)
     {
         if ( TextUtils.isEmpty( adUnitId ) )
         {
@@ -692,7 +693,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdClicked(final MaxAd ad)
+    public void onAdClicked(@NonNull final MaxAd ad)
     {
         val adFormat = ad.getFormat();
         String name;
@@ -722,7 +723,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdDisplayed(final MaxAd ad)
+    public void onAdDisplayed(@NonNull MaxAd ad)
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
@@ -742,7 +743,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdDisplayFailed(final MaxAd ad, final MaxError error)
+    public void onAdDisplayFailed(@NonNull final MaxAd ad, @NonNull final MaxError error)
     {
         // BMLs do not support [DISPLAY] events
         val adFormat = ad.getFormat();
@@ -765,7 +766,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdHidden(final MaxAd ad)
+    public void onAdHidden(@NonNull final MaxAd ad)
     {
         // BMLs do not support [HIDDEN] events
         val adFormat = ad.getFormat();
@@ -785,7 +786,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdExpanded(final MaxAd ad)
+    public void onAdExpanded(@NonNull final MaxAd ad)
     {
         val adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
@@ -798,7 +799,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdCollapsed(final MaxAd ad)
+    public void onAdCollapsed(@NonNull final MaxAd ad)
     {
         val adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.BANNER && adFormat != MaxAdFormat.LEADER && adFormat != MaxAdFormat.MREC )
@@ -811,7 +812,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onUserRewarded(final MaxAd ad, final MaxReward reward)
+    public void onUserRewarded(@NonNull MaxAd ad, @NonNull final MaxReward reward)
     {
         val adFormat = ad.getFormat();
         if ( adFormat != MaxAdFormat.REWARDED )
@@ -828,7 +829,7 @@ public class MaxUnrealPlugin
     }
 
     @Override
-    public void onAdRevenuePaid(final MaxAd ad)
+    public void onAdRevenuePaid(@NonNull MaxAd ad)
     {
         val adFormat = ad.getFormat();
         final String name;
