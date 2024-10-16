@@ -42,7 +42,7 @@ void UInterstitialWidget::NativeConstruct()
 
     UAppLovinMAX::OnInterstitialAdRevenuePaidDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Interstitial revenue paid");
+        DEMO_LOG("Interstitial revenue paid: %f", AdInfo.Revenue);
     });
 }
 
