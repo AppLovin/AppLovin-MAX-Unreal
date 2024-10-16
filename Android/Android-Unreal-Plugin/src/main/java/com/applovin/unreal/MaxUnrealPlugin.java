@@ -213,31 +213,27 @@ public class MaxUnrealPlugin
             userGeographyToSet = null;
         }
 
-        sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener()
-        {
-            @Override
-            public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
+        sdk.initializeSdk( configuration -> {
+
+            d( "SDK initialized" );
+
+            sdkConfiguration = configuration;
+            isSdkInitialized = true;
+
+            // Enable orientation change listener, so that the position can be updated for vertical banners.
+            new OrientationEventListener( context )
             {
-                d( "SDK initialized" );
-
-                sdkConfiguration = configuration;
-                isSdkInitialized = true;
-
-                // Enable orientation change listener, so that the position can be updated for vertical banners.
-                new OrientationEventListener( context )
+                @Override
+                public void onOrientationChanged(final int orientation)
                 {
-                    @Override
-                    public void onOrientationChanged(final int orientation)
+                    for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : verticalAdViewFormats.entrySet() )
                     {
-                        for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : verticalAdViewFormats.entrySet() )
-                        {
-                            positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
-                        }
+                        positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
                     }
-                }.enable();
+                }
+            }.enable();
 
-                sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
-            }
+            sendUnrealEvent( "OnSdkInitializedEvent", getInitializationMessage( context ) );
         } );
     }
 
@@ -865,235 +861,203 @@ public class MaxUnrealPlugin
     private void createAdView(final String adUnitId, final MaxAdFormat adFormat, final String adViewPosition)
     {
         // Run on main thread to ensure there are no concurrency issues with other ad view methods
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Creating " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" and position: \"" + adViewPosition + "\"" );
+
+            // Retrieve ad view from the map
+            val adView = retrieveAdView( adUnitId, adFormat, adViewPosition );
+            if ( adView == null )
             {
-                d( "Creating " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" and position: \"" + adViewPosition + "\"" );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
+            }
 
-                // Retrieve ad view from the map
-                val adView = retrieveAdView( adUnitId, adFormat, adViewPosition );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
+            adView.setVisibility( View.GONE );
 
-                adView.setVisibility( View.GONE );
+            if ( adView.getParent() == null )
+            {
+                val currentActivity = getGameActivity();
+                val relativeLayout = new RelativeLayout( currentActivity );
+                currentActivity.addContentView( relativeLayout, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                                               LinearLayout.LayoutParams.MATCH_PARENT ) );
+                relativeLayout.addView( adView );
 
-                if ( adView.getParent() == null )
-                {
-                    val currentActivity = getGameActivity();
-                    val relativeLayout = new RelativeLayout( currentActivity );
-                    currentActivity.addContentView( relativeLayout, new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                                                   LinearLayout.LayoutParams.MATCH_PARENT ) );
-                    relativeLayout.addView( adView );
+                // Position ad view immediately so if publisher sets color before ad loads, it will not be the size of the screen
+                adViewAdFormats.put( adUnitId, adFormat );
+                positionAdView( adUnitId, adFormat );
+            }
 
-                    // Position ad view immediately so if publisher sets color before ad loads, it will not be the size of the screen
-                    adViewAdFormats.put( adUnitId, adFormat );
-                    positionAdView( adUnitId, adFormat );
-                }
+            adView.loadAd();
 
-                adView.loadAd();
-
-                // The publisher may have requested to show the banner before it was created. Now that the banner is created, show it.
-                if ( adUnitIdsToShowAfterCreate.contains( adUnitId ) )
-                {
-                    showAdView( adUnitId, adFormat );
-                    adUnitIdsToShowAfterCreate.remove( adUnitId );
-                }
+            // The publisher may have requested to show the banner before it was created. Now that the banner is created, show it.
+            if ( adUnitIdsToShowAfterCreate.contains( adUnitId ) )
+            {
+                showAdView( adUnitId, adFormat );
+                adUnitIdsToShowAfterCreate.remove( adUnitId );
             }
         } );
     }
 
     private void setAdViewPlacement(final String adUnitId, final MaxAdFormat adFormat, final String placement)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Setting placement \"" + placement + "\" for " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Setting placement \"" + placement + "\" for " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
-
-                val adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                adView.setPlacement( placement );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            adView.setPlacement( placement );
         } );
     }
 
     private void updateAdViewPosition(final String adUnitId, final String adViewPosition, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Updating " + adFormat.getLabel() + " position to \"" + adViewPosition + "\" for ad unit id \"" + adUnitId + "\"" );
+
+            // Retrieve ad view from the map
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Updating " + adFormat.getLabel() + " position to \"" + adViewPosition + "\" for ad unit id \"" + adUnitId + "\"" );
-
-                // Retrieve ad view from the map
-                val adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                // Check if the previous position is same as the new position. If so, no need to update the position again.
-                val previousPosition = adViewPositions.get( adUnitId );
-                if ( adViewPosition == null || adViewPosition.equals( previousPosition ) ) return;
-
-                adViewPositions.put( adUnitId, adViewPosition );
-                positionAdView( adUnitId, adFormat );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            // Check if the previous position is same as the new position. If so, no need to update the position again.
+            val previousPosition = adViewPositions.get( adUnitId );
+            if ( adViewPosition == null || adViewPosition.equals( previousPosition ) ) return;
+
+            adViewPositions.put( adUnitId, adViewPosition );
+            positionAdView( adUnitId, adFormat );
         } );
     }
 
     private void showAdView(final String adUnitId, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Showing " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Showing " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+                e( adFormat.getLabel() + " does not exist for ad unit id " + adUnitId );
 
-                val adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist for ad unit id " + adUnitId );
-
-                    // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
-                    adUnitIdsToShowAfterCreate.add( adUnitId );
-                    return;
-                }
-
-                adView.setVisibility( View.VISIBLE );
-                adView.startAutoRefresh();
+                // The adView has not yet been created. Store the ad unit ID, so that it can be displayed once the banner has been created.
+                adUnitIdsToShowAfterCreate.add( adUnitId );
+                return;
             }
+
+            adView.setVisibility( View.VISIBLE );
+            adView.startAutoRefresh();
         } );
     }
 
     private void hideAdView(final String adUnitId, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Hiding " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+            adUnitIdsToShowAfterCreate.remove( adUnitId );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Hiding " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
-                adUnitIdsToShowAfterCreate.remove( adUnitId );
-
-                val adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                adView.setVisibility( View.GONE );
-                adView.stopAutoRefresh();
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            adView.setVisibility( View.GONE );
+            adView.stopAutoRefresh();
         } );
     }
 
     private void destroyAdView(final String adUnitId, final MaxAdFormat adFormat)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Destroying " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Destroying " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\"" );
-
-                val adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                val parent = adView.getParent();
-                if ( parent instanceof ViewGroup )
-                {
-                    ( (ViewGroup) parent ).removeView( adView );
-                }
-
-                adView.setListener( null );
-                adView.destroy();
-
-                adViews.remove( adUnitId );
-                adViewAdFormats.remove( adUnitId );
-                adViewPositions.remove( adUnitId );
-                verticalAdViewFormats.remove( adUnitId );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            val parent = adView.getParent();
+            if ( parent instanceof ViewGroup )
+            {
+                ( (ViewGroup) parent ).removeView( adView );
+            }
+
+            adView.setListener( null );
+            adView.destroy();
+
+            adViews.remove( adUnitId );
+            adViewAdFormats.remove( adUnitId );
+            adViewPositions.remove( adUnitId );
+            verticalAdViewFormats.remove( adUnitId );
         } );
     }
 
     private void setAdViewBackgroundColor(final String adUnitId, final MaxAdFormat adFormat, final String hexColorCode)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Setting " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" to color: " + hexColorCode );
+
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Setting " + adFormat.getLabel() + " with ad unit id \"" + adUnitId + "\" to color: " + hexColorCode );
-
-                val adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
-                {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
-                }
-
-                adView.setBackgroundColor( Color.parseColor( hexColorCode ) );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
             }
+
+            adView.setBackgroundColor( Color.parseColor( hexColorCode ) );
         } );
     }
 
     private void setAdViewExtraParameters(final String adUnitId, final MaxAdFormat adFormat, final String key, final String value)
     {
-        getGameActivity().runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
+        getGameActivity().runOnUiThread( () -> {
+
+            d( "Setting " + adFormat.getLabel() + " extra with key: \"" + key + "\" value: " + value );
+
+            // Retrieve ad view from the map
+            val adView = retrieveAdView( adUnitId, adFormat );
+            if ( adView == null )
             {
-                d( "Setting " + adFormat.getLabel() + " extra with key: \"" + key + "\" value: " + value );
+                e( adFormat.getLabel() + " does not exist" );
+                return;
+            }
 
-                // Retrieve ad view from the map
-                val adView = retrieveAdView( adUnitId, adFormat );
-                if ( adView == null )
+            adView.setExtraParameter( key, value );
+
+            // Handle local changes as needed
+            if ( "force_banner".equalsIgnoreCase( key ) && MaxAdFormat.MREC != adFormat )
+            {
+                final MaxAdFormat forcedAdFormat;
+
+                boolean shouldForceBanner = Boolean.parseBoolean( value );
+                if ( shouldForceBanner )
                 {
-                    e( adFormat.getLabel() + " does not exist" );
-                    return;
+                    forcedAdFormat = MaxAdFormat.BANNER;
+                }
+                else
+                {
+                    forcedAdFormat = getDeviceSpecificBannerAdViewAdFormat();
                 }
 
-                adView.setExtraParameter( key, value );
-
-                // Handle local changes as needed
-                if ( "force_banner".equalsIgnoreCase( key ) && MaxAdFormat.MREC != adFormat )
-                {
-                    final MaxAdFormat forcedAdFormat;
-
-                    boolean shouldForceBanner = Boolean.parseBoolean( value );
-                    if ( shouldForceBanner )
-                    {
-                        forcedAdFormat = MaxAdFormat.BANNER;
-                    }
-                    else
-                    {
-                        forcedAdFormat = getDeviceSpecificBannerAdViewAdFormat();
-                    }
-
-                    adViewAdFormats.put( adUnitId, forcedAdFormat );
-                    positionAdView( adUnitId, forcedAdFormat );
-                }
+                adViewAdFormats.put( adUnitId, forcedAdFormat );
+                positionAdView( adUnitId, forcedAdFormat );
             }
         } );
     }
