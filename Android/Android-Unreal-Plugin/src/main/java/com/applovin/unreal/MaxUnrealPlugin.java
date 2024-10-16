@@ -1155,9 +1155,9 @@ public class MaxUnrealPlugin
 
         // Size the ad
         val adViewPosition = adViewPositions.get( adUnitId );
-        val adViewSize = getAdViewSize( adFormat );
-        val width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.widthDp );
-        val height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.heightDp );
+        val adViewSize = adFormat.getSize();
+        val width = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.getWidth() );
+        val height = AppLovinSdkUtils.dpToPx( getGameActivity(), adViewSize.getHeight() );
 
         val params = (RelativeLayout.LayoutParams) adView.getLayoutParams();
         params.height = height;
@@ -1286,38 +1286,6 @@ public class MaxUnrealPlugin
     public static MaxAdFormat getDeviceSpecificBannerAdViewAdFormat(final Context context)
     {
         return AppLovinSdkUtils.isTablet( context ) ? MaxAdFormat.LEADER : MaxAdFormat.BANNER;
-    }
-
-    protected static class AdViewSize
-    {
-        public final int widthDp;
-        public final int heightDp;
-
-        private AdViewSize(final int widthDp, final int heightDp)
-        {
-            this.widthDp = widthDp;
-            this.heightDp = heightDp;
-        }
-    }
-
-    public static AdViewSize getAdViewSize(final MaxAdFormat format)
-    {
-        if ( MaxAdFormat.LEADER == format )
-        {
-            return new AdViewSize( 728, 90 );
-        }
-        else if ( MaxAdFormat.BANNER == format )
-        {
-            return new AdViewSize( 320, 50 );
-        }
-        else if ( MaxAdFormat.MREC == format )
-        {
-            return new AdViewSize( 300, 250 );
-        }
-        else
-        {
-            throw new IllegalArgumentException( "Invalid ad format" );
-        }
     }
 
     private JSONObject getAdInfo(final MaxAd ad)

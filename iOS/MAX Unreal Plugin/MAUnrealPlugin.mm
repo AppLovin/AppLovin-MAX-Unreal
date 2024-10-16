@@ -1057,7 +1057,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     [NSLayoutConstraint deactivateConstraints: self.safeAreaBackground.constraints];
     self.safeAreaBackground.hidden = adView.hidden;
     
-    CGSize adViewSize = [[self class] adViewSizeForAdFormat: adFormat];
+    CGSize adViewSize = adFormat.size;
     
     // All positions have constant height
     NSMutableArray<NSLayoutConstraint *> *constraints = [NSMutableArray arrayWithObject: [adView.heightAnchor constraintEqualToConstant: adViewSize.height]];
@@ -1233,27 +1233,6 @@ static NSString *const TAG = @"MAUnrealPlugin";
     self.adViewConstraints[adUnitIdentifier] = constraints;
     
     [NSLayoutConstraint activateConstraints: constraints];
-}
-
-+ (CGSize)adViewSizeForAdFormat:(MAAdFormat *)adFormat
-{
-    if ( MAAdFormat.leader == adFormat )
-    {
-        return CGSizeMake(728.0f, 90.0f);
-    }
-    else if ( MAAdFormat.banner == adFormat )
-    {
-        return CGSizeMake(320.0f, 50.0f);
-    }
-    else if ( MAAdFormat.mrec == adFormat )
-    {
-        return CGSizeMake(300.0f, 250.0f);
-    }
-    else
-    {
-        [NSException raise: NSInvalidArgumentException format: @"Invalid ad format"];
-        return CGSizeZero;
-    }
 }
 
 #pragma mark - Utility Methods
