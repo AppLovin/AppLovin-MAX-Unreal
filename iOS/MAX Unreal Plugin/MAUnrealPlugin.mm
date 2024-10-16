@@ -62,7 +62,7 @@
 @property (nonatomic, strong) UIView *safeAreaBackground;
 @property (nonatomic, strong, nullable) UIColor *publisherBannerBackgroundColor;
 
-@property (nonatomic, weak) UIView *unrealMainView;
+@property (nonatomic, weak, nullable) UIView *unrealMainView;
 @property (nonatomic, assign) UnrealEventCallback eventCallback;
 
 @end
