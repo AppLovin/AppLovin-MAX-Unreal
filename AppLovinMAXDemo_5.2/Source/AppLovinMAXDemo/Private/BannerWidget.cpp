@@ -37,7 +37,7 @@ void UBannerWidget::NativeConstruct()
 
     UAppLovinMAX::OnBannerAdRevenuePaidDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Banner revenue paid");
+        DEMO_LOG("Banner revenue paid: %f", AdInfo.Revenue);
     });
 }
 

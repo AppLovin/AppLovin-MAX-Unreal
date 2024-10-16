@@ -37,7 +37,7 @@ void UMRecWidget::NativeConstruct()
 
     UAppLovinMAX::OnMRecAdRevenuePaidDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("MREC ad revenue paid");
+        DEMO_LOG("MREC revenue paid: %f", AdInfo.Revenue);
     });
 }
 

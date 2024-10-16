@@ -43,7 +43,7 @@ void URewardedWidget::NativeConstruct()
 
     UAppLovinMAX::OnRewardedAdRevenuePaidDelegate.AddLambda([](const FAdInfo &AdInfo)
     {
-        DEMO_LOG("Rewarded ad revenue paid");
+        DEMO_LOG("Rewarded ad revenue paid: %f", AdInfo.Revenue);
     });
 }
 

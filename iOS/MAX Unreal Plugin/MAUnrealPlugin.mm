@@ -950,6 +950,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
         
         MAAdView *view = [self retrieveAdViewForAdUnitIdentifier: adUnitIdentifier adFormat: adFormat];
         view.delegate = nil;
+        view.revenueDelegate = nil;
         
         [view removeFromSuperview];
         
@@ -982,6 +983,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     {
         result = [[MAInterstitialAd alloc] initWithAdUnitIdentifier: adUnitIdentifier sdk: self.sdk];
         result.delegate = self;
+        result.revenueDelegate = self;
         
         self.interstitials[adUnitIdentifier] = result;
     }
@@ -996,6 +998,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     {
         result = [MARewardedAd sharedWithAdUnitIdentifier: adUnitIdentifier sdk: self.sdk];
         result.delegate = self;
+        result.revenueDelegate = self;
         
         self.rewardedAds[adUnitIdentifier] = result;
     }
@@ -1015,6 +1018,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     {
         result = [[MAAdView alloc] initWithAdUnitIdentifier: adUnitIdentifier adFormat: adFormat sdk: self.sdk];
         result.delegate = self;
+        result.revenueDelegate = self;
         result.userInteractionEnabled = NO;
         result.translatesAutoresizingMaskIntoConstraints = NO;
         
