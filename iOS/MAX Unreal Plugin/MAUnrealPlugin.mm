@@ -1237,6 +1237,11 @@ static NSString *const TAG = @"MAUnrealPlugin";
 
 #pragma mark - Utility Methods
 
+- (BOOL)isInvalidAdFormat:(MAAdFormat *)adFormat
+{
+    return !adFormat || !( [adFormat isAdViewAd] || MAAdFormat.interstitial == adFormat || MAAdFormat.rewarded == adFormat );
+}
+
 - (NSDictionary<NSString *, id> *)adInfoForAd:(MAAd *)ad
 {
     return @{@"adUnitIdentifier" : ad.adUnitIdentifier,
@@ -1251,6 +1256,32 @@ static NSString *const TAG = @"MAUnrealPlugin";
     return @{@"code" : @(error.code),
              @"message" : error.message ?: @"",
              @"waterfall" : error.waterfall.description ?: @""};
+}
+
+- (NSString *)eventNameForAdFormat:(MAAdFormat *)adFormat event:(NSString *)event
+{
+    if ( adFormat )
+    {
+        if ( [adFormat isAdViewAd] )
+        {
+            return [NSString stringWithFormat: @"OnBannerAd%@Event", event];
+        }
+        else if ( MAAdFormat.mrec == adFormat )
+        {
+            return [NSString stringWithFormat: @"OnMRecAd%@Event", event];
+        }
+        else if ( MAAdFormat.interstitial == adFormat )
+        {
+            return [NSString stringWithFormat: @"OnInterstitialAd%@Event", event];
+        }
+        else if ( MAAdFormat.rewarded == adFormat )
+        {
+            return [NSString stringWithFormat: @"OnRewardedAd%@Event", event];
+        }
+    }
+
+    [NSException raise: NSInvalidArgumentException format: @"Invalid ad format"];
+    return @"";
 }
 
 - (ALConsentFlowUserGeography)userGeographyForString:(NSString *)userGeographyString

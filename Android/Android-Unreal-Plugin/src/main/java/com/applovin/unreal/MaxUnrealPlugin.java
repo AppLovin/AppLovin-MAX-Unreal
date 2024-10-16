@@ -620,12 +620,15 @@ public class MaxUnrealPlugin
     @Override
     public void onAdLoaded(@NonNull MaxAd ad)
     {
-        final String name;
         val adFormat = ad.getFormat();
-        if ( MaxAdFormat.BANNER == adFormat || MaxAdFormat.LEADER == adFormat || MaxAdFormat.MREC == adFormat )
+        if ( isInvalidAdFormat( adFormat ) )
         {
-            name = ( MaxAdFormat.MREC == adFormat ) ? "OnMRecAdLoadedEvent" : "OnBannerAdLoadedEvent";
+            logInvalidAdFormat( adFormat );
+            return;
+        }
 
+        if ( adFormat.isAdViewAd() )
+        {
             val adViewPosition = adViewPositions.get( ad.getAdUnitId() );
             if ( !TextUtils.isEmpty( adViewPosition ) )
             {
@@ -641,20 +644,8 @@ public class MaxUnrealPlugin
                 adView.stopAutoRefresh();
             }
         }
-        else if ( MaxAdFormat.INTERSTITIAL == adFormat )
-        {
-            name = "OnInterstitialAdLoadedEvent";
-        }
-        else if ( MaxAdFormat.REWARDED == adFormat )
-        {
-            name = "OnRewardedAdLoadedEvent";
-        }
-        else
-        {
-            logInvalidAdFormat( adFormat );
-            return;
-        }
 
+        val name = getEventName( adFormat, "Loaded" );
         sendUnrealEvent( name, getAdInfo( ad ) );
     }
 
