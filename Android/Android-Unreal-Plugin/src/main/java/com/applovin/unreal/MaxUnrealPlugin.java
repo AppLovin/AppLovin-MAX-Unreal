@@ -822,8 +822,8 @@ public class MaxUnrealPlugin
         }
 
         val params = getAdInfo( ad );
-        JsonUtils.putString( params, "label", reward != null ? reward.getLabel() : "" );
-        JsonUtils.putInt( params, "amount", reward != null ? reward.getAmount() : 0 );
+        JsonUtils.putString( params, "label", reward.getLabel() );
+        JsonUtils.putInt( params, "amount", reward.getAmount() );
 
         sendUnrealEvent( "OnRewardedAdReceivedRewardEvent", params );
     }
