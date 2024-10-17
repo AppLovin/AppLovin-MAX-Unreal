@@ -227,7 +227,7 @@ public class MaxUnrealPlugin
                 @Override
                 public void onOrientationChanged(final int orientation)
                 {
-                    for ( final Map.Entry<String, MaxAdFormat> adUnitFormats : verticalAdViewFormats.entrySet() )
+                    for ( val adUnitFormats : verticalAdViewFormats.entrySet() )
                     {
                         positionAdView( adUnitFormats.getKey(), adUnitFormats.getValue() );
                     }
