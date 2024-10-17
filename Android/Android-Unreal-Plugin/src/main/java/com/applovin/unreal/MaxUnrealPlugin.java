@@ -1000,6 +1000,7 @@ public class MaxUnrealPlugin
             }
 
             adView.setListener( null );
+            adView.setRevenueListener( null );
             adView.destroy();
 
             adViews.remove( adUnitId );
@@ -1090,6 +1091,7 @@ public class MaxUnrealPlugin
         {
             result = new MaxInterstitialAd( adUnitId, sdk, getGameActivity() );
             result.setListener( this );
+            result.setRevenueListener( this );
 
             interstitials.put( adUnitId, result );
         }
@@ -1104,6 +1106,7 @@ public class MaxUnrealPlugin
         {
             result = MaxRewardedAd.getInstance( adUnitId, sdk, getGameActivity() );
             result.setListener( this );
+            result.setRevenueListener( this );
 
             rewardedAds.put( adUnitId, result );
         }
@@ -1124,6 +1127,7 @@ public class MaxUnrealPlugin
             // Must explicitly cast the GameActivity to Context to avoid a crash from NoSuchMethodError
             result = new MaxAdView( adUnitId, adFormat, sdk, (Context) getGameActivity() );
             result.setListener( this );
+            result.setRevenueListener( this );
 
             adViews.put( adUnitId, result );
             adViewPositions.put( adUnitId, adViewPosition );
