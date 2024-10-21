@@ -1,4 +1,6 @@
 require 'json'
+require 'pathname'
+require 'xcodeproj'
 
 # -- Pre-Install -- #
 
@@ -11,7 +13,9 @@ end
 abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
 project_name = File.basename(uproject_file, ".uproject")
 
-puts "Configuring '#{project_name}' iOS builds for AppLovin MAX..."
+# TODO: Check if Xcode project files already exist
+
+puts "Configuring '#{project_name}' iOS build for AppLovin MAX..."
 
 uproject_data = File.read(uproject_file)
 uproject_json = JSON.parse(uproject_data)
@@ -21,46 +25,48 @@ ue_version = uproject_json["EngineAssociation"]
 ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
 system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
 
+# Update Xcode project configuration to use UE_TARGET_CONFIG
+xcodeproj_path = "Intermediate/ProjectFiles/#{project_name} (IOS).xcodeproj"
+xcode_project = Xcodeproj::Project.open(xcodeproj_path)
+xcode_project.targets.first.build_configurations.each do |config|
+  config.build_settings["CONFIGURATION"] = "$(UE_TARGET_CONFIG)"
+end
+
+xcode_project.save()
+
 # -- CocoaPods -- #
 
 workspace "#{project_name} (IOS)"
 platform :ios, '12.0'
 
 target 'AppLovinMAXDemo' do
-  project "Intermediate/ProjectFiles/#{project_name} (IOS).xcodeproj"
+  project xcodeproj_path
 
   use_frameworks!
   inhibit_all_warnings!
 
-  pod 'AppLovinSDK', '13.0.0'
-  # TODO: Add your dependencies here
+  pod 'AppLovinSDK', '13.0.0' # TODO: Get the version dynamically from the plugin!
+  # TODO: Add your adapter dependencies here
 end
 
 # -- Post-Install -- #
 
-# TODO: Update the xcconfigs
-# xcconfig_paths = Dir.glob("**/Intermediate/**#{project_name}_*.xcconfig")
+# Update the Unreal project's xcconfigs to include CocoaPods xcconfigs
+Dir.glob("**/#{project_name}_*.xcconfig").each do |project_xcconfig_path|
+  project_path = Pathname.new(project_xcconfig_path).dirname
+  build_config = project_xcconfig_path.match(/_(\w+)\.xcconfig$/)[1].downcase
+  pod_xcconfig_path = Pathname.new("Pods/Target Support Files/Pods-#{project_name}/Pods-#{project_name}.#{build_config}.xcconfig")
+  relative_pod_xcconfig_path = pod_xcconfig_path.relative_path_from(project_path)
 
-# for unreal_xcconfig_path in $xcconfig_paths; do
+  include_text = "#include \"#{relative_pod_xcconfig_path}\"\n"    
+  if File.readlines(project_xcconfig_path).grep(include_text).any?
+    puts "Skipping already up-to-date #{project_xcconfig_path}"
+  else
+    puts "Updating #{project_xcconfig_path}"
 
-#   # Extract the build configuration and lowercase it
-#   build_config=$(echo "$unreal_xcconfig_path" | sed -n 's/.*_\(.*\)\.xcconfig/\1/p' | tr '[:upper:]' '[:lower:]')
-  
-#   # Calculate depth of file for creating relative path to corresponding Pods xcconfig
-#   depth=$(( $(echo "$unreal_xcconfig_path" | tr -cd '/' | wc -c) - 1 ))
-#   relative_prefix=$(printf '../%.0s' $(seq 1 $depth))
-#   pod_xcconfig_path="${relative_prefix}Pods/Target Support Files/Pods-${project_name}/Pods-${project_name}.${build_config}.xcconfig"
-#   escaped_pod_xcconfig_path=$(echo "$pod_xcconfig_path" | sed 's/\//\\\//g')
-
-#   # Format include text
-#   include_text="#include \"${escaped_pod_xcconfig_path}\""
-
-#   # Check if the contents of the file already have the include line
-#   if ! grep -q "^${include_text}" "${unreal_xcconfig_path}"; then
-#     # Prepend include to the file
-#     sed -i '' "1s/^/${include_text}\n/" "${unreal_xcconfig_path}"
-#     echo "Updated ${unreal_xcconfig_path}"
-#   else
-#     echo "File already updated. Skipping ${unreal_xcconfig_path}"
-#   fi
-# done
+    original_text = File.read(project_xcconfig_path)
+    File.open(project_xcconfig_path, 'w') do |file|
+      file.write(include_text + original_text)
+    end
+  end
+end
