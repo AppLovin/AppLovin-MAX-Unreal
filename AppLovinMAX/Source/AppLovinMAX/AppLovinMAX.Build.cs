@@ -46,11 +46,9 @@ public class AppLovinMAX : ModuleRules
 	private void InstallIOS()
 	{
 		var AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
-		var AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDK.xcframework" );
         var AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "AppLovin", "MAX_Unreal_Plugin.embeddedframework.zip" );
-		var AppLovinPodsPath = Path.Combine( AppLovinIOSPath, "Pods" );
 
-		if ( !Directory.Exists( AppLovinSDKPath ) || !File.Exists( AppLovinPluginPath ) )
+		if ( !File.Exists( AppLovinPluginPath ) )
 		{
 			System.Console.WriteLine( "AppLovin IOS Plugin not found" );
 			PublicDefinitions.Add( "WITH_APPLOVIN=0" );
@@ -67,16 +65,6 @@ public class AppLovinMAX : ModuleRules
 		// Add support for linking with Swift frameworks
 		PrivateDependencyModuleNames.Add( "Swift" );
 
-		// Add the AppLovin SDK framework
-		PublicAdditionalFrameworks.Add(
-			new Framework(
-				"AppLovinSDK",
-				AppLovinSDKPath,
-				null,
-				true
-			)
-		);
-
 		// Add the AppLovin Unreal iOS plugin
 		PublicAdditionalFrameworks.Add(
 			new Framework(
@@ -84,77 +72,6 @@ public class AppLovinMAX : ModuleRules
 				AppLovinPluginPath
 			)
 		);
-
-		var PluginFrameworks = new HashSet<string> {
-			"AdSupport",
-			"AudioToolbox",
-			"AVFoundation",
-			"CFNetwork",
-			"CoreGraphics",
-			"CoreMedia",
-			"CoreMotion",
-			"CoreTelephony",
-			"MessageUI",
-			"SafariServices",
-			"StoreKit",
-			"SystemConfiguration",
-			"UIKit",
-			"WebKit"
-		};
-
-		var PluginWeakFrameworks = new HashSet<string> { "AppTrackingTransparency" };
-		var PluginSystemLibraries = new HashSet<string>();
-
-		// Parse installed Pods configuration
-		if ( Directory.Exists( AppLovinPodsPath ) )
-		{
-			XDocument PodConfig = XDocument.Load( Path.Combine( AppLovinPodsPath, "config.xml" ) );
-
-			var TagsToPublicSet = new[] {
-		        ("PublicFrameworks", PluginFrameworks),
-		        ("PublicWeakFrameworks", PluginWeakFrameworks),
-		        ("PublicSystemLibraries", PluginSystemLibraries)
-		    };
-
-		    foreach ( var (Tag, PluginSet) in TagsToPublicSet )
-		    {
-		        foreach ( var Item in PodConfig.Descendants( Tag ).Elements( "Item" ) )
-		        {
-		        	PluginSet.Add( Item.Value );
-		        }
-		    }
-
-			// Process the additional libraries
-			foreach ( var Item in PodConfig.Descendants( "PublicAdditionalLibraries" ).Elements( "Item" ) )
-			{
-				var LibraryPath = Path.Combine( AppLovinPodsPath, Item.Value );
-
-				System.Console.WriteLine( "Adding CocoaPod library: " + LibraryPath );
-
-				PublicAdditionalLibraries.Add( LibraryPath );
-			}
-
-			// Process the additional frameworks
-			foreach ( var Item in PodConfig.Descendants( "PublicAdditionalFrameworks" ).Elements( "Item" ) )
-			{
-                var Name = Item.Element( "Name" ).Value;
-				var FrameworkPath = Path.Combine( AppLovinPodsPath, Item.Element( "Path" ).Value );
-				var Resources = Item.Element( "Resources" ).Value;
-				var ResourcesPath = Resources != "None" ? Path.Combine( AppLovinPodsPath, Resources ) : null;
-
-				System.Console.WriteLine( "Adding CocoaPod framework: " + Name + " (" + FrameworkPath + ")" );
-
-				var AdditionalFramework = new Framework( Name, FrameworkPath, ResourcesPath, true );
-
-				PublicAdditionalFrameworks.Add( AdditionalFramework );
-			}
-		}
-
-		PublicFrameworks.AddRange( PluginFrameworks.ToArray() );
-		PublicWeakFrameworks.AddRange( PluginWeakFrameworks.ToArray() );
-		PublicSystemLibraries.AddRange( PluginSystemLibraries.ToArray() );
-
-		AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 
 		PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 	}
