@@ -17,7 +17,7 @@ workspace "#{project_name} (IOS)"
 platform :ios, '12.0'
 
 target 'AppLovinMAXDemo' do
-  project xcodeproj_path
+  project xcodeproj_path, 'Shipping' => :release, 'DebugGame' => :debug
 
   use_frameworks!
   inhibit_all_warnings!
