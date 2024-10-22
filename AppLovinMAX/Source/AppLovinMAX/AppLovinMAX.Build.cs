@@ -50,12 +50,12 @@ public class AppLovinMAX : ModuleRules
 
 		if ( !File.Exists( AppLovinPluginPath ) )
 		{
-			System.Console.WriteLine( "AppLovin IOS Plugin not found" );
+			System.Console.WriteLine( "AppLovin IOS plugin not found" );
 			PublicDefinitions.Add( "WITH_APPLOVIN=0" );
 			return;
 		}
 
-		System.Console.WriteLine( "AppLovin IOS Plugin found" );
+		System.Console.WriteLine( "AppLovin IOS plugin found" );
 
 		var PluginPath = Utils.MakePathRelativeTo( ModuleDirectory, Target.RelativeEnginePath );
 		AdditionalPropertiesForReceipt.Add( "IOSPlugin", Path.Combine( PluginPath, "AppLovinMAX_UPL_IOS.xml" ) );
@@ -72,6 +72,25 @@ public class AppLovinMAX : ModuleRules
 				AppLovinPluginPath
 			)
 		);
+
+		// Link with AppLovin SDK if installed
+		var AppLovinSDKPath = "/Users/ritam.sarmah/AppLovin/AppLovin-MAX-Unreal/AppLovinMAXDemo/Pods/AppLovinSDK/applovin-ios-sdk-13.0.0/AppLovinSDK.xcframework";
+		if ( Directory.Exists( AppLovinSDKPath ) )
+		{
+			System.Console.WriteLine( "AppLovin SDK linked from CocoaPods" );
+			PublicAdditionalFrameworks.Add(
+				new Framework(
+					"AppLovinSDK",
+					AppLovinSDKPath,
+					null,
+					true
+				)
+			);
+		}
+		else
+		{
+			System.Console.WriteLine( "AppLovin SDK not linked with CocoaPods" );
+		}
 
 		PublicDefinitions.Add( "WITH_APPLOVIN=1" );
 	}
