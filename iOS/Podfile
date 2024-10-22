@@ -22,7 +22,7 @@ target 'AppLovinMAXDemo' do
   use_frameworks!
   inhibit_all_warnings!
 
-  pod 'AppLovinSDK', '13.0.0'
+  pod 'AppLovinSDK', '13.0.0' # TODO: Get the value dynamically
 
   # TODO: Add your adapter dependencies here
   pod 'AppLovinMediationIronSourceAdapter'
@@ -37,14 +37,10 @@ pre_install do |installer|
   uproject_json = JSON.parse(uproject_data)
   ue_version = uproject_json["EngineAssociation"]
 
-  # Run build tool to generate the Xcode project if needed
-  if File.exist?(xcodeproj_path)
-    puts "Found Xcode project at '#{xcodeproj_path}'"
-  else
-    abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
-    ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
-    system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
-  end
+  # Run build tool to generate the Xcode project
+  abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
+  ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
+  system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
 
   # Update Xcode project configuration to use UE_TARGET_CONFIG
   xcode_project = Xcodeproj::Project.open(xcodeproj_path)
