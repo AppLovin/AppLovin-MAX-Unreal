@@ -2,39 +2,16 @@ require 'json'
 require 'pathname'
 require 'xcodeproj'
 
-# -- Pre-Install -- #
-
 # Check if file is in the same directory as uproject
 uproject_file = Dir.glob("*.uproject").first
 if uproject_file.nil?
   abort "Error: No .uproject file found in current directory. The Podfile must be copied into your Unreal project root directory"
 end
 
-abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
 project_name = File.basename(uproject_file, ".uproject")
-
-# TODO: Check if Xcode project files already exist
-
-puts "Configuring '#{project_name}' iOS build for AppLovin MAX..."
-
-uproject_data = File.read(uproject_file)
-uproject_json = JSON.parse(uproject_data)
-ue_version = uproject_json["EngineAssociation"]
-
-# Run build tool to generate the Xcode project
-ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
-system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
-
-# Update Xcode project configuration to use UE_TARGET_CONFIG
 xcodeproj_path = "Intermediate/ProjectFiles/#{project_name} (IOS).xcodeproj"
-xcode_project = Xcodeproj::Project.open(xcodeproj_path)
-xcode_project.targets.first.build_configurations.each do |config|
-  config.build_settings["CONFIGURATION"] = "$(UE_TARGET_CONFIG)"
-end
 
-xcode_project.save()
-
-# -- CocoaPods -- #
+# -- Pods -- #
 
 workspace "#{project_name} (IOS)"
 platform :ios, '12.0'
@@ -45,28 +22,57 @@ target 'AppLovinMAXDemo' do
   use_frameworks!
   inhibit_all_warnings!
 
-  pod 'AppLovinSDK', '13.0.0' # TODO: Get the version dynamically from the plugin!
+  pod 'AppLovinSDK', '13.0.0'
+
   # TODO: Add your adapter dependencies here
+  pod 'AppLovinMediationIronSourceAdapter'
+end
+
+# -- Pre-Install -- #
+
+pre_install do |installer|
+  puts "Configuring '#{project_name}' iOS build for AppLovin MAX"
+
+  uproject_data = File.read(uproject_file)
+  uproject_json = JSON.parse(uproject_data)
+  ue_version = uproject_json["EngineAssociation"]
+
+  # Run build tool to generate the Xcode project if needed
+  if File.exist?(xcodeproj_path)
+    puts "Found Xcode project at '#{xcodeproj_path}'"
+  else
+    abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
+    ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
+    system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
+  end
+
+  # Update Xcode project configuration to use UE_TARGET_CONFIG
+  xcode_project = Xcodeproj::Project.open(xcodeproj_path)
+  xcode_project.targets.first.build_configurations.each do |config|
+    config.build_settings["CONFIGURATION"] = "$(UE_TARGET_CONFIG)"
+  end
+
+  xcode_project.save()
 end
 
 # -- Post-Install -- #
 
-# Update the Unreal project's xcconfigs to include CocoaPods xcconfigs
-Dir.glob("**/#{project_name}_*.xcconfig").each do |project_xcconfig_path|
-  project_path = Pathname.new(project_xcconfig_path).dirname
-  build_config = project_xcconfig_path.match(/_(\w+)\.xcconfig$/)[1].downcase
-  pod_xcconfig_path = Pathname.new("Pods/Target Support Files/Pods-#{project_name}/Pods-#{project_name}.#{build_config}.xcconfig")
-  relative_pod_xcconfig_path = pod_xcconfig_path.relative_path_from(project_path)
+post_install do |installer|
+  # Update the Unreal project's xcconfigs to include CocoaPods xcconfigs
+  Dir.glob("**/#{project_name}_*.xcconfig").each do |project_xcconfig_path|
+    project_path = Pathname.new(project_xcconfig_path).dirname
+    build_config = project_xcconfig_path.match(/_(\w+)\.xcconfig$/)[1].downcase
+    pod_xcconfig_path = Pathname.new("Pods/Target Support Files/Pods-#{project_name}/Pods-#{project_name}.#{build_config}.xcconfig")
+    relative_pod_xcconfig_path = pod_xcconfig_path.relative_path_from(project_path)
 
-  include_text = "#include \"#{relative_pod_xcconfig_path}\"\n"    
-  if File.readlines(project_xcconfig_path).grep(include_text).any?
-    puts "Skipping already up-to-date #{project_xcconfig_path}"
-  else
-    puts "Updating #{project_xcconfig_path}"
+    include_text = "#include \"#{relative_pod_xcconfig_path}\"\n"    
+    if !File.readlines(project_xcconfig_path).grep(include_text).any?
+      puts "Updating #{project_xcconfig_path}"
 
-    original_text = File.read(project_xcconfig_path)
-    File.open(project_xcconfig_path, 'w') do |file|
-      file.write(include_text + original_text)
+      original_text = File.read(project_xcconfig_path)
+      File.open(project_xcconfig_path, 'w') do |file|
+        file.write(include_text + original_text)
+      end
     end
   end
 end
