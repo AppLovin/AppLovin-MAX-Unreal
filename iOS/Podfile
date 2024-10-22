@@ -21,10 +21,12 @@ ue_version = uproject_json["EngineAssociation"]
 puts "Configuring '#{project_name}' iOS build for AppLovin MAX"
 
 # Run build tool to generate the Xcode project
-abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
-# TODO: Add custom logic for UE 5.3 which doesn't have functional RunUBT.sh??
-ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
-system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
+if !File.exist?(xcodeproj_path)
+  abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
+  # TODO: Add custom logic for UE 5.3 which doesn't have functional RunUBT.sh??
+  ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
+  system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
+end
 
 # Update Xcode project configuration to use UE_TARGET_CONFIG
 xcode_project = Xcodeproj::Project.open(xcodeproj_path)
@@ -40,7 +42,7 @@ workspace "#{project_name} (IOS)"
 platform :ios, '12.0'
 
 target 'AppLovinMAXDemo' do
-  project xcodeproj_path, 'Shipping' => :release, 'DebugGame' => :debug
+  project xcodeproj_path, 'DebugGame' => :debug, 'Development' => :debug, 'Shipping' => :release
 
   use_frameworks!
   inhibit_all_warnings!
