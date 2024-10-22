@@ -2,6 +2,9 @@ require 'json'
 require 'pathname'
 require 'xcodeproj'
 
+# -- Pre-Install -- #
+# NOTE: Do not use pre-install hook since CocoaPods needs generated Xcode project before then
+
 # Check if file is in the same directory as uproject
 uproject_file = Dir.glob("*.uproject").first
 if uproject_file.nil?
@@ -10,6 +13,26 @@ end
 
 project_name = File.basename(uproject_file, ".uproject")
 xcodeproj_path = "Intermediate/ProjectFiles/#{project_name} (IOS).xcodeproj"
+
+uproject_data = File.read(uproject_file)
+uproject_json = JSON.parse(uproject_data)
+ue_version = uproject_json["EngineAssociation"]
+
+puts "Configuring '#{project_name}' iOS build for AppLovin MAX"
+
+# Run build tool to generate the Xcode project
+abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
+# TODO: Add custom logic for UE 5.3 which doesn't have functional RunUBT.sh??
+ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
+system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
+
+# Update Xcode project configuration to use UE_TARGET_CONFIG
+xcode_project = Xcodeproj::Project.open(xcodeproj_path)
+xcode_project.targets.first.build_configurations.each do |config|
+  config.build_settings["CONFIGURATION"] = "$(UE_TARGET_CONFIG)"
+end
+
+xcode_project.save()
 
 # -- Pods -- #
 
@@ -25,30 +48,6 @@ target 'AppLovinMAXDemo' do
   pod 'AppLovinSDK', '13.0.0' # TODO: Get the value dynamically
 
   # TODO: Add your adapter dependencies here
-  pod 'AppLovinMediationIronSourceAdapter'
-end
-
-# -- Pre-Install -- #
-
-pre_install do |installer|
-  puts "Configuring '#{project_name}' iOS build for AppLovin MAX"
-
-  uproject_data = File.read(uproject_file)
-  uproject_json = JSON.parse(uproject_data)
-  ue_version = uproject_json["EngineAssociation"]
-
-  # Run build tool to generate the Xcode project
-  abs_uproject_file = File.expand_path(uproject_file, base_directory = Dir.pwd)
-  ubt_path = "/Users/Shared/Epic\ Games/UE_#{ue_version}/Engine/Build/BatchFiles/RunUBT.sh"
-  system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
-
-  # Update Xcode project configuration to use UE_TARGET_CONFIG
-  xcode_project = Xcodeproj::Project.open(xcodeproj_path)
-  xcode_project.targets.first.build_configurations.each do |config|
-    config.build_settings["CONFIGURATION"] = "$(UE_TARGET_CONFIG)"
-  end
-
-  xcode_project.save()
 end
 
 # -- Post-Install -- #

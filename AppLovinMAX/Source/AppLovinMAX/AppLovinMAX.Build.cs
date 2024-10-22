@@ -73,22 +73,23 @@ public class AppLovinMAX : ModuleRules
 			)
 		);
 
-		// Link with AppLovin SDK if installed
 		var AppLovinSDKPath = "/Users/ritam.sarmah/AppLovin/AppLovin-MAX-Unreal/AppLovinMAXDemo/Pods/AppLovinSDK/applovin-ios-sdk-13.0.0/AppLovinSDK.xcframework";
 		if ( Directory.Exists( AppLovinSDKPath ) )
 		{
+			// Link with AppLovin SDK if installed
 			System.Console.WriteLine( "AppLovin SDK linked from CocoaPods" );
 			PublicAdditionalFrameworks.Add(
 				new Framework(
 					"AppLovinSDK",
 					AppLovinSDKPath,
 					null,
-					true
+					false
 				)
 			);
 		}
 		else
 		{
+			// If not, continue with build. We may be generating the initial Xcode project to install CocoaPods dependencies.
 			System.Console.WriteLine( "AppLovin SDK not linked with CocoaPods" );
 		}
 
