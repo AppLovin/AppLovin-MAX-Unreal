@@ -28,24 +28,16 @@ if !File.exist?(xcodeproj_path)
   system "\"#{ubt_path}\" -ProjectFiles -XCodeProjectFiles -Project=\"#{abs_uproject_file}\""
 end
 
-# Update Xcode project configuration to use UE_TARGET_CONFIG
-xcode_project = Xcodeproj::Project.open(xcodeproj_path)
-xcode_project.targets.first.build_configurations.each do |config|
-  config.build_settings["CONFIGURATION"] = "$(UE_TARGET_CONFIG)"
-end
-
-xcode_project.save()
-
 # -- Pods -- #
 
 workspace "#{project_name} (IOS)"
+
+use_frameworks!
+inhibit_all_warnings!
 platform :ios, '12.0'
 
 target 'AppLovinMAXDemo' do
   project xcodeproj_path, 'DebugGame' => :debug, 'Development' => :debug, 'Shipping' => :release
-
-  use_frameworks!
-  inhibit_all_warnings!
 
   pod 'AppLovinSDK', '13.0.0' # TODO: Get the value dynamically
 
@@ -55,6 +47,8 @@ end
 # -- Post-Install -- #
 
 post_install do |installer|
+  puts "Running post install actions"
+
   # Update the Unreal project's xcconfigs to include CocoaPods xcconfigs
   Dir.glob("**/#{project_name}_*.xcconfig").each do |project_xcconfig_path|
     project_path = Pathname.new(project_xcconfig_path).dirname
@@ -70,6 +64,17 @@ post_install do |installer|
       File.open(project_xcconfig_path, 'w') do |file|
         file.write(include_text + original_text)
       end
+    else
+      puts "Skipping #{project_xcconfig_path}"
     end
   end
+
+  # Update Unreal Xcode project configuration
+  xcode_project = Xcodeproj::Project.open(xcodeproj_path)
+  xcode_project.targets.first.build_configurations.each do |config|
+    config.build_settings["CONFIGURATION"] = "$(UE_TARGET_CONFIG)"
+  end
+
+  xcode_project.save()
 end
+
