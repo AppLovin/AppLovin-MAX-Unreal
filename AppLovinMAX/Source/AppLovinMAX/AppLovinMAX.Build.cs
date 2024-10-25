@@ -74,6 +74,7 @@ public class AppLovinMAX : ModuleRules
 			        {
 			            var error = process.StandardError.ReadToEnd();
 			            System.Console.WriteLine( $"Failed to unzip AppLovin IOS SDK: {error}" );
+						return;
 			        }
 			        else
 			        {
