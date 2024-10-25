@@ -67,7 +67,7 @@ public class AppLovinMAX : ModuleRules
 
 			try
 			{
-			    using ( var process = Process.Start(startInfo) )
+			    using ( var process = Process.Start( startInfo ) )
 				{
 			        process.WaitForExit();
 			        if ( process.ExitCode != 0 )
