@@ -62,7 +62,7 @@ public class AppLovinMAX : ModuleRules
 			var startInfo = new ProcessStartInfo
 			{
 				FileName = "unzip",
-				Arguments = $"-o {AppLovinSDKZipPath} -d {AppLovinCorePath}"
+				Arguments = $"{AppLovinSDKZipPath} -d {AppLovinCorePath}"
 			};
 
 			try
