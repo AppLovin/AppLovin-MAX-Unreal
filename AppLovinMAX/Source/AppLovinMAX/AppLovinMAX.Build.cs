@@ -58,7 +58,7 @@ public class AppLovinMAX : ModuleRules
 		{
 			System.Console.WriteLine( $"Unzipping AppLovin IOS SDK: {AppLovinSDKZipPath}" );
 
-			// Process unzips to specified directory, overwriting without confirmation
+			// Use shell process to unzip to specified directory
 			var startInfo = new ProcessStartInfo
 			{
 				FileName = "unzip",
