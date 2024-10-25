@@ -10,8 +10,6 @@ using System.Xml.Linq;
 
 public class AppLovinMAX : ModuleRules
 {
-	private const string AppLovinIOSVersion = "13.0.0";
-
 	public AppLovinMAX(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.NoSharedPCHs;
@@ -49,9 +47,10 @@ public class AppLovinMAX : ModuleRules
 	private void InstallIOS()
 	{
 		var AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
-		var AppLovinSDKPath = Path.Combine( AppLovinIOSPath, "AppLovin", "AppLovinSDK.xcframework" );
-		var AppLovinSDKZipPath = Path.Combine( AppLovinIOSPath, "AppLovin", $"applovin-ios-sdk-{AppLovinIOSVersion}.zip" );
-        var AppLovinPluginPath = Path.Combine( AppLovinIOSPath, "AppLovin", "MAX_Unreal_Plugin.embeddedframework.zip" );
+		var AppLovinCorePath = Path.Combine( AppLovinIOSPath, "AppLovin" );
+		var AppLovinSDKPath = Path.Combine( AppLovinCorePath, "AppLovinSDK.xcframework" );
+		var AppLovinSDKZipPath = Path.Combine( AppLovinCorePath, $"AppLovinSDK.xcframework.zip" );
+        var AppLovinPluginPath = Path.Combine( AppLovinCorePath, "MAX_Unreal_Plugin.embeddedframework.zip" );
 		var AppLovinPodsPath = Path.Combine( AppLovinIOSPath, "Pods" );
 
 		// Unzip the SDK if needed
@@ -59,39 +58,41 @@ public class AppLovinMAX : ModuleRules
 		{
 			System.Console.WriteLine( $"Unzipping AppLovin IOS SDK: {AppLovinSDKZipPath}" );
 
-			ProcessStartInfo startInfo = new ProcessStartInfo
+			// Process unzips to specified directory, overwriting without confirmation
+			var startInfo = new ProcessStartInfo
 			{
-				FileName = "/bin/bash",
-				Arguments = $"-c \"unzip {AppLovinSDKZipPath} -d {AppLovinSDKPath}\"",
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-				UseShellExecute = false,
-				CreateNoWindow = true
+				FileName = "unzip",
+				Arguments = $"-o {AppLovinSDKZipPath} -d {AppLovinCorePath}"
 			};
 
 			try
 			{
-			    using (var process = Process.Start(startInfo))
-			    {
+			    using ( var process = Process.Start(startInfo) )
+				{
 			        process.WaitForExit();
-			        if (process.ExitCode != 0)
+			        if ( process.ExitCode != 0 )
 			        {
-			            string error = process.StandardError.ReadToEnd();
-			            System.Console.WriteLine($"Failed to unzip AppLovin IOS SDK: {error}");
+			            var error = process.StandardError.ReadToEnd();
+			            System.Console.WriteLine( $"Failed to unzip AppLovin IOS SDK: {error}" );
 			        }
 			        else
 			        {
-			            System.Console.WriteLine($"AppLovin IOS SDK unzipped to {AppLovinSDKPath}");
+			            System.Console.WriteLine( $"AppLovin IOS SDK unzipped to {AppLovinSDKPath}" );
 			        }
-			    }
+				}
 			}
-			catch (System.Exception ex)
+			catch ( System.Exception ex )
 		    {
-		        System.Console.WriteLine($"Failed to unzip AppLovin IOS SDK: {ex.Message}");
+		        System.Console.WriteLine( $"Failed to unzip AppLovin IOS SDK: {ex.Message}" );
 				return;
 		    }
 		}
+		else
+		{
+			System.Console.WriteLine( $"AppLovin IOS SDK found: {AppLovinSDKPath}" );
+		}
 
+		// Check that native plugin exists
 		if ( !File.Exists( AppLovinPluginPath ) )
 		{
 			System.Console.WriteLine( "AppLovin IOS Plugin not found" );
