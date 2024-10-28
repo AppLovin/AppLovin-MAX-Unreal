@@ -49,7 +49,7 @@ public class AppLovinMAX : ModuleRules
         var AppLovinIOSPath = Path.Combine( ModuleDirectory, "..", "ThirdParty", "IOS" );
         var AppLovinCorePath = Path.Combine( AppLovinIOSPath, "AppLovin" );
         var AppLovinSDKPath = Path.Combine( AppLovinCorePath, "AppLovinSDK.xcframework" );
-        var AppLovinSDKZipPath = Path.Combine( AppLovinCorePath, $"AppLovinSDK.xcframework.zip" );
+        var AppLovinSDKZipPath = Path.Combine( AppLovinCorePath, "AppLovinSDK.xcframework.zip" );
         var AppLovinPluginPath = Path.Combine( AppLovinCorePath, "MAX_Unreal_Plugin.embeddedframework.zip" );
         var AppLovinPodsPath = Path.Combine( AppLovinIOSPath, "Pods" );
 
