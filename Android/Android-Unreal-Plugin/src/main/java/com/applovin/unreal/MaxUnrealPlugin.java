@@ -35,6 +35,7 @@ import com.applovin.sdk.AppLovinPrivacySettings;
 import com.applovin.sdk.AppLovinSdk;
 import com.applovin.sdk.AppLovinSdkConfiguration;
 import com.applovin.sdk.AppLovinSdkConfiguration.ConsentFlowUserGeography;
+import com.applovin.sdk.AppLovinSdkInitializationConfiguration;
 import com.applovin.sdk.AppLovinSdkSettings;
 import com.applovin.sdk.AppLovinSdkUtils;
 
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import lombok.val;
 import lombok.var;
 
@@ -63,9 +65,11 @@ public class MaxUnrealPlugin
     private static final String SDK_TAG = "AppLovinSdk";
 
     // Parent Fields
-    private AppLovinSdk              sdk;
-    private boolean                  isPluginInitialized = false;
-    private boolean                  isSdkInitialized    = false;
+    private AppLovinSdk sdk;
+    private boolean     isPluginInitialized = false;
+    private boolean     isSdkInitialized    = false;
+
+    @Nullable
     private AppLovinSdkConfiguration sdkConfiguration;
 
     // Store these values if pub sets before initializing
@@ -132,33 +136,8 @@ public class MaxUnrealPlugin
         // Set listener
         eventListener = listener;
 
-        // If SDK key passed in is empty, check Android Manifest
-        var sdkKeyToUse = sdkKey;
-        if ( TextUtils.isEmpty( sdkKey ) )
-        {
-            try
-            {
-                val packageManager = context.getPackageManager();
-                val packageName = context.getPackageName();
-                val applicationInfo = packageManager.getApplicationInfo( packageName, PackageManager.GET_META_DATA );
-                val metaData = applicationInfo.metaData;
 
-                sdkKeyToUse = metaData.getString( "applovin.sdk.key", "" );
-            }
-            catch ( Throwable th )
-            {
-                e( "Unable to retrieve SDK key from Android Manifest: " + th );
-            }
-
-            if ( TextUtils.isEmpty( sdkKeyToUse ) )
-            {
-                throw new IllegalStateException( "Unable to initialize AppLovin SDK - no SDK key provided and not found in Android Manifest!" );
-            }
-        }
-
-        sdk = AppLovinSdk.getInstance( sdkKeyToUse, new AppLovinSdkSettings( context ), currentActivity );
-        sdk.setPluginVersion( "Unreal-" + pluginVersion );
-        sdk.setMediationProvider( AppLovinMediationProvider.MAX );
+        sdk = AppLovinSdk.getInstance( context );
 
         if ( !TextUtils.isEmpty( userIdToSet ) )
         {
@@ -214,7 +193,13 @@ public class MaxUnrealPlugin
             userGeographyToSet = null;
         }
 
-        sdk.initializeSdk( configuration -> {
+        // Create initialization configuration
+        val initConfig = AppLovinSdkInitializationConfiguration.builder( sdkKey, context )
+                .setMediationProvider( AppLovinMediationProvider.MAX )
+                .setPluginVersion( "Unreal-" + pluginVersion )
+                .build();
+
+        sdk.initialize( initConfig, configuration -> {
 
             d( "SDK initialized" );
 

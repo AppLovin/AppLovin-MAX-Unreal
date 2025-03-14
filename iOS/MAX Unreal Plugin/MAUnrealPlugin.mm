@@ -190,9 +190,10 @@ static NSString *const TAG = @"MAUnrealPlugin";
         builder.pluginVersion = [@"Unreal-" stringByAppendingString: pluginVersion];
         builder.mediationProvider = ALMediationProviderMAX;
     }];
- 
+    
     // Initialize SDK
     [self.sdk initializeWithConfiguration: initConfig completionHandler:^(ALSdkConfiguration *configuration) {
+        
         [self log: @"SDK initialized"];
         
         self.sdkConfiguration = configuration;
@@ -220,7 +221,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     message[@"isTablet"] = @([self isTablet]);
     
     return message;
-
+    
 }
 
 - (BOOL)isInitialized
