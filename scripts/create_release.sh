@@ -11,6 +11,8 @@
 # - For 4.27.X support, set the VERSION to 4.27 (patch version will be set to 0)
 # - If no VERSION is specified, creates an engine-agnostic plugin that should be integrated as project plugin
 
+set -e
+
 version="${1}"
 
 unreal_path="${HOME}/AppLovin/AppLovin-MAX-Unreal"
@@ -23,13 +25,20 @@ mkdir -p "${packaged_path}"
 if [ -n "$version" ]; then
     echo "Packaging for UE ${version}"
 
-    # Export environment variables for UAT Android builds
-    # Refer to requirements: https://dev.epicgames.com/documentation/en-us/unreal-engine/android-development-requirements-for-unreal-engine?application_version=5.4
-    if [ "$version" == "5.2" ]; then
+    # NOTE: Recommended Xcode version is 15.4 for UE 5.5, but works with prior UE versions
+    # https://dev.epicgames.com/documentation/en-us/unreal-engine/ios-ipados-and-tvos-development-requirements-for-unreal-engine#versionhistory
+    xcode_version='15.4'
+
+    # Export environment variables for UAT Android builds based on requirements
+    # https://dev.epicgames.com/documentation/en-us/unreal-engine/android-development-requirements-for-unreal-engine#versionhistory
+    if [ "$version" == '5.2' ]; then
         studio_version='4.0'
         ndk_version='25.1.8937393'
-    else # Default (5.3+)
+    elif [ "$version" == '5.3' ] || [ "$version" == '5.4' ]; then
         studio_version='2022.2.1'
+        ndk_version='25.1.8937393'
+    else # Default: 5.5+
+        studio_version='2024.1.2'
         ndk_version='25.1.8937393'
     fi
 
