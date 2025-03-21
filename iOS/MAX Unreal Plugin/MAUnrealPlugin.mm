@@ -34,7 +34,7 @@
 @property (nonatomic, weak) ALSdk *sdk;
 @property (nonatomic, assign, getter=isPluginInitialized) BOOL pluginInitialized;
 @property (nonatomic, assign, getter=isSDKInitialized) BOOL sdkInitialized;
-@property (nonatomic, strong) ALSdkConfiguration *sdkConfiguration;
+@property (nonatomic, strong, nullable) ALSdkConfiguration *sdkConfiguration;
 
 // Store these values if pub sets before initializing
 @property (nonatomic,   copy, nullable) NSString *userIdentifierToSet;
@@ -127,24 +127,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     
     [self log: @"Initializing AppLovin MAX Unreal v%@...", pluginVersion];
     
-    // If SDK key passed in is empty, check Info.plist
-    if ( ![sdkKey al_isValidString] )
-    {
-        if ( [[NSBundle mainBundle].infoDictionary al_containsValueForKey: @"AppLovinSdkKey"] )
-        {
-            sdkKey = [NSBundle mainBundle].infoDictionary[@"AppLovinSdkKey"];
-        }
-        else
-        {
-            [NSException raise: NSInternalInconsistencyException
-                        format: @"Unable to initialize AppLovin SDK - no SDK key provided and not found in Info.plist!"];
-        }
-    }
-    
-    // Initialize SDK
-    self.sdk = [ALSdk sharedWithKey: sdkKey];
-    [self.sdk setPluginVersion: [@"Unreal-" stringByAppendingString: pluginVersion]];
-    [self.sdk setMediationProvider: ALMediationProviderMAX];
+    self.sdk = [ALSdk shared];
     
     // Update SDK settings
     
@@ -201,8 +184,16 @@ static NSString *const TAG = @"MAUnrealPlugin";
         self.sdk.settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = [self userGeographyForString: self.userGeographyStringToSet];
         self.userGeographyStringToSet = nil;
     }
- 
-    [self.sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
+    
+    // Create initialization configuration
+    ALSdkInitializationConfiguration *initConfig = [ALSdkInitializationConfiguration configurationWithSdkKey: sdkKey builderBlock:^(ALSdkInitializationConfigurationBuilder *builder) {
+        builder.pluginVersion = [@"Unreal-" stringByAppendingString: pluginVersion];
+        builder.mediationProvider = ALMediationProviderMAX;
+    }];
+    
+    // Initialize SDK
+    [self.sdk initializeWithConfiguration: initConfig completionHandler:^(ALSdkConfiguration *configuration) {
+        
         [self log: @"SDK initialized"];
         
         self.sdkConfiguration = configuration;
@@ -230,7 +221,7 @@ static NSString *const TAG = @"MAUnrealPlugin";
     message[@"isTablet"] = @([self isTablet]);
     
     return message;
-
+    
 }
 
 - (BOOL)isInitialized

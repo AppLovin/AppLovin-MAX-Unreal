@@ -22,12 +22,6 @@ THIRD_PARTY_INCLUDES_END
 
 // MARK: - Initialization
 
-void UAppLovinMAX::Initialize()
-{
-    // Pass empty string as SDK key
-    UAppLovinMAX::Initialize(FString());
-}
-
 void UAppLovinMAX::Initialize(const FString &SdkKey)
 {
     TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin("AppLovinMAX");
