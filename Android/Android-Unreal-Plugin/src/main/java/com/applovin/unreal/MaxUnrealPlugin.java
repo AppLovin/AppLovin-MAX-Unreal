@@ -136,18 +136,21 @@ public class MaxUnrealPlugin
         // Set listener
         eventListener = listener;
 
+        val initConfigBuilder = AppLovinSdkInitializationConfiguration.builder( sdkKey )
+                .setMediationProvider( AppLovinMediationProvider.MAX )
+                .setPluginVersion( "Unreal-" + pluginVersion );
 
         sdk = AppLovinSdk.getInstance( context );
 
         if ( !TextUtils.isEmpty( userIdToSet ) )
         {
-            sdk.setUserIdentifier( userIdToSet );
+            sdk.getSettings().setUserIdentifier( userIdToSet );
             userIdToSet = null;
         }
 
         if ( testDeviceAdvertisingIdsToSet != null )
         {
-            sdk.getSettings().setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
+            initConfigBuilder.setTestDeviceAdvertisingIds( testDeviceAdvertisingIdsToSet );
             testDeviceAdvertisingIdsToSet = null;
         }
 
@@ -194,12 +197,7 @@ public class MaxUnrealPlugin
         }
 
         // Create initialization configuration
-        val initConfig = AppLovinSdkInitializationConfiguration.builder( sdkKey, context )
-                .setMediationProvider( AppLovinMediationProvider.MAX )
-                .setPluginVersion( "Unreal-" + pluginVersion )
-                .build();
-
-        sdk.initialize( initConfig, configuration -> {
+        sdk.initialize( initConfigBuilder.build(), configuration -> {
 
             d( "SDK initialized" );
 
@@ -376,7 +374,7 @@ public class MaxUnrealPlugin
     {
         if ( sdk != null )
         {
-            sdk.setUserIdentifier( userId );
+            sdk.getSettings().setUserIdentifier( userId );
             userIdToSet = null;
         }
         else
@@ -450,7 +448,7 @@ public class MaxUnrealPlugin
     {
         if ( sdk != null )
         {
-            sdk.getSettings().setTestDeviceAdvertisingIds( Arrays.asList( advertisingIds ) );
+            // TODO: Remove. Setting `testDeviceAdvertisingIds` after initialization is no longer supported
             testDeviceAdvertisingIdsToSet = null;
         }
         else
