@@ -2,6 +2,9 @@
 
 AppLovin MAX Unreal Plugin for Android and iOS.
 
+> [!NOTE]
+> Windows is currently unsupported as a development platform due to Fab's file path limit restrictions.
+
 ## Documentation
 
 Please check out our [documentation](https://developers.applovin.com/en/unreal/overview/integration) to get started on integrating and enabling mediated networks using our guides.

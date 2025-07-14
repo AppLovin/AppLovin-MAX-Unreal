@@ -21,7 +21,6 @@
 			"LoadingPhase": "Default",
 			"PlatformAllowList": [
 				"Mac",
-				"Win64",
 				"IOS",
 				"Android"
 			]
