@@ -2,14 +2,12 @@ plugins {
     id("com.android.library")
 }
 
-var libraryVersions = rootProject.extra["versions"] as Map<*, *>
-
 android {
     namespace = "com.applovin.unreal"
-    compileSdk = libraryVersions["compileSdk"] as Int
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = libraryVersions["minSdk"] as Int
+        minSdk = libs.versions.minSdk.get().toInt()
 
         consumerProguardFiles("proguard-rules.pro")
     }

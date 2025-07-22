@@ -43,12 +43,6 @@ public:
 
     /**
      * Initialize the default instance of AppLovin SDK.
-     * Please make sure that application's Android manifest or Info.plist includes the AppLovin SDK key.
-     */
-    static void Initialize();
-
-    /**
-     * Initialize the default instance of AppLovin SDK.
      * @param SdkKey - AppLovin SDK key
      */
     UFUNCTION(BlueprintCallable, Category = "AppLovinMAX")
