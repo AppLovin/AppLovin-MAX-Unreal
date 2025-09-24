@@ -282,7 +282,7 @@ def install_google_sdk():
 def main():
     print("\nThis script installs AppLovin adapters and third-party SDKs using your Podfile.\n")
     print("Please refer to our documentation for complete instructions:")
-    print("https://developers.applovin.com/en/unreal/preparing-mediated-networks#ios\n")
+    print("https://support.axon.ai/en/max/unreal/preparing-mediated-networks\n")
 
     print("> Updating CocoaPods repos...")
     run_shell("pod --silent repo update".split())

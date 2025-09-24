@@ -7,7 +7,7 @@ AppLovin MAX Unreal Plugin for Android and iOS.
 
 ## Documentation
 
-Please check out our [documentation](https://developers.applovin.com/en/unreal/overview/integration) to get started on integrating and enabling mediated networks using our guides.
+Please check out our [documentation](https://support.axon.ai/en/max/unreal/overview/integration) to get started on integrating and enabling mediated networks using our guides.
 
 ## Demo App
 
