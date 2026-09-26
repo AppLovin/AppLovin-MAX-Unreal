@@ -46,7 +46,7 @@ class Pod:
             self.source = "http"
         elif "git" in source:
             self.url = source["git"]
-            self.git_tag = source["tag"]
+            self.git_tag = source.get("tag") or source.get("commit") or source.get("branch")
             self.source = "git"
         else:
             self.url = None
@@ -137,21 +137,22 @@ def serialize_to_xml(data, root_tag='root'):
 """ Installation """
 
 
+POD_PATTERN = re.compile(r"""^pod\s+["']([^"']+)["'](?:\s*,\s*["']([^"']+)["'])?""")
+
+
 def parse_podfile():
+    pod_tuples = []
     with open(install_dir.parent / "Podfile") as podfile:
-        # Trim whitespace
-        pods = map(lambda l: l.strip(), podfile.readlines())
+        for line in podfile:
+            line = line.strip()
+            match = POD_PATTERN.match(line)
+            if match:
+                name = match.group(1)
+                version = match.group(2) or ""
+                if name != "AppLovinSDK":
+                    pod_tuples.append((name, version))
 
-        # Extract lines for pods
-        pods = filter(lambda l: l.startswith("pod"), pods)
-
-        # Get pod names
-        pods = map(lambda l: l.split(' ', 1)[1].strip("\'"), pods)
-
-        # Ignore AppLovinSDK
-        pods = filter(lambda l: l != "AppLovinSDK", pods)
-
-    return list(map(get_pod_info, pods))
+    return [get_pod_info(name, version) for name, version in pod_tuples]
 
 
 def get_pod_info(name, version=""):
